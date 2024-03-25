@@ -1,0 +1,9 @@
+{
+  "name": "lastbite-server",
+  "version": "1.0.0",
+  "description": "API server for LastBite",
+  "main": "index.js",
+  "repository": "https://github.com/neetcoders/lastbite-server.git",
+  "author": "keanutaufan <keanu.taufan21@gmail.com>",
+  "license": "UNLICENSED"
+}
