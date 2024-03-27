@@ -1,9 +1,9 @@
-import express, { Express } from "express";
 import dotenv from "dotenv";
+dotenv.config();
+
+import express, { Express } from "express";
 
 import router from "./api/api.route";
-
-dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT;
