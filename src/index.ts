@@ -8,7 +8,9 @@ import router from "./api/api.route";
 const app: Express = express();
 const port = process.env.PORT;
 
-app.use("/", router)
+app.use(express.json());
+
+app.use("/", router);
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at PORT ${port}`);
