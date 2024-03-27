@@ -12,7 +12,7 @@ CREATE TABLE users (
     updated_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
-CREATE INDEX idx_users_email ON users (email);
+CREATE UNIQUE INDEX idx_users_email ON users (email);
 
 CREATE TRIGGER trigger_update_timestamp
 AFTER UPDATE ON users
