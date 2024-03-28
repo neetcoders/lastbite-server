@@ -5,3 +5,8 @@ export type UserRegisterSchema = {
   name: string;
   birth_date: string;
 }
+
+export type UserLoginSchema = {
+  email: string;
+  password: string;
+}

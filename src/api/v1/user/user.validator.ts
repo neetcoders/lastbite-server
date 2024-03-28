@@ -21,3 +21,15 @@ export function validateRegister() {
       .isDate({ format: "YYYY-MM-DD" }).withMessage("Date of birth is not a valid date"),
   ];
 }
+
+export function validateLogin() {
+  return [
+    body("email")
+    .notEmpty().withMessage("Email address is required")
+    .isEmail().withMessage("Invalid email address"),
+    body("password")
+      .notEmpty().withMessage("Password is required")
+      .isLength({ min: 8 }).withMessage("Password should be at least 8 characters long")
+      .isLength({ max: 127 }).withMessage("Password should be at most 127 characters long"),
+  ];
+}
