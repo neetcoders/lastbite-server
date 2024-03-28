@@ -25,14 +25,14 @@ export function verifyAuthToken(req: Request, res: Response, next: NextFunction)
     )
   }
 
-  const payload = jwt.verify(token!, secret);
-
-  if (!payload) {
+  try {
+    const payload = jwt.verify(token!, secret);
+    req.body.payload = payload;
+    return next();
+  }
+  catch (err) {
     return res.status(401).json(
       buildResponse(null, false, "User is not logged in")
     );
   }
-
-  req.body.payload = payload;
-  return next();
 }

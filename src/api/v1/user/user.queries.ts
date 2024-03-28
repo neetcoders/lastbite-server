@@ -112,3 +112,41 @@ const getUserByEmailWithSecretIR: any = {"usedParamSet":{"email":true},"params":
 export const getUserByEmailWithSecret = new PreparedQuery<IGetUserByEmailWithSecretParams,IGetUserByEmailWithSecretResult>(getUserByEmailWithSecretIR);
 
 
+/** 'GetUserById' parameters type */
+export interface IGetUserByIdParams {
+  id?: string | null | void;
+}
+
+/** 'GetUserById' return type */
+export interface IGetUserByIdResult {
+  birth_date: Date;
+  created_at: Date;
+  display_name: string;
+  email: string;
+  updated_at: Date;
+}
+
+/** 'GetUserById' query type */
+export interface IGetUserByIdQuery {
+  params: IGetUserByIdParams;
+  result: IGetUserByIdResult;
+}
+
+const getUserByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":105,"b":107}]}],"statement":"SELECT\n    email,\n    display_name,\n    birth_date,\n    created_at,\n    updated_at\nFROM users\nWHERE id = :id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT
+ *     email,
+ *     display_name,
+ *     birth_date,
+ *     created_at,
+ *     updated_at
+ * FROM users
+ * WHERE id = :id
+ * ```
+ */
+export const getUserById = new PreparedQuery<IGetUserByIdParams,IGetUserByIdResult>(getUserByIdIR);
+
+
