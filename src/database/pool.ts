@@ -8,7 +8,7 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: true,
-    ca: fs.readFileSync(path.resolve(process.cwd(), "./certs/pg-digitalocean.crt")).toString()
+    ca: fs.readFileSync(path.resolve(process.cwd(), "./certs/pg-ca-certificate.crt")).toString()
   }
 });
 

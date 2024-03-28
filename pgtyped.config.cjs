@@ -17,7 +17,7 @@ const config = {
   db: {
     ssl: {
       rejectUnauthorized: true,
-      ca: fs.readFileSync("./certs/pg-digitalocean.crt").toString()
+      ca: fs.readFileSync("./certs/pg-ca-certificate.crt").toString()
     },
   },
 };
