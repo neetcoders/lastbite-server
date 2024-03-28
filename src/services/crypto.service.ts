@@ -10,3 +10,8 @@ export async function hashPassword(password: string) {
 
   return hash;
 }
+
+export async function verifyPassword(digest: string, password: string) {
+  const match = await argon2.verify(digest, password);
+  return match;
+}
