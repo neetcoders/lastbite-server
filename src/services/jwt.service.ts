@@ -17,16 +17,32 @@ export function verifyAuthToken(req: Request, res: Response, next: NextFunction)
     throw new Error("JWT private key is not defined")
   }
   
-  const token = req.headers.authorization;
+  const authorization = req.headers.authorization;
   
-  if (!token) {
+  if (!authorization) {
     return res.status(401).json(
       buildResponse(null, false, "User is not logged in")
     )
   }
+  
+  if (authorization.split(" ").length !== 2) {
+    return res.status(400).json(
+      buildResponse(null, false, "Scheme not supported")
+    )
+  }
+  
+  const scheme = authorization.split(" ")[0];
+  const token = authorization.split(" ")[1];
+  
+  if (scheme !== "Bearer") {
+    return res.status(400).json(
+      buildResponse(null, false, "Scheme not supported")
+    )
+  
+  }
 
   try {
-    const payload = jwt.verify(token!, secret);
+    const payload = jwt.verify(token, secret);
     req.body.payload = payload;
     return next();
   }
