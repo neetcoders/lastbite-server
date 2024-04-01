@@ -35,7 +35,7 @@ export default class UserController {
         store: {
           email: req.body.email,
           store_secret: hashedPassword,
-          display_name: req.body.name,
+          display_name: req.body.display_name,
           address_id: newAddress[0].id,
         }
       }, pool);

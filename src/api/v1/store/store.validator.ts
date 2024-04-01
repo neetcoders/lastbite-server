@@ -12,7 +12,7 @@ export function validateRegister() {
     body("confirm_password")
       .notEmpty().withMessage("Password confirmation is required")
       .custom((value, { req }) => ( req.body?.password && value === req.body.password )).withMessage("Password confirmation does not match"),
-    body("name")
+    body("display_name")
       .notEmpty().withMessage("Name is required")
       .isLength({ min: 3 }).withMessage("Name should be at least 3 characters long")
       .isLength({ max: 64 }).withMessage("Name should be at most 64 characters long"),
