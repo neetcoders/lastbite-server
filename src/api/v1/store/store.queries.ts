@@ -121,3 +121,54 @@ const getStoreByEmailWithSecretIR: any = {"usedParamSet":{"email":true},"params"
 export const getStoreByEmailWithSecret = new PreparedQuery<IGetStoreByEmailWithSecretParams,IGetStoreByEmailWithSecretResult>(getStoreByEmailWithSecretIR);
 
 
+/** 'GetStoreById' parameters type */
+export interface IGetStoreByIdParams {
+  id?: string | null | void;
+}
+
+/** 'GetStoreById' return type */
+export interface IGetStoreByIdResult {
+  address_created_at: Date;
+  adress_updated_at: Date;
+  bio: string | null;
+  created_at: Date;
+  display_name: string;
+  email: string;
+  latitude: number;
+  longitude: number;
+  store_secret: string;
+  street: string;
+  updated_at: Date;
+}
+
+/** 'GetStoreById' query type */
+export interface IGetStoreByIdQuery {
+  params: IGetStoreByIdParams;
+  result: IGetStoreByIdResult;
+}
+
+const getStoreByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":306,"b":308}]}],"statement":"SELECT\n    s.email,\n    s.display_name,\n    s.bio,\n    s.store_secret,\n    a.street,\n    a.longitude,\n    a.latitude,\n    a.created_at as \"address_created_at\",\n    a.updated_at as \"adress_updated_at\",\n    s.created_at,\n    s.updated_at\nFROM store s\nINNER JOIN address a ON a.id = s.address_id\nWHERE s.id = :id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT
+ *     s.email,
+ *     s.display_name,
+ *     s.bio,
+ *     s.store_secret,
+ *     a.street,
+ *     a.longitude,
+ *     a.latitude,
+ *     a.created_at as "address_created_at",
+ *     a.updated_at as "adress_updated_at",
+ *     s.created_at,
+ *     s.updated_at
+ * FROM store s
+ * INNER JOIN address a ON a.id = s.address_id
+ * WHERE s.id = :id
+ * ```
+ */
+export const getStoreById = new PreparedQuery<IGetStoreByIdParams,IGetStoreByIdResult>(getStoreByIdIR);
+
+

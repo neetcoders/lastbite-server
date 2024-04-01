@@ -5,7 +5,7 @@ import pool from "@/database/pool";
 import { StoreLoginSchema, StoreRegisterSchema } from "./store.schema";
 import { buildResponse } from "@/utils/response";
 import { createStoreAddress } from "../address/address.queries";
-import { checkStoreByEmail, createStore, getStoreByEmailWithSecret } from "./store.queries";
+import { checkStoreByEmail, createStore, getStoreByEmailWithSecret, getStoreById } from "./store.queries";
 import { hashPassword, verifyPassword } from "@/services/crypto.service";
 import { issueAuthToken } from "@/services/jwt.service";
 
@@ -106,6 +106,42 @@ export default class UserController {
         }, true, "Store successfully logged in")
       )
     }
+    catch (err) {
+      console.error(err);
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
+
+
+  static async getCurrentStore(req: Request, res: Response) {
+    try {
+      const currentStore = await getStoreById.run({ id: req.body.payload.sub }, pool);
+      if (!currentStore || currentStore.length === 0) {
+        return res.status(401).json(
+          buildResponse(null, false, "Store is not logged in")
+        );
+      }
+
+      return res.status(200).json(
+        buildResponse({
+          email: currentStore[0].email,
+          display_name: currentStore[0].display_name,
+          bio: currentStore[0].bio,
+          address: {
+            street: currentStore[0].street,
+            longitude: currentStore[0].longitude,
+            latitude: currentStore[0].latitude,
+            created_at: currentStore[0].address_created_at,
+            updated_at: currentStore[0].adress_updated_at,
+          },
+          created_at: currentStore[0].created_at,
+          updated_at: currentStore[0].updated_at,
+        }, true, "Current store fetched successfully"),
+      );
+    }
+    
     catch (err) {
       console.error(err);
       return res.status(500).json(
