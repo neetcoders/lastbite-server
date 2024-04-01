@@ -43,6 +43,77 @@ const createProductIR: any = {"usedParamSet":{"product":true},"params":[{"name":
 export const createProduct = new PreparedQuery<ICreateProductParams,ICreateProductResult>(createProductIR);
 
 
+/** 'UpdateProductDetails' parameters type */
+export interface IUpdateProductDetailsParams {
+  category_id?: string | null | void;
+  description?: string | null | void;
+  display_name?: string | null | void;
+  expiration_date?: DateOrString | null | void;
+  id?: string | null | void;
+  price_after?: NumberOrString | null | void;
+  price_before?: NumberOrString | null | void;
+}
+
+/** 'UpdateProductDetails' return type */
+export interface IUpdateProductDetailsResult {
+  id: string;
+}
+
+/** 'UpdateProductDetails' query type */
+export interface IUpdateProductDetailsQuery {
+  params: IUpdateProductDetailsParams;
+  result: IUpdateProductDetailsResult;
+}
+
+const updateProductDetailsIR: any = {"usedParamSet":{"display_name":true,"description":true,"price_before":true,"price_after":true,"expiration_date":true,"category_id":true,"id":true},"params":[{"name":"display_name","required":false,"transform":{"type":"scalar"},"locs":[{"a":38,"b":50}]},{"name":"description","required":false,"transform":{"type":"scalar"},"locs":[{"a":71,"b":82}]},{"name":"price_before","required":false,"transform":{"type":"scalar"},"locs":[{"a":104,"b":116}]},{"name":"price_after","required":false,"transform":{"type":"scalar"},"locs":[{"a":137,"b":148}]},{"name":"expiration_date","required":false,"transform":{"type":"scalar"},"locs":[{"a":173,"b":188}]},{"name":"category_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":209,"b":220}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":233,"b":235}]}],"statement":"UPDATE product\nSET\n    display_name = :display_name,\n    description = :description,\n    price_before = :price_before,\n    price_after = :price_after,\n    expiration_date = :expiration_date,\n    category_id = :category_id\nWHERE id = :id\nRETURNING id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE product
+ * SET
+ *     display_name = :display_name,
+ *     description = :description,
+ *     price_before = :price_before,
+ *     price_after = :price_after,
+ *     expiration_date = :expiration_date,
+ *     category_id = :category_id
+ * WHERE id = :id
+ * RETURNING id
+ * ```
+ */
+export const updateProductDetails = new PreparedQuery<IUpdateProductDetailsParams,IUpdateProductDetailsResult>(updateProductDetailsIR);
+
+
+/** 'GetProductOwnerById' parameters type */
+export interface IGetProductOwnerByIdParams {
+  id?: string | null | void;
+}
+
+/** 'GetProductOwnerById' return type */
+export interface IGetProductOwnerByIdResult {
+  store_id: string;
+}
+
+/** 'GetProductOwnerById' query type */
+export interface IGetProductOwnerByIdQuery {
+  params: IGetProductOwnerByIdParams;
+  result: IGetProductOwnerByIdResult;
+}
+
+const getProductOwnerByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":40,"b":42}]}],"statement":"SELECT store_id\nFROM product\nWHERE id = :id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT store_id
+ * FROM product
+ * WHERE id = :id
+ * ```
+ */
+export const getProductOwnerById = new PreparedQuery<IGetProductOwnerByIdParams,IGetProductOwnerByIdResult>(getProductOwnerByIdIR);
+
+
 /** 'GetProductById' parameters type */
 export interface IGetProductByIdParams {
   id?: string | null | void;

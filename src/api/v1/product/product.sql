@@ -7,7 +7,26 @@ VALUES :product
 RETURNING id;
 
 
-/* @name GetProductById */
+/* @name UpdateProductDetails */
+UPDATE product
+SET
+    display_name = :display_name,
+    description = :description,
+    price_before = :price_before,
+    price_after = :price_after,
+    expiration_date = :expiration_date,
+    category_id = :category_id
+WHERE id = :id
+RETURNING id;
+
+
+/* @name GetProductOwnerByID */
+SELECT store_id
+FROM product
+WHERE id = :id;
+
+
+/* @name GetProductByID */
 SELECT
     p.id,
     p.display_name,
