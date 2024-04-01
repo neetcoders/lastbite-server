@@ -2,11 +2,12 @@ import { ParamsDictionary } from "express-serve-static-core";
 import { Request, Response } from "express";
 
 import pool from "@/database/pool";
-import { StoreRegisterSchema } from "./store.schema";
+import { StoreLoginSchema, StoreRegisterSchema } from "./store.schema";
 import { buildResponse } from "@/utils/response";
 import { createStoreAddress } from "../address/address.queries";
-import { checkStoreByEmail, createStore } from "./store.queries";
-import { hashPassword } from "@/services/crypto.service";
+import { checkStoreByEmail, createStore, getStoreByEmailWithSecret } from "./store.queries";
+import { hashPassword, verifyPassword } from "@/services/crypto.service";
+import { issueAuthToken } from "@/services/jwt.service";
 
 export default class UserController {
   static async registerStore(req: Request<ParamsDictionary, any, StoreRegisterSchema>, res: Response) {
@@ -57,6 +58,55 @@ export default class UserController {
     }
     catch (err) {
       pool.query("ROLLBACK");
+      console.error(err);
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
+
+
+  static async loginStore(req: Request<ParamsDictionary, any, StoreLoginSchema>, res: Response) {
+    try {
+      const requestedStore = await getStoreByEmailWithSecret.run({ email: req.body.email }, pool);
+      
+      if (!requestedStore || requestedStore.length === 0) {
+        return res.status(404).json(
+          buildResponse(null, false, "Email or password does not match")
+        );
+      }
+
+      const hashedPassword = requestedStore[0].store_secret;
+      const verified = await verifyPassword(hashedPassword, req.body.password);
+      if (!verified) {
+        return res.status(404).json(
+          buildResponse(null, false, "Email or password does not match")
+        );
+      }
+
+      const token = issueAuthToken(requestedStore[0].id);
+
+      return res.status(200).json(
+        buildResponse({
+          store: {
+            email: requestedStore[0].email,
+            display_name: requestedStore[0].display_name,
+            bio: requestedStore[0].bio,
+            address: {
+              street: requestedStore[0].street,
+              longitude: requestedStore[0].longitude,
+              latitude: requestedStore[0].latitude,
+              created_at: requestedStore[0].address_created_at,
+              updated_at: requestedStore[0].adress_updated_at,
+            },
+            created_at: requestedStore[0].created_at,
+            updated_at: requestedStore[0].updated_at,
+          },
+          authorization: token,
+        }, true, "Store successfully logged in")
+      )
+    }
+    catch (err) {
       console.error(err);
       return res.status(500).json(
         buildResponse(null, false, "Internal server error")
