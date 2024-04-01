@@ -40,6 +40,8 @@ export default class UserController {
         }
       }, pool);
 
+      pool.query("COMMIT");
+
       return res.status(201).json(
         buildResponse({
           email: newStore[0].email,
