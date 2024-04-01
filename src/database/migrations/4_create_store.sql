@@ -6,7 +6,7 @@ CREATE TABLE store (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     email CITEXT NOT NULL,
     display_name TEXT NOT NULL,
-    bio TEXT NOT NULL,
+    bio TEXT NULL,
     store_secret TEXT NOT NULL,
     address_id UUID NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT now(),
