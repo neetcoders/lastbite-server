@@ -52,6 +52,7 @@ export interface IUpdateProductDetailsParams {
   id?: string | null | void;
   price_after?: NumberOrString | null | void;
   price_before?: NumberOrString | null | void;
+  store_id?: string | null | void;
 }
 
 /** 'UpdateProductDetails' return type */
@@ -65,7 +66,7 @@ export interface IUpdateProductDetailsQuery {
   result: IUpdateProductDetailsResult;
 }
 
-const updateProductDetailsIR: any = {"usedParamSet":{"display_name":true,"description":true,"price_before":true,"price_after":true,"expiration_date":true,"category_id":true,"id":true},"params":[{"name":"display_name","required":false,"transform":{"type":"scalar"},"locs":[{"a":38,"b":50}]},{"name":"description","required":false,"transform":{"type":"scalar"},"locs":[{"a":71,"b":82}]},{"name":"price_before","required":false,"transform":{"type":"scalar"},"locs":[{"a":104,"b":116}]},{"name":"price_after","required":false,"transform":{"type":"scalar"},"locs":[{"a":137,"b":148}]},{"name":"expiration_date","required":false,"transform":{"type":"scalar"},"locs":[{"a":173,"b":188}]},{"name":"category_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":209,"b":220}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":233,"b":235}]}],"statement":"UPDATE product\nSET\n    display_name = :display_name,\n    description = :description,\n    price_before = :price_before,\n    price_after = :price_after,\n    expiration_date = :expiration_date,\n    category_id = :category_id\nWHERE id = :id\nRETURNING id"};
+const updateProductDetailsIR: any = {"usedParamSet":{"display_name":true,"description":true,"price_before":true,"price_after":true,"expiration_date":true,"category_id":true,"id":true,"store_id":true},"params":[{"name":"display_name","required":false,"transform":{"type":"scalar"},"locs":[{"a":38,"b":50}]},{"name":"description","required":false,"transform":{"type":"scalar"},"locs":[{"a":71,"b":82}]},{"name":"price_before","required":false,"transform":{"type":"scalar"},"locs":[{"a":104,"b":116}]},{"name":"price_after","required":false,"transform":{"type":"scalar"},"locs":[{"a":137,"b":148}]},{"name":"expiration_date","required":false,"transform":{"type":"scalar"},"locs":[{"a":173,"b":188}]},{"name":"category_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":209,"b":220}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":238,"b":240}]},{"name":"store_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":261,"b":269}]}],"statement":"UPDATE product\nSET\n    display_name = :display_name,\n    description = :description,\n    price_before = :price_before,\n    price_after = :price_after,\n    expiration_date = :expiration_date,\n    category_id = :category_id\nWHERE \n    id = :id\n    AND store_id = :store_id\nRETURNING id"};
 
 /**
  * Query generated from SQL:
@@ -78,11 +79,47 @@ const updateProductDetailsIR: any = {"usedParamSet":{"display_name":true,"descri
  *     price_after = :price_after,
  *     expiration_date = :expiration_date,
  *     category_id = :category_id
- * WHERE id = :id
+ * WHERE 
+ *     id = :id
+ *     AND store_id = :store_id
  * RETURNING id
  * ```
  */
 export const updateProductDetails = new PreparedQuery<IUpdateProductDetailsParams,IUpdateProductDetailsResult>(updateProductDetailsIR);
+
+
+/** 'UpdateProductStock' parameters type */
+export interface IUpdateProductStockParams {
+  id?: string | null | void;
+  stock?: number | null | void;
+  store_id?: string | null | void;
+}
+
+/** 'UpdateProductStock' return type */
+export interface IUpdateProductStockResult {
+  id: string;
+}
+
+/** 'UpdateProductStock' query type */
+export interface IUpdateProductStockQuery {
+  params: IUpdateProductStockParams;
+  result: IUpdateProductStockResult;
+}
+
+const updateProductStockIR: any = {"usedParamSet":{"stock":true,"id":true,"store_id":true},"params":[{"name":"stock","required":false,"transform":{"type":"scalar"},"locs":[{"a":27,"b":32}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":50,"b":52}]},{"name":"store_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":73,"b":81}]}],"statement":"UPDATE product\nSET stock = :stock\nWHERE \n    id = :id\n    AND store_id = :store_id\nRETURNING id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE product
+ * SET stock = :stock
+ * WHERE 
+ *     id = :id
+ *     AND store_id = :store_id
+ * RETURNING id
+ * ```
+ */
+export const updateProductStock = new PreparedQuery<IUpdateProductStockParams,IUpdateProductStockResult>(updateProductStockIR);
 
 
 /** 'GetProductOwnerById' parameters type */

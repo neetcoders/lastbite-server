@@ -22,3 +22,11 @@ export type UpdateProductSchema = {
     sub: string;
   }
 }
+
+
+export type UpdateStockSchema = {
+  stock: number;
+  payload: {
+    sub: string;
+  }
+}

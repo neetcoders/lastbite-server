@@ -16,7 +16,18 @@ SET
     price_after = :price_after,
     expiration_date = :expiration_date,
     category_id = :category_id
-WHERE id = :id
+WHERE 
+    id = :id
+    AND store_id = :store_id
+RETURNING id;
+
+
+/* @name UpdateProductStock */
+UPDATE product
+SET stock = :stock
+WHERE 
+    id = :id
+    AND store_id = :store_id
 RETURNING id;
 
 

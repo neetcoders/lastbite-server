@@ -56,3 +56,13 @@ export function validateUpdateProduct() {
       .isLength({ max: 50 }).withMessage("Category slug should be at most 50 characters long"),
   ];
 }
+
+
+export function validateUpdateStock() {
+  return [
+    body("stock")
+      .notEmpty().withMessage("Stock is required")
+      .isNumeric().withMessage("Stock must be a numeric value")
+      .custom((value) => (!isNaN(value) && value > 0)).withMessage("Stock must be non-negative"),
+  ];
+}
