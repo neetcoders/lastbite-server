@@ -10,3 +10,7 @@ export type StoreRegisterSchema = {
   }
 }
 
+export type StoreLoginSchema = {
+  email: string;
+  password: string;
+}
