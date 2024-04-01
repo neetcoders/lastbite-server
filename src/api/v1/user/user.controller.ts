@@ -24,7 +24,7 @@ export default class UserController {
         user: {
           email: req.body.email,
           user_secret: hashedPassword,
-          display_name: req.body.name,
+          display_name: req.body.display_name,
           birth_date: req.body.birth_date,
         }
       }, pool);
