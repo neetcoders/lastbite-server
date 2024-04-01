@@ -2,7 +2,7 @@ export type StoreRegisterSchema = {
   email: string;
   password: string;
   confirm_password: string;
-  name: string;
+  display_name: string;
   address: {
     street: string;
     longitude: number;
