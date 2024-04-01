@@ -53,3 +53,10 @@ INNER JOIN store s ON s.id = p.store_id
 INNER JOIN address a ON a.id = s.address_id
 INNER JOIN category c ON c.id = p.category_id
 WHERE p.id = :id;
+
+
+/* @name DeleteProductByID */
+DELETE FROM product
+WHERE 
+    id = :id
+    AND store_id = :store_id;

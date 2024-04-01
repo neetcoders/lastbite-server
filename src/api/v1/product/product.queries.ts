@@ -185,3 +185,32 @@ const getProductByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id"
 export const getProductById = new PreparedQuery<IGetProductByIdParams,IGetProductByIdResult>(getProductByIdIR);
 
 
+/** 'DeleteProductById' parameters type */
+export interface IDeleteProductByIdParams {
+  id?: string | null | void;
+  store_id?: string | null | void;
+}
+
+/** 'DeleteProductById' return type */
+export type IDeleteProductByIdResult = void;
+
+/** 'DeleteProductById' query type */
+export interface IDeleteProductByIdQuery {
+  params: IDeleteProductByIdParams;
+  result: IDeleteProductByIdResult;
+}
+
+const deleteProductByIdIR: any = {"usedParamSet":{"id":true,"store_id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":36,"b":38}]},{"name":"store_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":59,"b":67}]}],"statement":"DELETE FROM product\nWHERE \n    id = :id\n    AND store_id = :store_id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * DELETE FROM product
+ * WHERE 
+ *     id = :id
+ *     AND store_id = :store_id
+ * ```
+ */
+export const deleteProductById = new PreparedQuery<IDeleteProductByIdParams,IDeleteProductByIdResult>(deleteProductByIdIR);
+
+

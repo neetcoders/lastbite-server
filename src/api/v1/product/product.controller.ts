@@ -1,12 +1,11 @@
 import { ParamsDictionary } from "express-serve-static-core";
-import { Request, Response } from "express";
+import { Request, Response, query } from "express";
 
 import pool from "@/database/pool";
 import { CreateProductSchema, UpdateProductSchema } from "./product.schema";
 import { buildResponse } from "@/utils/response";
-import { createStoreAddress } from "../address/address.queries";
 import { getCategoryIdBySlug } from "../category/category.queries";
-import { createProduct, getProductById, getProductOwnerById, updateProductDetails } from "./product.queries";
+import { createProduct, deleteProductById, getProductById, getProductOwnerById, updateProductDetails } from "./product.queries";
 
 export default class UserController {
   static async createProduct(req: Request<ParamsDictionary, any, CreateProductSchema>, res: Response) {
@@ -204,6 +203,30 @@ export default class UserController {
     catch (err) {
       console.error(err);
       pool.query("ROLLBACK");
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
+
+
+  static async deleteProduct(req: Request, res: Response) {
+    try {
+      const storeID = await getProductOwnerById.run({ id: req.params.product_id }, pool);
+      if (!storeID || storeID.length !== 1 || storeID[0].store_id !== req.body.payload.sub) {
+        return res.status(403).json(
+          buildResponse(null, false, "Access denied")
+        );
+      }
+
+      await deleteProductById.run({ id: req.params.product_id, store_id: req.body.payload.sub }, pool);
+
+      return res.status(200).json(
+        buildResponse(null, true, "Product deleted successfully")
+      );
+    }
+    catch (err) {
+      console.error(err);
       return res.status(500).json(
         buildResponse(null, false, "Internal server error")
       );

@@ -10,5 +10,6 @@ const router = Router();
 router.post("/new", verifyAuthToken, validateCreateProduct(), validate, ProductController.createProduct);
 router.get("/:product_id", ProductController.getProduct);
 router.put("/:product_id", verifyAuthToken, validateUpdateProduct(), validate, ProductController.updateProduct);
+router.delete("/:product_id", verifyAuthToken, ProductController.deleteProduct);
 
 export default router;
