@@ -66,7 +66,7 @@ export default class UserController {
         buildResponse({
           user: {
             email: requestedUser[0].email,
-            name: requestedUser[0].display_name,
+            display_name: requestedUser[0].display_name,
             birth_date: requestedUser[0].birth_date,
             created_at: requestedUser[0].created_at,
             updated_at: requestedUser[0].updated_at,
