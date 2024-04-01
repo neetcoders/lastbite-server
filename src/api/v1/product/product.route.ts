@@ -8,5 +8,6 @@ import { verifyAuthToken } from "@/services/jwt.service";
 const router = Router();
 
 router.post("/new", verifyAuthToken, validateCreateProduct(), validate, ProductController.createProduct);
+router.get("/:product_id", ProductController.getProduct);
 
 export default router;

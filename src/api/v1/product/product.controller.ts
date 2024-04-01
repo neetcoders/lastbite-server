@@ -78,4 +78,54 @@ export default class UserController {
       );
     }
   }
+
+
+  static async getProduct(req: Request, res: Response) {
+    try {
+      const product = await getProductById.run({ id: req.params.product_id }, pool);
+
+      if (!product || product.length === 0) {
+        return res.status(404).json(
+          buildResponse(null, false, "Product does not exist")
+        );
+      }
+
+      return res.status(200).json(
+        buildResponse({
+          id: product[0].id,
+          display_name: product[0].display_name,
+          description: product[0].description,
+          price_before: product[0].price_before,
+          price_after: product[0].price_after,
+          expiration_date: product[0].expiration_date,
+          stock: product[0].expiration_date,
+          store: {
+            id: product[0].store_id,
+            display_name: product[0].store_display_name,
+            address: {
+              street: product[0].address_street,
+              longitude: product[0].address_longitude,
+              latitude: product[0].address_latitude,
+              created_at: product[0].address_created_at,
+              updated_at: product[0].address_updated_at,
+            },
+            created_at: product[0].store_created_at,
+            updated_at: product[0].store_updated_at,
+          },
+          category: {
+            slug: product[0].category_slug,
+            display_name: product[0].category_display_name,
+          },
+          created_at: product[0].created_at,
+          updated_at: product[0].updated_at
+        }, true, "Product fetched successfully")
+      );
+    }
+    catch (err) {
+      console.error(err);
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
 }
