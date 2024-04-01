@@ -9,7 +9,7 @@ import { getCategoryIdBySlug } from "../category/category.queries";
 import { createProduct, getProductById } from "./product.queries";
 
 export default class UserController {
-  static async registerStore(req: Request<ParamsDictionary, any, CreateProductSchema>, res: Response) {
+  static async createProduct(req: Request<ParamsDictionary, any, CreateProductSchema>, res: Response) {
     try {
       const category = await getCategoryIdBySlug.run({ slug: req.body.category_slug }, pool);
 

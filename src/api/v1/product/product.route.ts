@@ -7,6 +7,6 @@ import { verifyAuthToken } from "@/services/jwt.service";
 
 const router = Router();
 
-router.post("/new", verifyAuthToken, validateCreateProduct(), validate, ProductController.registerStore);
+router.post("/new", verifyAuthToken, validateCreateProduct(), validate, ProductController.createProduct);
 
 export default router;
