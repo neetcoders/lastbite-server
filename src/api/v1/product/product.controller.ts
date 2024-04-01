@@ -47,7 +47,7 @@ export default class UserController {
           price_before: newProduct[0].price_before,
           price_after: newProduct[0].price_after,
           expiration_date: newProduct[0].expiration_date,
-          stock: newProduct[0].expiration_date,
+          stock: newProduct[0].stock,
           store: {
             id: newProduct[0].store_id,
             display_name: newProduct[0].store_display_name,
@@ -97,7 +97,7 @@ export default class UserController {
           price_before: product[0].price_before,
           price_after: product[0].price_after,
           expiration_date: product[0].expiration_date,
-          stock: product[0].expiration_date,
+          stock: product[0].stock,
           store: {
             id: product[0].store_id,
             display_name: product[0].store_display_name,
@@ -178,7 +178,7 @@ export default class UserController {
           price_before: newProduct[0].price_before,
           price_after: newProduct[0].price_after,
           expiration_date: newProduct[0].expiration_date,
-          stock: newProduct[0].expiration_date,
+          stock: newProduct[0].stock,
           store: {
             id: newProduct[0].store_id,
             display_name: newProduct[0].store_display_name,
@@ -242,7 +242,7 @@ export default class UserController {
           price_before: newProduct[0].price_before,
           price_after: newProduct[0].price_after,
           expiration_date: newProduct[0].expiration_date,
-          stock: newProduct[0].expiration_date,
+          stock: newProduct[0].stock,
           store: {
             id: newProduct[0].store_id,
             display_name: newProduct[0].store_display_name,
