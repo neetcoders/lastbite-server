@@ -2,7 +2,7 @@ import { ParamsDictionary } from "express-serve-static-core";
 import { Request, Response } from "express";
 
 import pool from "@/database/pool";
-import { CreateUserAddressSchema } from "./address.schema";
+import { CreateUserAddressSchema, convertToGetAddressResponse } from "./address.schema";
 import { buildResponse } from "@/utils/response";
 import { createUserAddress } from "../address/address.queries";
 
@@ -19,14 +19,7 @@ export default class AddressController {
       }, pool);
 
       return res.status(201).json(
-        buildResponse({
-          id: newAddress[0].id,
-          street: newAddress[0].street,
-          longitude: newAddress[0].longitude,
-          latitude: newAddress[0].latitude,
-          created_at: newAddress[0].created_at,
-          updated_at: newAddress[0].updated_at,
-        }, true, "Address created successfully")
+        buildResponse(convertToGetAddressResponse(newAddress[0]), true, "Address created successfully")
       );
     }
     catch (err) {
