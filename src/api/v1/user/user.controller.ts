@@ -2,9 +2,9 @@ import { ParamsDictionary } from "express-serve-static-core";
 import { Request, Response } from "express";
 
 import pool from "@/database/pool";
-import { UserLoginSchema, UserRegisterSchema } from "./user.schema";
+import { UserLoginSchema, UserRegisterSchema, convertToGetUserResponse } from "./user.schema";
 import { buildResponse } from "@/utils/response";
-import { checkUserByEmail, createUser, getUserByEmailWithSecret, getUserById } from "./user.queries";
+import { checkUserByEmail, createUser, getUserByEmailWithSecret, getUserById, getUserWithAddress } from "./user.queries";
 import { hashPassword, verifyPassword } from "@/services/crypto.service";
 import { issueAuthToken } from "@/services/jwt.service";
 
@@ -86,7 +86,7 @@ export default class UserController {
 
   static async getCurrentUser(req: Request, res: Response) {
     try {
-      const currentUser = await getUserById.run({ id: req.body.payload.sub }, pool);
+      const currentUser = await getUserWithAddress.run({ id: req.body.payload.sub }, pool);
       if (!currentUser || currentUser.length === 0) {
         return res.status(401).json(
           buildResponse(null, false, "User is not logged in")
@@ -94,7 +94,7 @@ export default class UserController {
       }
 
       return res.status(200).json(
-        buildResponse(currentUser[0], true, "Current user fetched successfully")
+        buildResponse(convertToGetUserResponse(currentUser[0]), true, "Current user fetched successfully")
       );
     }
     catch (err) {

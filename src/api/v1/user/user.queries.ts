@@ -150,3 +150,54 @@ const getUserByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","r
 export const getUserById = new PreparedQuery<IGetUserByIdParams,IGetUserByIdResult>(getUserByIdIR);
 
 
+/** 'GetUserWithAddress' parameters type */
+export interface IGetUserWithAddressParams {
+  id?: string | null | void;
+}
+
+/** 'GetUserWithAddress' return type */
+export interface IGetUserWithAddressResult {
+  address_created_at: Date;
+  address_id: string;
+  address_latitude: number;
+  address_longitude: number;
+  address_street: string;
+  address_updated_at: Date;
+  birth_date: Date;
+  created_at: Date;
+  display_name: string;
+  email: string;
+  updated_at: Date;
+}
+
+/** 'GetUserWithAddress' query type */
+export interface IGetUserWithAddressQuery {
+  params: IGetUserWithAddressParams;
+  result: IGetUserWithAddressResult;
+}
+
+const getUserWithAddressIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":391,"b":393}]}],"statement":"SELECT\n    u.email,\n    u.display_name,\n    u.birth_date,\n    a.id as \"address_id\",\n    a.street as \"address_street\",\n    a.longitude as \"address_longitude\",\n    a.latitude as \"address_latitude\",\n    a.created_at as \"address_created_at\",\n    a.updated_at as \"address_updated_at\",\n    u.created_at,\n    u.updated_at\nFROM users u\nLEFT JOIN address a ON a.id = u.active_address_id\nWHERE u.id = :id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT
+ *     u.email,
+ *     u.display_name,
+ *     u.birth_date,
+ *     a.id as "address_id",
+ *     a.street as "address_street",
+ *     a.longitude as "address_longitude",
+ *     a.latitude as "address_latitude",
+ *     a.created_at as "address_created_at",
+ *     a.updated_at as "address_updated_at",
+ *     u.created_at,
+ *     u.updated_at
+ * FROM users u
+ * LEFT JOIN address a ON a.id = u.active_address_id
+ * WHERE u.id = :id
+ * ```
+ */
+export const getUserWithAddress = new PreparedQuery<IGetUserWithAddressParams,IGetUserWithAddressResult>(getUserWithAddressIR);
+
+

@@ -34,3 +34,21 @@ SELECT
     updated_at
 FROM users
 WHERE id = :id;
+
+
+/* @name GetUserWithAddress */
+SELECT
+    u.email,
+    u.display_name,
+    u.birth_date,
+    a.id as "address_id",
+    a.street as "address_street",
+    a.longitude as "address_longitude",
+    a.latitude as "address_latitude",
+    a.created_at as "address_created_at",
+    a.updated_at as "address_updated_at",
+    u.created_at,
+    u.updated_at
+FROM users u
+LEFT JOIN address a ON a.id = u.active_address_id
+WHERE u.id = :id;
