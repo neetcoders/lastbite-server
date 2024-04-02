@@ -13,11 +13,11 @@ RETURNING id, street, longitude, latitude, created_at, updated_at;
 */
 INSERT INTO address (street, longitude, latitude, user_id)
 VALUES :address
-RETURNING id, street, longitude, latitude, user_id, created_at, updated_at;
+RETURNING id, street, longitude, latitude, created_at, updated_at;
 
 
 /* @name GetAddressByID */
-SELECT id, street, longitude, latitude, user_id, created_at, updated_at
+SELECT id, street, longitude, latitude, created_at, updated_at
 FROM address
 WHERE
     id = :id
@@ -25,7 +25,7 @@ WHERE
 
 
 /* @name GetAllUserAddresses */
-SELECT id, street, longitude, latitude, user_id, created_at, updated_at
+SELECT id, street, longitude, latitude, created_at, updated_at
 FROM address
 WHERE user_id = :user_id;
 
@@ -39,7 +39,7 @@ SET
 WHERE
     id = :id
     AND user_id = :user_id
-RETURNING id, street, longitude, latitude, user_id, created_at, updated_at;
+RETURNING id, street, longitude, latitude, created_at, updated_at;
 
 
 /* @name DeleteUserAddressByID */
