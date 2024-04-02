@@ -12,15 +12,10 @@ VALUES :user
 RETURNING id, email, display_name, birth_date, created_at, updated_at;
 
 
-/* @name GetUserByEmailWithSecret */
+/* @name GetUserSecretByEmail */
 SELECT
     id,
-    email,
-    display_name,
-    user_secret,
-    birth_date,
-    created_at,
-    updated_at
+    user_secret
 FROM users
 WHERE email = :email;
 

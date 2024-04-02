@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 import pool from "@/database/pool";
 import { UserLoginSchema, UserRegisterSchema, convertToGetUserResponse } from "./user.schema";
 import { buildResponse } from "@/utils/response";
-import { checkUserByEmail, createUser, getUserByEmailWithSecret, getUserById, getUserWithAddress } from "./user.queries";
+import { checkUserByEmail, createUser, getUserSecretByEmail, getUserWithAddress } from "./user.queries";
 import { hashPassword, verifyPassword } from "@/services/crypto.service";
 import { issueAuthToken } from "@/services/jwt.service";
 
@@ -44,7 +44,7 @@ export default class UserController {
 
   static async loginUser(req: Request<ParamsDictionary, any, UserLoginSchema>, res: Response) {
     try {
-      const requestedUser = await getUserByEmailWithSecret.run({ email: req.body.email }, pool);
+      const requestedUser = await getUserSecretByEmail.run({ email: req.body.email }, pool);
       
       if (!requestedUser || requestedUser.length === 0) {
         return res.status(404).json(
@@ -60,17 +60,12 @@ export default class UserController {
         );
       }
 
+      const fullUser = await getUserWithAddress.run({ id: requestedUser[0].id }, pool);
       const token = issueAuthToken(requestedUser[0].id);
 
       return res.status(200).json(
         buildResponse({
-          user: {
-            email: requestedUser[0].email,
-            display_name: requestedUser[0].display_name,
-            birth_date: requestedUser[0].birth_date,
-            created_at: requestedUser[0].created_at,
-            updated_at: requestedUser[0].updated_at,
-          },
+          user: convertToGetUserResponse(fullUser[0]),
           authorization: token,
         }, true, "User successfully logged in")
       )

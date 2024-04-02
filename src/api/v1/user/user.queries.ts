@@ -70,46 +70,36 @@ const createUserIR: any = {"usedParamSet":{"user":true},"params":[{"name":"user"
 export const createUser = new PreparedQuery<ICreateUserParams,ICreateUserResult>(createUserIR);
 
 
-/** 'GetUserByEmailWithSecret' parameters type */
-export interface IGetUserByEmailWithSecretParams {
+/** 'GetUserSecretByEmail' parameters type */
+export interface IGetUserSecretByEmailParams {
   email?: string | null | void;
 }
 
-/** 'GetUserByEmailWithSecret' return type */
-export interface IGetUserByEmailWithSecretResult {
-  birth_date: Date;
-  created_at: Date;
-  display_name: string;
-  email: string;
+/** 'GetUserSecretByEmail' return type */
+export interface IGetUserSecretByEmailResult {
   id: string;
-  updated_at: Date;
   user_secret: string;
 }
 
-/** 'GetUserByEmailWithSecret' query type */
-export interface IGetUserByEmailWithSecretQuery {
-  params: IGetUserByEmailWithSecretParams;
-  result: IGetUserByEmailWithSecretResult;
+/** 'GetUserSecretByEmail' query type */
+export interface IGetUserSecretByEmailQuery {
+  params: IGetUserSecretByEmailParams;
+  result: IGetUserSecretByEmailResult;
 }
 
-const getUserByEmailWithSecretIR: any = {"usedParamSet":{"email":true},"params":[{"name":"email","required":false,"transform":{"type":"scalar"},"locs":[{"a":133,"b":138}]}],"statement":"SELECT\n    id,\n    email,\n    display_name,\n    user_secret,\n    birth_date,\n    created_at,\n    updated_at\nFROM users\nWHERE email = :email"};
+const getUserSecretByEmailIR: any = {"usedParamSet":{"email":true},"params":[{"name":"email","required":false,"transform":{"type":"scalar"},"locs":[{"a":56,"b":61}]}],"statement":"SELECT\n    id,\n    user_secret\nFROM users\nWHERE email = :email"};
 
 /**
  * Query generated from SQL:
  * ```
  * SELECT
  *     id,
- *     email,
- *     display_name,
- *     user_secret,
- *     birth_date,
- *     created_at,
- *     updated_at
+ *     user_secret
  * FROM users
  * WHERE email = :email
  * ```
  */
-export const getUserByEmailWithSecret = new PreparedQuery<IGetUserByEmailWithSecretParams,IGetUserByEmailWithSecretResult>(getUserByEmailWithSecretIR);
+export const getUserSecretByEmail = new PreparedQuery<IGetUserSecretByEmailParams,IGetUserSecretByEmailResult>(getUserSecretByEmailIR);
 
 
 /** 'GetUserById' parameters type */
