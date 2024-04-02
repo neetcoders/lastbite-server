@@ -9,7 +9,7 @@ import { checkStoreByEmail, createStore, getStoreByEmailWithSecret, getStoreById
 import { hashPassword, verifyPassword } from "@/services/crypto.service";
 import { issueAuthToken } from "@/services/jwt.service";
 
-export default class UserController {
+export default class StoreController {
   static async registerStore(req: Request<ParamsDictionary, any, StoreRegisterSchema>, res: Response) {
     try {
       const checkStore = await checkStoreByEmail.run({ email: req.body.email }, pool);

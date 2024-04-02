@@ -39,3 +39,189 @@ const createStoreAddressIR: any = {"usedParamSet":{"address":true},"params":[{"n
 export const createStoreAddress = new PreparedQuery<ICreateStoreAddressParams,ICreateStoreAddressResult>(createStoreAddressIR);
 
 
+/** 'CreateUserAddress' parameters type */
+export interface ICreateUserAddressParams {
+  address: {
+    street: string | null | void,
+    longitude: number | null | void,
+    latitude: number | null | void,
+    user_id: string | null | void
+  };
+}
+
+/** 'CreateUserAddress' return type */
+export interface ICreateUserAddressResult {
+  created_at: Date;
+  id: string;
+  latitude: number;
+  longitude: number;
+  street: string;
+  updated_at: Date;
+}
+
+/** 'CreateUserAddress' query type */
+export interface ICreateUserAddressQuery {
+  params: ICreateUserAddressParams;
+  result: ICreateUserAddressResult;
+}
+
+const createUserAddressIR: any = {"usedParamSet":{"address":true},"params":[{"name":"address","required":false,"transform":{"type":"pick_tuple","keys":[{"name":"street","required":false},{"name":"longitude","required":false},{"name":"latitude","required":false},{"name":"user_id","required":false}]},"locs":[{"a":66,"b":73}]}],"statement":"INSERT INTO address (street, longitude, latitude, user_id)\nVALUES :address\nRETURNING id, street, longitude, latitude, created_at, updated_at"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * INSERT INTO address (street, longitude, latitude, user_id)
+ * VALUES :address
+ * RETURNING id, street, longitude, latitude, created_at, updated_at
+ * ```
+ */
+export const createUserAddress = new PreparedQuery<ICreateUserAddressParams,ICreateUserAddressResult>(createUserAddressIR);
+
+
+/** 'GetAddressById' parameters type */
+export interface IGetAddressByIdParams {
+  id?: string | null | void;
+  user_id?: string | null | void;
+}
+
+/** 'GetAddressById' return type */
+export interface IGetAddressByIdResult {
+  created_at: Date;
+  id: string;
+  latitude: number;
+  longitude: number;
+  street: string;
+  updated_at: Date;
+}
+
+/** 'GetAddressById' query type */
+export interface IGetAddressByIdQuery {
+  params: IGetAddressByIdParams;
+  result: IGetAddressByIdResult;
+}
+
+const getAddressByIdIR: any = {"usedParamSet":{"id":true,"user_id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":91,"b":93}]},{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":113,"b":120}]}],"statement":"SELECT id, street, longitude, latitude, created_at, updated_at\nFROM address\nWHERE\n    id = :id\n    AND user_id = :user_id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT id, street, longitude, latitude, created_at, updated_at
+ * FROM address
+ * WHERE
+ *     id = :id
+ *     AND user_id = :user_id
+ * ```
+ */
+export const getAddressById = new PreparedQuery<IGetAddressByIdParams,IGetAddressByIdResult>(getAddressByIdIR);
+
+
+/** 'GetAllUserAddresses' parameters type */
+export interface IGetAllUserAddressesParams {
+  user_id?: string | null | void;
+}
+
+/** 'GetAllUserAddresses' return type */
+export interface IGetAllUserAddressesResult {
+  created_at: Date;
+  id: string;
+  latitude: number;
+  longitude: number;
+  street: string;
+  updated_at: Date;
+}
+
+/** 'GetAllUserAddresses' query type */
+export interface IGetAllUserAddressesQuery {
+  params: IGetAllUserAddressesParams;
+  result: IGetAllUserAddressesResult;
+}
+
+const getAllUserAddressesIR: any = {"usedParamSet":{"user_id":true},"params":[{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":92,"b":99}]}],"statement":"SELECT id, street, longitude, latitude, created_at, updated_at\nFROM address\nWHERE user_id = :user_id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT id, street, longitude, latitude, created_at, updated_at
+ * FROM address
+ * WHERE user_id = :user_id
+ * ```
+ */
+export const getAllUserAddresses = new PreparedQuery<IGetAllUserAddressesParams,IGetAllUserAddressesResult>(getAllUserAddressesIR);
+
+
+/** 'UpdateUserAddressById' parameters type */
+export interface IUpdateUserAddressByIdParams {
+  id?: string | null | void;
+  latitude?: number | null | void;
+  longitude?: number | null | void;
+  street?: string | null | void;
+  user_id?: string | null | void;
+}
+
+/** 'UpdateUserAddressById' return type */
+export interface IUpdateUserAddressByIdResult {
+  created_at: Date;
+  id: string;
+  latitude: number;
+  longitude: number;
+  street: string;
+  updated_at: Date;
+}
+
+/** 'UpdateUserAddressById' query type */
+export interface IUpdateUserAddressByIdQuery {
+  params: IUpdateUserAddressByIdParams;
+  result: IUpdateUserAddressByIdResult;
+}
+
+const updateUserAddressByIdIR: any = {"usedParamSet":{"street":true,"longitude":true,"latitude":true,"id":true,"user_id":true},"params":[{"name":"street","required":false,"transform":{"type":"scalar"},"locs":[{"a":32,"b":38}]},{"name":"longitude","required":false,"transform":{"type":"scalar"},"locs":[{"a":57,"b":66}]},{"name":"latitude","required":false,"transform":{"type":"scalar"},"locs":[{"a":84,"b":92}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":109,"b":111}]},{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":131,"b":138}]}],"statement":"UPDATE address\nSET\n    street = :street,\n    longitude = :longitude,\n    latitude = :latitude\nWHERE\n    id = :id\n    AND user_id = :user_id\nRETURNING id, street, longitude, latitude, created_at, updated_at"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE address
+ * SET
+ *     street = :street,
+ *     longitude = :longitude,
+ *     latitude = :latitude
+ * WHERE
+ *     id = :id
+ *     AND user_id = :user_id
+ * RETURNING id, street, longitude, latitude, created_at, updated_at
+ * ```
+ */
+export const updateUserAddressById = new PreparedQuery<IUpdateUserAddressByIdParams,IUpdateUserAddressByIdResult>(updateUserAddressByIdIR);
+
+
+/** 'DeleteUserAddressById' parameters type */
+export interface IDeleteUserAddressByIdParams {
+  id?: string | null | void;
+  user_id?: string | null | void;
+}
+
+/** 'DeleteUserAddressById' return type */
+export interface IDeleteUserAddressByIdResult {
+  id: string;
+}
+
+/** 'DeleteUserAddressById' query type */
+export interface IDeleteUserAddressByIdQuery {
+  params: IDeleteUserAddressByIdParams;
+  result: IDeleteUserAddressByIdResult;
+}
+
+const deleteUserAddressByIdIR: any = {"usedParamSet":{"id":true,"user_id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":35,"b":37}]},{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":57,"b":64}]}],"statement":"DELETE FROM address\nWHERE\n    id = :id\n    AND user_id = :user_id\nRETURNING id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * DELETE FROM address
+ * WHERE
+ *     id = :id
+ *     AND user_id = :user_id
+ * RETURNING id
+ * ```
+ */
+export const deleteUserAddressById = new PreparedQuery<IDeleteUserAddressByIdParams,IDeleteUserAddressByIdResult>(deleteUserAddressByIdIR);
+
+
