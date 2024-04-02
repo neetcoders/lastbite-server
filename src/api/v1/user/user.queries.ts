@@ -43,12 +43,7 @@ export interface ICreateUserParams {
 
 /** 'CreateUser' return type */
 export interface ICreateUserResult {
-  birth_date: Date;
-  created_at: Date;
-  display_name: string;
-  email: string;
   id: string;
-  updated_at: Date;
 }
 
 /** 'CreateUser' query type */
@@ -57,14 +52,14 @@ export interface ICreateUserQuery {
   result: ICreateUserResult;
 }
 
-const createUserIR: any = {"usedParamSet":{"user":true},"params":[{"name":"user","required":false,"transform":{"type":"pick_tuple","keys":[{"name":"email","required":false},{"name":"display_name","required":false},{"name":"birth_date","required":false},{"name":"user_secret","required":false}]},"locs":[{"a":72,"b":76}]}],"statement":"INSERT INTO users (email, display_name, birth_date, user_secret)\nVALUES :user\nRETURNING id, email, display_name, birth_date, created_at, updated_at"};
+const createUserIR: any = {"usedParamSet":{"user":true},"params":[{"name":"user","required":false,"transform":{"type":"pick_tuple","keys":[{"name":"email","required":false},{"name":"display_name","required":false},{"name":"birth_date","required":false},{"name":"user_secret","required":false}]},"locs":[{"a":72,"b":76}]}],"statement":"INSERT INTO users (email, display_name, birth_date, user_secret)\nVALUES :user\nRETURNING id"};
 
 /**
  * Query generated from SQL:
  * ```
  * INSERT INTO users (email, display_name, birth_date, user_secret)
  * VALUES :user
- * RETURNING id, email, display_name, birth_date, created_at, updated_at
+ * RETURNING id
  * ```
  */
 export const createUser = new PreparedQuery<ICreateUserParams,ICreateUserResult>(createUserIR);

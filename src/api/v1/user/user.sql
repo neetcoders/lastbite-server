@@ -9,7 +9,7 @@ SELECT
 */
 INSERT INTO users (email, display_name, birth_date, user_secret)
 VALUES :user
-RETURNING id, email, display_name, birth_date, created_at, updated_at;
+RETURNING id;
 
 
 /* @name GetUserSecretByEmail */

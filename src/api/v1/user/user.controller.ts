@@ -29,8 +29,10 @@ export default class UserController {
         }
       }, pool);
 
+      const fullUser = await getUserWithAddress.run({ id: newUser[0].id }, pool);
+
       return res.status(201).json(
-        buildResponse(newUser[0], true, "User registered successfully")
+        buildResponse(convertToGetUserResponse(fullUser[0]), true, "User registered successfully")
       );
     }
     catch (err) {
