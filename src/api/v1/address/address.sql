@@ -48,3 +48,14 @@ WHERE
     id = :id
     AND user_id = :user_id
 RETURNING id;
+
+
+/* @name UpdateUserActiveAddress */
+UPDATE users
+SET active_address_id = :active_address_id
+WHERE (
+    SELECT id FROM address
+    WHERE id = :active_address_id
+    AND user_id = :user_id
+) IS NOT NULL
+RETURNING active_address_id;

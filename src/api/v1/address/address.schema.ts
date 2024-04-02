@@ -36,6 +36,13 @@ export type UpdateUserAddressSchema = {
   }
 }
 
+export type UserSetActiveAddressSchema = {
+  active_address_id: string;
+  payload: {
+    sub: string;
+  }
+}
+
 
 export function convertToGetAddressResponse(address: IGetAddressByIdResult) {
   return {

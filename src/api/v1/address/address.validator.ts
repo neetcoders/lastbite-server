@@ -30,3 +30,12 @@ export function validateUpdateUserAddress() {
       .isNumeric().withMessage("Latitude must be a numeric value"),
   ];
 }
+
+
+export function valudateSetUserActiveAddress() {
+  return [
+    body("active_address_id")
+      .notEmpty().withMessage("Address ID is required")
+      .isUUID().withMessage("Address ID is not valid"),
+  ];
+}

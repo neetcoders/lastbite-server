@@ -1,10 +1,10 @@
 import { ParamsDictionary } from "express-serve-static-core";
-import { Request, Response, query } from "express";
+import { Request, Response } from "express";
 
 import pool from "@/database/pool";
-import { CreateUserAddressSchema, DeleteUserAddressSchema, GetUserAddressSchema, UpdateUserAddressSchema, convertToGetAddressResponse, convertToGetAllAddressesResponse } from "./address.schema";
+import { CreateUserAddressSchema, DeleteUserAddressSchema, GetUserAddressSchema, UpdateUserAddressSchema, UserSetActiveAddressSchema as SetUserActiveAddressSchema, convertToGetAddressResponse, convertToGetAllAddressesResponse } from "./address.schema";
 import { buildResponse } from "@/utils/response";
-import { createUserAddress, deleteUserAddressById, getAddressById, getAllUserAddresses, updateUserAddressById } from "../address/address.queries";
+import { createUserAddress, deleteUserAddressById, getAddressById, getAllUserAddresses, updateUserActiveAddress, updateUserAddressById } from "./address.queries";
 
 export default class AddressController {
   static async createUserAddress(req: Request<ParamsDictionary, any, CreateUserAddressSchema>, res: Response) {
@@ -112,6 +112,37 @@ export default class AddressController {
 
       return res.status(200).json(
         buildResponse(null, true, "Address deleted successfully")
+      );
+    }
+    catch (err) {
+      console.error(err);
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
+
+  
+  static async setActiveAddress(req: Request<ParamsDictionary, any, SetUserActiveAddressSchema>, res: Response) {
+    try {
+      const updatedUser = await updateUserActiveAddress.run({ 
+        active_address_id: req.body.active_address_id,
+        user_id: req.body.payload.sub,
+      }, pool);
+
+      if (!updatedUser || updatedUser.length === 0) {
+        return res.status(404).json(
+          buildResponse(null, false, "Address not found")
+        );
+      }
+
+      const updatedAddress = await getAddressById.run({ 
+        id: updatedUser[0].active_address_id,
+        user_id: req.body.payload.sub 
+      }, pool);
+
+      return res.status(200).json(
+        buildResponse(convertToGetAddressResponse(updatedAddress[0]), true, "Active address updated successfully")
       );
     }
     catch (err) {
