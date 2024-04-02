@@ -8,5 +8,6 @@ import { verifyAuthToken } from "@/services/jwt.service";
 const router = Router();
 
 router.post("/new", verifyAuthToken, validateCreateUserAddress(), validate, AddressController.createUserAddress);
+router.get("/:address_id", verifyAuthToken, AddressController.getUserAddress);
 
 export default router;

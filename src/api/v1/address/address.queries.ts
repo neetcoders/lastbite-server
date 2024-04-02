@@ -79,3 +79,41 @@ const createUserAddressIR: any = {"usedParamSet":{"address":true},"params":[{"na
 export const createUserAddress = new PreparedQuery<ICreateUserAddressParams,ICreateUserAddressResult>(createUserAddressIR);
 
 
+/** 'GetAddressById' parameters type */
+export interface IGetAddressByIdParams {
+  id?: string | null | void;
+  user_id?: string | null | void;
+}
+
+/** 'GetAddressById' return type */
+export interface IGetAddressByIdResult {
+  created_at: Date;
+  id: string;
+  latitude: number;
+  longitude: number;
+  street: string;
+  updated_at: Date;
+  user_id: string | null;
+}
+
+/** 'GetAddressById' query type */
+export interface IGetAddressByIdQuery {
+  params: IGetAddressByIdParams;
+  result: IGetAddressByIdResult;
+}
+
+const getAddressByIdIR: any = {"usedParamSet":{"id":true,"user_id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":100,"b":102}]},{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":122,"b":129}]}],"statement":"SELECT id, street, longitude, latitude, user_id, created_at, updated_at\nFROM address\nWHERE\n    id = :id\n    AND user_id = :user_id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT id, street, longitude, latitude, user_id, created_at, updated_at
+ * FROM address
+ * WHERE
+ *     id = :id
+ *     AND user_id = :user_id
+ * ```
+ */
+export const getAddressById = new PreparedQuery<IGetAddressByIdParams,IGetAddressByIdResult>(getAddressByIdIR);
+
+

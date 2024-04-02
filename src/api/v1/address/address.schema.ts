@@ -9,6 +9,12 @@ export type CreateUserAddressSchema = {
   }
 }
 
+export type GetUserAddressSchema = {
+  payload: {
+    sub: string;
+  }
+}
+
 
 export function convertToGetAddressResponse(address: IGetAddressByIdResult) {
   return {

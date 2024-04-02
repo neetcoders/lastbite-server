@@ -14,3 +14,11 @@ RETURNING id, street, longitude, latitude, created_at, updated_at;
 INSERT INTO address (street, longitude, latitude, user_id)
 VALUES :address
 RETURNING id, street, longitude, latitude, user_id, created_at, updated_at;
+
+
+/* @name GetAddressByID */
+SELECT id, street, longitude, latitude, user_id, created_at, updated_at
+FROM address
+WHERE
+    id = :id
+    AND user_id = :user_id;
