@@ -162,3 +162,35 @@ const updateUserAddressByIdIR: any = {"usedParamSet":{"street":true,"longitude":
 export const updateUserAddressById = new PreparedQuery<IUpdateUserAddressByIdParams,IUpdateUserAddressByIdResult>(updateUserAddressByIdIR);
 
 
+/** 'DeleteUserAddressById' parameters type */
+export interface IDeleteUserAddressByIdParams {
+  id?: string | null | void;
+  user_id?: string | null | void;
+}
+
+/** 'DeleteUserAddressById' return type */
+export interface IDeleteUserAddressByIdResult {
+  id: string;
+}
+
+/** 'DeleteUserAddressById' query type */
+export interface IDeleteUserAddressByIdQuery {
+  params: IDeleteUserAddressByIdParams;
+  result: IDeleteUserAddressByIdResult;
+}
+
+const deleteUserAddressByIdIR: any = {"usedParamSet":{"id":true,"user_id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":35,"b":37}]},{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":57,"b":64}]}],"statement":"DELETE FROM address\nWHERE\n    id = :id\n    AND user_id = :user_id\nRETURNING id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * DELETE FROM address
+ * WHERE
+ *     id = :id
+ *     AND user_id = :user_id
+ * RETURNING id
+ * ```
+ */
+export const deleteUserAddressById = new PreparedQuery<IDeleteUserAddressByIdParams,IDeleteUserAddressByIdResult>(deleteUserAddressByIdIR);
+
+

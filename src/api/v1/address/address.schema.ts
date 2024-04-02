@@ -15,6 +15,14 @@ export type GetUserAddressSchema = {
   }
 }
 
+
+export type DeleteUserAddressSchema = {
+  payload: {
+    sub: string;
+  }
+}
+
+
 export type UpdateUserAddressSchema = {
   street: string;
   longitude: number;

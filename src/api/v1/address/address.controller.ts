@@ -2,9 +2,9 @@ import { ParamsDictionary } from "express-serve-static-core";
 import { Request, Response, query } from "express";
 
 import pool from "@/database/pool";
-import { CreateUserAddressSchema, GetUserAddressSchema, UpdateUserAddressSchema, convertToGetAddressResponse } from "./address.schema";
+import { CreateUserAddressSchema, DeleteUserAddressSchema, GetUserAddressSchema, UpdateUserAddressSchema, convertToGetAddressResponse } from "./address.schema";
 import { buildResponse } from "@/utils/response";
-import { createUserAddress, getAddressById, updateUserAddressById } from "../address/address.queries";
+import { createUserAddress, deleteUserAddressById, getAddressById, updateUserAddressById } from "../address/address.queries";
 
 export default class AddressController {
   static async createUserAddress(req: Request<ParamsDictionary, any, CreateUserAddressSchema>, res: Response) {
@@ -72,6 +72,29 @@ export default class AddressController {
 
       return res.status(200).json(
         buildResponse(convertToGetAddressResponse(newAddress[0]), true, "Address updated successfully")
+      );
+    }
+    catch (err) {
+      console.error(err);
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
+
+
+  static async deleteUserAddress(req: Request<ParamsDictionary, any, DeleteUserAddressSchema>, res: Response) {
+    try {
+      const deletedAddress = await deleteUserAddressById.run({ id: req.params.address_id, user_id: req.body.payload.sub }, pool);
+
+      if (!deletedAddress || deletedAddress.length === 0) {
+        return res.status(404).json(
+          buildResponse(null, false, "Address not found")
+        );
+      }
+
+      return res.status(200).json(
+        buildResponse(null, true, "Address deleted successfully")
       );
     }
     catch (err) {

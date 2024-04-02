@@ -10,5 +10,6 @@ const router = Router();
 router.post("/new", verifyAuthToken, validateCreateUserAddress(), validate, AddressController.createUserAddress);
 router.get("/:address_id", verifyAuthToken, AddressController.getUserAddress);
 router.put("/:address_id", verifyAuthToken, validateUpdateUserAddress(), validate, AddressController.updateUserAddress);
+router.delete("/:address_id", verifyAuthToken, AddressController.deleteUserAddress);
 
 export default router;
