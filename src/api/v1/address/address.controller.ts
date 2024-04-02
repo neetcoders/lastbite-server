@@ -2,9 +2,9 @@ import { ParamsDictionary } from "express-serve-static-core";
 import { Request, Response, query } from "express";
 
 import pool from "@/database/pool";
-import { CreateUserAddressSchema, DeleteUserAddressSchema, GetUserAddressSchema, UpdateUserAddressSchema, convertToGetAddressResponse } from "./address.schema";
+import { CreateUserAddressSchema, DeleteUserAddressSchema, GetUserAddressSchema, UpdateUserAddressSchema, convertToGetAddressResponse, convertToGetAllAddressesResponse } from "./address.schema";
 import { buildResponse } from "@/utils/response";
-import { createUserAddress, deleteUserAddressById, getAddressById, updateUserAddressById } from "../address/address.queries";
+import { createUserAddress, deleteUserAddressById, getAddressById, getAllUserAddresses, updateUserAddressById } from "../address/address.queries";
 
 export default class AddressController {
   static async createUserAddress(req: Request<ParamsDictionary, any, CreateUserAddressSchema>, res: Response) {
@@ -43,6 +43,23 @@ export default class AddressController {
 
       return res.status(200).json(
         buildResponse(convertToGetAddressResponse(address[0]), true, "Address fetched successfully")
+      );
+    }
+    catch (err) {
+      console.error(err);
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
+
+
+  static async getAllUserAddress(req: Request<ParamsDictionary, any, GetUserAddressSchema>, res: Response) {
+    try {
+      const address = await getAllUserAddresses.run({ user_id: req.body.payload.sub }, pool);
+      
+      return res.status(200).json(
+        buildResponse(convertToGetAllAddressesResponse(address), true, "Address fetched successfully")
       );
     }
     catch (err) {

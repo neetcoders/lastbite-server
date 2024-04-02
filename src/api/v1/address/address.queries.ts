@@ -117,6 +117,41 @@ const getAddressByIdIR: any = {"usedParamSet":{"id":true,"user_id":true},"params
 export const getAddressById = new PreparedQuery<IGetAddressByIdParams,IGetAddressByIdResult>(getAddressByIdIR);
 
 
+/** 'GetAllUserAddresses' parameters type */
+export interface IGetAllUserAddressesParams {
+  user_id?: string | null | void;
+}
+
+/** 'GetAllUserAddresses' return type */
+export interface IGetAllUserAddressesResult {
+  created_at: Date;
+  id: string;
+  latitude: number;
+  longitude: number;
+  street: string;
+  updated_at: Date;
+  user_id: string | null;
+}
+
+/** 'GetAllUserAddresses' query type */
+export interface IGetAllUserAddressesQuery {
+  params: IGetAllUserAddressesParams;
+  result: IGetAllUserAddressesResult;
+}
+
+const getAllUserAddressesIR: any = {"usedParamSet":{"user_id":true},"params":[{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":101,"b":108}]}],"statement":"SELECT id, street, longitude, latitude, user_id, created_at, updated_at\nFROM address\nWHERE user_id = :user_id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT id, street, longitude, latitude, user_id, created_at, updated_at
+ * FROM address
+ * WHERE user_id = :user_id
+ * ```
+ */
+export const getAllUserAddresses = new PreparedQuery<IGetAllUserAddressesParams,IGetAllUserAddressesResult>(getAllUserAddressesIR);
+
+
 /** 'UpdateUserAddressById' parameters type */
 export interface IUpdateUserAddressByIdParams {
   id?: string | null | void;

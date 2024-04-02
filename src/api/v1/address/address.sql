@@ -24,6 +24,12 @@ WHERE
     AND user_id = :user_id;
 
 
+/* @name GetAllUserAddresses */
+SELECT id, street, longitude, latitude, user_id, created_at, updated_at
+FROM address
+WHERE user_id = :user_id;
+
+
 /* @name UpdateUserAddressByID */
 UPDATE address
 SET
