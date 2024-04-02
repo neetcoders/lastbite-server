@@ -2,9 +2,9 @@ import { ParamsDictionary } from "express-serve-static-core";
 import { Request, Response, query } from "express";
 
 import pool from "@/database/pool";
-import { CreateUserAddressSchema, GetUserAddressSchema, convertToGetAddressResponse } from "./address.schema";
+import { CreateUserAddressSchema, GetUserAddressSchema, UpdateUserAddressSchema, convertToGetAddressResponse } from "./address.schema";
 import { buildResponse } from "@/utils/response";
-import { createUserAddress, getAddressById } from "../address/address.queries";
+import { createUserAddress, getAddressById, updateUserAddressById } from "../address/address.queries";
 
 export default class AddressController {
   static async createUserAddress(req: Request<ParamsDictionary, any, CreateUserAddressSchema>, res: Response) {
@@ -43,6 +43,35 @@ export default class AddressController {
 
       return res.status(200).json(
         buildResponse(convertToGetAddressResponse(address[0]), true, "Address fetched successfully")
+      );
+    }
+    catch (err) {
+      console.error(err);
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
+
+
+  static async updateUserAddress(req: Request<ParamsDictionary, any, UpdateUserAddressSchema>, res: Response) {
+    try {
+      const newAddress = await updateUserAddressById.run({
+        id: req.params.address_id, 
+        street: req.body.street,
+        latitude: req.body.latitude,
+        longitude: req.body.longitude,
+        user_id: req.body.payload.sub,
+      }, pool);
+
+      if (!newAddress || newAddress.length === 0) {
+        return res.status(404).json(
+          buildResponse(null, false, "Address not found")
+        );
+      }
+
+      return res.status(200).json(
+        buildResponse(convertToGetAddressResponse(newAddress[0]), true, "Address updated successfully")
       );
     }
     catch (err) {

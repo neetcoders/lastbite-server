@@ -15,6 +15,15 @@ export type GetUserAddressSchema = {
   }
 }
 
+export type UpdateUserAddressSchema = {
+  street: string;
+  longitude: number;
+  latitude: number;
+  payload: {
+    sub: string;
+  }
+}
+
 
 export function convertToGetAddressResponse(address: IGetAddressByIdResult) {
   return {

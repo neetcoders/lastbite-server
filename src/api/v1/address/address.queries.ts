@@ -117,3 +117,48 @@ const getAddressByIdIR: any = {"usedParamSet":{"id":true,"user_id":true},"params
 export const getAddressById = new PreparedQuery<IGetAddressByIdParams,IGetAddressByIdResult>(getAddressByIdIR);
 
 
+/** 'UpdateUserAddressById' parameters type */
+export interface IUpdateUserAddressByIdParams {
+  id?: string | null | void;
+  latitude?: number | null | void;
+  longitude?: number | null | void;
+  street?: string | null | void;
+  user_id?: string | null | void;
+}
+
+/** 'UpdateUserAddressById' return type */
+export interface IUpdateUserAddressByIdResult {
+  created_at: Date;
+  id: string;
+  latitude: number;
+  longitude: number;
+  street: string;
+  updated_at: Date;
+  user_id: string | null;
+}
+
+/** 'UpdateUserAddressById' query type */
+export interface IUpdateUserAddressByIdQuery {
+  params: IUpdateUserAddressByIdParams;
+  result: IUpdateUserAddressByIdResult;
+}
+
+const updateUserAddressByIdIR: any = {"usedParamSet":{"street":true,"longitude":true,"latitude":true,"id":true,"user_id":true},"params":[{"name":"street","required":false,"transform":{"type":"scalar"},"locs":[{"a":32,"b":38}]},{"name":"longitude","required":false,"transform":{"type":"scalar"},"locs":[{"a":57,"b":66}]},{"name":"latitude","required":false,"transform":{"type":"scalar"},"locs":[{"a":84,"b":92}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":109,"b":111}]},{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":131,"b":138}]}],"statement":"UPDATE address\nSET\n    street = :street,\n    longitude = :longitude,\n    latitude = :latitude\nWHERE\n    id = :id\n    AND user_id = :user_id\nRETURNING id, street, longitude, latitude, user_id, created_at, updated_at"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE address
+ * SET
+ *     street = :street,
+ *     longitude = :longitude,
+ *     latitude = :latitude
+ * WHERE
+ *     id = :id
+ *     AND user_id = :user_id
+ * RETURNING id, street, longitude, latitude, user_id, created_at, updated_at
+ * ```
+ */
+export const updateUserAddressById = new PreparedQuery<IUpdateUserAddressByIdParams,IUpdateUserAddressByIdResult>(updateUserAddressByIdIR);
+
+

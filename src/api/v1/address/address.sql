@@ -22,3 +22,15 @@ FROM address
 WHERE
     id = :id
     AND user_id = :user_id;
+
+
+/* @name UpdateUserAddressByID */
+UPDATE address
+SET
+    street = :street,
+    longitude = :longitude,
+    latitude = :latitude
+WHERE
+    id = :id
+    AND user_id = :user_id
+RETURNING id, street, longitude, latitude, user_id, created_at, updated_at;
