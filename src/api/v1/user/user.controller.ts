@@ -49,7 +49,7 @@ export default class UserController {
       const requestedUser = await getUserSecretByEmail.run({ email: req.body.email }, pool);
       
       if (!requestedUser || requestedUser.length === 0) {
-        return res.status(404).json(
+        return res.status(401).json(
           buildResponse(null, false, "Email or password does not match")
         );
       }
@@ -57,7 +57,7 @@ export default class UserController {
       const hashedPassword = requestedUser[0].user_secret;
       const verified = await verifyPassword(hashedPassword, req.body.password);
       if (!verified) {
-        return res.status(404).json(
+        return res.status(401).json(
           buildResponse(null, false, "Email or password does not match")
         );
       }
