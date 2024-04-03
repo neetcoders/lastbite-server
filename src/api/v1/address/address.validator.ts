@@ -32,7 +32,7 @@ export function validateUpdateUserAddress() {
 }
 
 
-export function valudateSetUserActiveAddress() {
+export function validateSetUserActiveAddress() {
   return [
     body("active_address_id")
       .notEmpty().withMessage("Address ID is required")

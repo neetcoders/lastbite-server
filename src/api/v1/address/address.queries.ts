@@ -285,3 +285,48 @@ const updateUserActiveAddressIR: any = {"usedParamSet":{"active_address_id":true
 export const updateUserActiveAddress = new PreparedQuery<IUpdateUserActiveAddressParams,IUpdateUserActiveAddressResult>(updateUserActiveAddressIR);
 
 
+/** 'GetUserActiveAddress' parameters type */
+export interface IGetUserActiveAddressParams {
+  user_id?: string | null | void;
+}
+
+/** 'GetUserActiveAddress' return type */
+export interface IGetUserActiveAddressResult {
+  created_at: Date;
+  id: string;
+  latitude: number | null;
+  longitude: number | null;
+  street: string;
+  updated_at: Date;
+}
+
+/** 'GetUserActiveAddress' query type */
+export interface IGetUserActiveAddressQuery {
+  params: IGetUserActiveAddressParams;
+  result: IGetUserActiveAddressResult;
+}
+
+const getUserActiveAddressIR: any = {"usedParamSet":{"user_id":true},"params":[{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":242,"b":249}]}],"statement":"SELECT\n    id, \n    street, \n    ST_X(coordinates::geometry) as \"longitude\",\n    ST_Y(coordinates::geometry) as \"latitude\", \n    created_at, \n    updated_at\nFROM address\nWHERE id = (\n    SELECT active_address_id\n    FROM users\n    WHERE id = :user_id\n    LIMIT 1\n)"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT
+ *     id, 
+ *     street, 
+ *     ST_X(coordinates::geometry) as "longitude",
+ *     ST_Y(coordinates::geometry) as "latitude", 
+ *     created_at, 
+ *     updated_at
+ * FROM address
+ * WHERE id = (
+ *     SELECT active_address_id
+ *     FROM users
+ *     WHERE id = :user_id
+ *     LIMIT 1
+ * )
+ * ```
+ */
+export const getUserActiveAddress = new PreparedQuery<IGetUserActiveAddressParams,IGetUserActiveAddressResult>(getUserActiveAddressIR);
+
+

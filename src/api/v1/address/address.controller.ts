@@ -2,9 +2,9 @@ import { ParamsDictionary } from "express-serve-static-core";
 import { Request, Response } from "express";
 
 import pool from "@/database/pool";
-import { CreateUserAddressSchema, DeleteUserAddressSchema, GetUserAddressSchema, UpdateUserAddressSchema, UserSetActiveAddressSchema as SetUserActiveAddressSchema, convertToGetAddressResponse, convertToGetAllAddressesResponse } from "./address.schema";
+import { CreateUserAddressSchema, DeleteUserAddressSchema, GetUserAddressSchema, UpdateUserAddressSchema, UserSetActiveAddressSchema, convertToGetAddressResponse, convertToGetAllAddressesResponse, UserGetActiveAddressSchema } from "./address.schema";
 import { buildResponse } from "@/utils/response";
-import { createUserAddress, deleteUserAddressById, getAddressById, getAllUserAddresses, updateUserActiveAddress, updateUserAddressById } from "./address.queries";
+import { createUserAddress, deleteUserAddressById, getAddressById, getAllUserAddresses, getUserActiveAddress, updateUserActiveAddress, updateUserAddressById } from "./address.queries";
 
 export default class AddressController {
   static async createUserAddress(req: Request<ParamsDictionary, any, CreateUserAddressSchema>, res: Response) {
@@ -121,7 +121,7 @@ export default class AddressController {
   }
 
   
-  static async setActiveAddress(req: Request<ParamsDictionary, any, SetUserActiveAddressSchema>, res: Response) {
+  static async setActiveAddress(req: Request<ParamsDictionary, any, UserSetActiveAddressSchema>, res: Response) {
     try {
       const updatedUser = await updateUserActiveAddress.run({ 
         active_address_id: req.body.active_address_id,
@@ -147,6 +147,29 @@ export default class AddressController {
       console.error(err);
       return res.status(500).json(
         buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
+
+
+  static async getActiveAddress(req: Request<ParamsDictionary, any, UserGetActiveAddressSchema>, res: Response) {
+    try {
+      const activeAddress = await getUserActiveAddress.run({ user_id: req.body.payload.sub }, pool);
+
+      if (!activeAddress || activeAddress.length === 0) {
+        return res.status(200).json(
+          buildResponse(null, true, "Active address fetched successfully")
+        );
+      }
+
+      return res.status(200).json(
+        buildResponse(convertToGetAddressResponse(activeAddress[0]), true, "Active address fetched successfully")
+      );
+    }
+    catch (err) {
+      console.error(err);
+      return res.status(500).json(
+        buildResponse(null, false, req.body)
       );
     }
   }

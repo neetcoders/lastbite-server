@@ -82,3 +82,20 @@ WHERE id = (
     AND user_id = :user_id
 )
 RETURNING active_address_id;
+
+
+/* @name GetUserActiveAddress */
+SELECT
+    id, 
+    street, 
+    ST_X(coordinates::geometry) as "longitude",
+    ST_Y(coordinates::geometry) as "latitude", 
+    created_at, 
+    updated_at
+FROM address
+WHERE id = (
+    SELECT active_address_id
+    FROM users
+    WHERE id = :user_id
+    LIMIT 1
+);

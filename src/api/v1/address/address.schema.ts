@@ -44,6 +44,13 @@ export type UserSetActiveAddressSchema = {
 }
 
 
+export type UserGetActiveAddressSchema = {
+  payload: {
+    sub: string;
+  }
+}
+
+
 export function convertToGetAddressResponse(address: IGetAddressByIdResult) {
   return {
     id: address.id,
