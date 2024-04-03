@@ -80,8 +80,8 @@ export default class UserController {
     try {
       const storeID = await getProductOwnerById.run({ id: req.params.product_id }, pool);
       if (!storeID || storeID.length !== 1 || storeID[0].store_id !== req.body.payload.sub) {
-        return res.status(403).json(
-          buildResponse(null, false, "Access denied")
+        return res.status(404).json(
+          buildResponse(null, false, "Product does not exist")
         );
       }
 
@@ -129,8 +129,8 @@ export default class UserController {
     try {
       const storeID = await getProductOwnerById.run({ id: req.params.product_id }, pool);
       if (!storeID || storeID.length !== 1 || storeID[0].store_id !== req.body.payload.sub) {
-        return res.status(403).json(
-          buildResponse(null, false, "Access denied")
+        return res.status(404).json(
+          buildResponse(null, false, "Product does not exist")
         );
       }
 
@@ -165,8 +165,8 @@ export default class UserController {
     try {
       const storeID = await getProductOwnerById.run({ id: req.params.product_id }, pool);
       if (!storeID || storeID.length !== 1 || storeID[0].store_id !== req.body.payload.sub) {
-        return res.status(403).json(
-          buildResponse(null, false, "Access denied")
+        return res.status(404).json(
+          buildResponse(null, false, "Product does not exist")
         );
       }
 
