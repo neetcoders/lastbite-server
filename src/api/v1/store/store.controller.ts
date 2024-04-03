@@ -2,10 +2,10 @@ import { ParamsDictionary } from "express-serve-static-core";
 import { Request, Response } from "express";
 
 import pool from "@/database/pool";
-import { StoreLoginSchema, StoreRegisterSchema } from "./store.schema";
+import { StoreLoginSchema, StoreRegisterSchema, convertToGetStoreResponse } from "./store.schema";
 import { buildResponse } from "@/utils/response";
 import { createStoreAddress } from "../address/address.queries";
-import { checkStoreByEmail, createStore, getStoreByEmailWithSecret, getStoreById } from "./store.queries";
+import { checkStoreByEmail, createStore, getStoreById, getStoreSecretByEmail } from "./store.queries";
 import { hashPassword, verifyPassword } from "@/services/crypto.service";
 import { issueAuthToken } from "@/services/jwt.service";
 
@@ -38,21 +38,12 @@ export default class StoreController {
         }
       }, pool);
 
+      const fullStore = await getStoreById.run({ id: newStore[0].id }, pool);
+
       pool.query("COMMIT");
 
       return res.status(201).json(
-        buildResponse({
-          email: newStore[0].email,
-          display_name: newStore[0].display_name,
-          address: {
-            street: newAddress[0].street,
-            coordinates: newAddress[0].coordinates,
-            created_at: newAddress[0].created_at,
-            updated_at: newAddress[0].updated_at,
-          },
-          created_at: newStore[0].created_at,
-          updated_at: newStore[0].created_at,
-        }, true, "Store registered successfully")
+        buildResponse(convertToGetStoreResponse(fullStore[0]), true, "Store registered successfully")
       );
     }
     catch (err) {
@@ -67,7 +58,7 @@ export default class StoreController {
 
   static async loginStore(req: Request<ParamsDictionary, any, StoreLoginSchema>, res: Response) {
     try {
-      const requestedStore = await getStoreByEmailWithSecret.run({ email: req.body.email }, pool);
+      const requestedStore = await getStoreSecretByEmail.run({ email: req.body.email }, pool);
       
       if (!requestedStore || requestedStore.length === 0) {
         return res.status(404).json(
@@ -83,23 +74,12 @@ export default class StoreController {
         );
       }
 
+      const fullStore = await getStoreById.run({ id: requestedStore[0].id }, pool);
       const token = issueAuthToken(requestedStore[0].id);
 
       return res.status(200).json(
         buildResponse({
-          store: {
-            email: requestedStore[0].email,
-            display_name: requestedStore[0].display_name,
-            bio: requestedStore[0].bio,
-            address: {
-              street: requestedStore[0].street,
-              coordinates: requestedStore[0].coordinates,
-              created_at: requestedStore[0].address_created_at,
-              updated_at: requestedStore[0].adress_updated_at,
-            },
-            created_at: requestedStore[0].created_at,
-            updated_at: requestedStore[0].updated_at,
-          },
+          store: convertToGetStoreResponse(fullStore[0]),
           authorization: token,
         }, true, "Store successfully logged in")
       )
@@ -123,19 +103,7 @@ export default class StoreController {
       }
 
       return res.status(200).json(
-        buildResponse({
-          email: currentStore[0].email,
-          display_name: currentStore[0].display_name,
-          bio: currentStore[0].bio,
-          address: {
-            street: currentStore[0].street,
-            coordinates: currentStore[0].coordinates,
-            created_at: currentStore[0].address_created_at,
-            updated_at: currentStore[0].adress_updated_at,
-          },
-          created_at: currentStore[0].created_at,
-          updated_at: currentStore[0].updated_at,
-        }, true, "Current store fetched successfully"),
+        buildResponse(convertToGetStoreResponse(currentStore[0]), true, "Current store fetched successfully"),
       );
     }
     

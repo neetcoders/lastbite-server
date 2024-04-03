@@ -1,17 +1,35 @@
 /* @name CreateStoreAddress */
 INSERT INTO address (street, coordinates)
 VALUES (:street, ST_MakePoint(:longitude, :latitude))
-RETURNING id, street, coordinates, created_at, updated_at;
+RETURNING 
+    id, 
+    street,
+    ST_X(coordinates::geometry) as "longitude",
+    ST_Y(coordinates::geometry) as "latitude",
+    created_at,
+    updated_at;
 
 
 /* @name CreateUserAddress */
 INSERT INTO address (street, coordinates, user_id)
 VALUES (:street, ST_MakePoint(:longitude, :latitude), :user_id)
-RETURNING id, street, coordinates, created_at, updated_at;
+RETURNING
+    id, 
+    street,
+    ST_X(coordinates::geometry) as "longitude",
+    ST_Y(coordinates::geometry) as "latitude",
+    created_at,
+    updated_at;
 
 
 /* @name GetAddressByID */
-SELECT id, street, coordinates, created_at, updated_at
+SELECT 
+    id, 
+    street, 
+    ST_X(coordinates::geometry) as "longitude",
+    ST_Y(coordinates::geometry) as "latitude", 
+    created_at, 
+    updated_at
 FROM address
 WHERE
     id = :id
@@ -19,7 +37,13 @@ WHERE
 
 
 /* @name GetAllUserAddresses */
-SELECT id, street, coordinates, created_at, updated_at
+SELECT 
+    id, 
+    street, 
+    ST_X(coordinates::geometry) as "longitude",
+    ST_Y(coordinates::geometry) as "latitude",
+    created_at, 
+    updated_at
 FROM address
 WHERE user_id = :user_id;
 
@@ -32,7 +56,13 @@ SET
 WHERE
     id = :id
     AND user_id = :user_id
-RETURNING id, street, coordinates, created_at, updated_at;
+RETURNING
+    id, 
+    street,
+    ST_X(coordinates::geometry) as "longitude",
+    ST_Y(coordinates::geometry) as "latitude",
+    created_at,
+    updated_at;
 
 
 /* @name DeleteUserAddressByID */

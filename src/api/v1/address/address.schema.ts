@@ -48,7 +48,8 @@ export function convertToGetAddressResponse(address: IGetAddressByIdResult) {
   return {
     id: address.id,
     street: address.street,
-    coordinates: address.coordinates,
+    longitude: address.longitude,
+    latitude: address.latitude,
     created_at: address.created_at,
     updated_at: address.updated_at,
   }
@@ -58,7 +59,8 @@ export function convertToGetAllAddressesResponse(addresses: IGetAddressByIdResul
   return addresses.map((address) => ({
     id: address.id,
     street: address.street,
-    coordinates: address.coordinates,
+    longitude: address.longitude,
+    latitude: address.latitude,
     created_at: address.created_at,
     updated_at: address.updated_at,
   }));
