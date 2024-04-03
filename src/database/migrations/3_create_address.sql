@@ -1,10 +1,11 @@
 -- Up Migration
 
+CREATE EXTENSION IF NOT EXISTS postgis;
+
 CREATE TABLE address (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     street TEXT NOT NULL,
-    longitude FLOAT NOT NULL,
-    latitude FLOAT NOT NULL,
+    coordinates GEOGRAPHY (POINT, 4326) NOT NULL,
     user_id UUID NULL,
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     updated_at TIMESTAMP NOT NULL DEFAULT now(),
@@ -13,7 +14,7 @@ CREATE TABLE address (
 );
 
 
-CREATE INDEX idx_address_coordinate ON address (longitude, latitude);
+CREATE INDEX idx_address_coordinate ON address USING GIST (coordinates);
 CREATE INDEX idx_fk_address_user ON address (user_id);
 
 CREATE TRIGGER trigger_update_timestamp
