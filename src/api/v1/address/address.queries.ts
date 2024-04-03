@@ -267,18 +267,18 @@ export interface IUpdateUserActiveAddressQuery {
   result: IUpdateUserActiveAddressResult;
 }
 
-const updateUserActiveAddressIR: any = {"usedParamSet":{"active_address_id":true,"user_id":true},"params":[{"name":"active_address_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":37,"b":54},{"a":106,"b":123}]},{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":143,"b":150}]}],"statement":"UPDATE users\nSET active_address_id = :active_address_id\nWHERE (\n    SELECT id FROM address\n    WHERE id = :active_address_id\n    AND user_id = :user_id\n) IS NOT NULL\nRETURNING active_address_id"};
+const updateUserActiveAddressIR: any = {"usedParamSet":{"active_address_id":true,"user_id":true},"params":[{"name":"active_address_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":37,"b":54},{"a":116,"b":133}]},{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":153,"b":160}]}],"statement":"UPDATE users\nSET active_address_id = :active_address_id\nWHERE id = (\n    SELECT user_id FROM address\n    WHERE id = :active_address_id\n    AND user_id = :user_id\n)\nRETURNING active_address_id"};
 
 /**
  * Query generated from SQL:
  * ```
  * UPDATE users
  * SET active_address_id = :active_address_id
- * WHERE (
- *     SELECT id FROM address
+ * WHERE id = (
+ *     SELECT user_id FROM address
  *     WHERE id = :active_address_id
  *     AND user_id = :user_id
- * ) IS NOT NULL
+ * )
  * RETURNING active_address_id
  * ```
  */
