@@ -61,7 +61,7 @@ export default class StoreController {
       const requestedStore = await getStoreSecretByEmail.run({ email: req.body.email }, pool);
       
       if (!requestedStore || requestedStore.length === 0) {
-        return res.status(404).json(
+        return res.status(401).json(
           buildResponse(null, false, "Email or password does not match")
         );
       }
@@ -69,7 +69,7 @@ export default class StoreController {
       const hashedPassword = requestedStore[0].store_secret;
       const verified = await verifyPassword(hashedPassword, req.body.password);
       if (!verified) {
-        return res.status(404).json(
+        return res.status(401).json(
           buildResponse(null, false, "Email or password does not match")
         );
       }
