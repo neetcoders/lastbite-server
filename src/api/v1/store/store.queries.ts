@@ -78,12 +78,11 @@ export interface IGetStoreByEmailWithSecretResult {
   address_created_at: Date;
   adress_updated_at: Date;
   bio: string | null;
+  coordinates: unknown;
   created_at: Date;
   display_name: string;
   email: string;
   id: string;
-  latitude: number;
-  longitude: number;
   store_secret: string;
   street: string;
   updated_at: Date;
@@ -95,7 +94,7 @@ export interface IGetStoreByEmailWithSecretQuery {
   result: IGetStoreByEmailWithSecretResult;
 }
 
-const getStoreByEmailWithSecretIR: any = {"usedParamSet":{"email":true},"params":[{"name":"email","required":false,"transform":{"type":"scalar"},"locs":[{"a":318,"b":323}]}],"statement":"SELECT\n    s.id,\n    s.email,\n    s.display_name,\n    s.bio,\n    s.store_secret,\n    a.street,\n    a.longitude,\n    a.latitude,\n    a.created_at as \"address_created_at\",\n    a.updated_at as \"adress_updated_at\",\n    s.created_at,\n    s.updated_at\nFROM store s\nINNER JOIN address a ON a.id = s.address_id \nWHERE email = :email"};
+const getStoreByEmailWithSecretIR: any = {"usedParamSet":{"email":true},"params":[{"name":"email","required":false,"transform":{"type":"scalar"},"locs":[{"a":304,"b":309}]}],"statement":"SELECT\n    s.id,\n    s.email,\n    s.display_name,\n    s.bio,\n    s.store_secret,\n    a.street,\n    a.coordinates,\n    a.created_at as \"address_created_at\",\n    a.updated_at as \"adress_updated_at\",\n    s.created_at,\n    s.updated_at\nFROM store s\nINNER JOIN address a ON a.id = s.address_id \nWHERE email = :email"};
 
 /**
  * Query generated from SQL:
@@ -107,8 +106,7 @@ const getStoreByEmailWithSecretIR: any = {"usedParamSet":{"email":true},"params"
  *     s.bio,
  *     s.store_secret,
  *     a.street,
- *     a.longitude,
- *     a.latitude,
+ *     a.coordinates,
  *     a.created_at as "address_created_at",
  *     a.updated_at as "adress_updated_at",
  *     s.created_at,
@@ -131,11 +129,10 @@ export interface IGetStoreByIdResult {
   address_created_at: Date;
   adress_updated_at: Date;
   bio: string | null;
+  coordinates: unknown;
   created_at: Date;
   display_name: string;
   email: string;
-  latitude: number;
-  longitude: number;
   store_secret: string;
   street: string;
   updated_at: Date;
@@ -147,7 +144,7 @@ export interface IGetStoreByIdQuery {
   result: IGetStoreByIdResult;
 }
 
-const getStoreByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":306,"b":308}]}],"statement":"SELECT\n    s.email,\n    s.display_name,\n    s.bio,\n    s.store_secret,\n    a.street,\n    a.longitude,\n    a.latitude,\n    a.created_at as \"address_created_at\",\n    a.updated_at as \"adress_updated_at\",\n    s.created_at,\n    s.updated_at\nFROM store s\nINNER JOIN address a ON a.id = s.address_id\nWHERE s.id = :id"};
+const getStoreByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":292,"b":294}]}],"statement":"SELECT\n    s.email,\n    s.display_name,\n    s.bio,\n    s.store_secret,\n    a.street,\n    a.coordinates,\n    a.created_at as \"address_created_at\",\n    a.updated_at as \"adress_updated_at\",\n    s.created_at,\n    s.updated_at\nFROM store s\nINNER JOIN address a ON a.id = s.address_id\nWHERE s.id = :id"};
 
 /**
  * Query generated from SQL:
@@ -158,8 +155,7 @@ const getStoreByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","
  *     s.bio,
  *     s.store_secret,
  *     a.street,
- *     a.longitude,
- *     a.latitude,
+ *     a.coordinates,
  *     a.created_at as "address_created_at",
  *     a.updated_at as "adress_updated_at",
  *     s.created_at,

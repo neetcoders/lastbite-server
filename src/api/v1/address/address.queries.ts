@@ -3,19 +3,16 @@ import { PreparedQuery } from '@pgtyped/runtime';
 
 /** 'CreateStoreAddress' parameters type */
 export interface ICreateStoreAddressParams {
-  address: {
-    street: string | null | void,
-    longitude: number | null | void,
-    latitude: number | null | void
-  };
+  latitude?: number | null | void;
+  longitude?: number | null | void;
+  street?: string | null | void;
 }
 
 /** 'CreateStoreAddress' return type */
 export interface ICreateStoreAddressResult {
+  coordinates: unknown;
   created_at: Date;
   id: string;
-  latitude: number;
-  longitude: number;
   street: string;
   updated_at: Date;
 }
@@ -26,14 +23,14 @@ export interface ICreateStoreAddressQuery {
   result: ICreateStoreAddressResult;
 }
 
-const createStoreAddressIR: any = {"usedParamSet":{"address":true},"params":[{"name":"address","required":false,"transform":{"type":"pick_tuple","keys":[{"name":"street","required":false},{"name":"longitude","required":false},{"name":"latitude","required":false}]},"locs":[{"a":57,"b":64}]}],"statement":"INSERT INTO address (street, longitude, latitude)\nVALUES :address\nRETURNING id, street, longitude, latitude, created_at, updated_at"};
+const createStoreAddressIR: any = {"usedParamSet":{"street":true,"longitude":true,"latitude":true},"params":[{"name":"street","required":false,"transform":{"type":"scalar"},"locs":[{"a":50,"b":56}]},{"name":"longitude","required":false,"transform":{"type":"scalar"},"locs":[{"a":72,"b":81}]},{"name":"latitude","required":false,"transform":{"type":"scalar"},"locs":[{"a":84,"b":92}]}],"statement":"INSERT INTO address (street, coordinates)\nVALUES (:street, ST_MakePoint(:longitude, :latitude))\nRETURNING id, street, coordinates, created_at, updated_at"};
 
 /**
  * Query generated from SQL:
  * ```
- * INSERT INTO address (street, longitude, latitude)
- * VALUES :address
- * RETURNING id, street, longitude, latitude, created_at, updated_at
+ * INSERT INTO address (street, coordinates)
+ * VALUES (:street, ST_MakePoint(:longitude, :latitude))
+ * RETURNING id, street, coordinates, created_at, updated_at
  * ```
  */
 export const createStoreAddress = new PreparedQuery<ICreateStoreAddressParams,ICreateStoreAddressResult>(createStoreAddressIR);
@@ -41,20 +38,17 @@ export const createStoreAddress = new PreparedQuery<ICreateStoreAddressParams,IC
 
 /** 'CreateUserAddress' parameters type */
 export interface ICreateUserAddressParams {
-  address: {
-    street: string | null | void,
-    longitude: number | null | void,
-    latitude: number | null | void,
-    user_id: string | null | void
-  };
+  latitude?: number | null | void;
+  longitude?: number | null | void;
+  street?: string | null | void;
+  user_id?: string | null | void;
 }
 
 /** 'CreateUserAddress' return type */
 export interface ICreateUserAddressResult {
+  coordinates: unknown;
   created_at: Date;
   id: string;
-  latitude: number;
-  longitude: number;
   street: string;
   updated_at: Date;
 }
@@ -65,14 +59,14 @@ export interface ICreateUserAddressQuery {
   result: ICreateUserAddressResult;
 }
 
-const createUserAddressIR: any = {"usedParamSet":{"address":true},"params":[{"name":"address","required":false,"transform":{"type":"pick_tuple","keys":[{"name":"street","required":false},{"name":"longitude","required":false},{"name":"latitude","required":false},{"name":"user_id","required":false}]},"locs":[{"a":66,"b":73}]}],"statement":"INSERT INTO address (street, longitude, latitude, user_id)\nVALUES :address\nRETURNING id, street, longitude, latitude, created_at, updated_at"};
+const createUserAddressIR: any = {"usedParamSet":{"street":true,"longitude":true,"latitude":true,"user_id":true},"params":[{"name":"street","required":false,"transform":{"type":"scalar"},"locs":[{"a":59,"b":65}]},{"name":"longitude","required":false,"transform":{"type":"scalar"},"locs":[{"a":81,"b":90}]},{"name":"latitude","required":false,"transform":{"type":"scalar"},"locs":[{"a":93,"b":101}]},{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":105,"b":112}]}],"statement":"INSERT INTO address (street, coordinates, user_id)\nVALUES (:street, ST_MakePoint(:longitude, :latitude), :user_id)\nRETURNING id, street, coordinates, created_at, updated_at"};
 
 /**
  * Query generated from SQL:
  * ```
- * INSERT INTO address (street, longitude, latitude, user_id)
- * VALUES :address
- * RETURNING id, street, longitude, latitude, created_at, updated_at
+ * INSERT INTO address (street, coordinates, user_id)
+ * VALUES (:street, ST_MakePoint(:longitude, :latitude), :user_id)
+ * RETURNING id, street, coordinates, created_at, updated_at
  * ```
  */
 export const createUserAddress = new PreparedQuery<ICreateUserAddressParams,ICreateUserAddressResult>(createUserAddressIR);
@@ -86,10 +80,9 @@ export interface IGetAddressByIdParams {
 
 /** 'GetAddressById' return type */
 export interface IGetAddressByIdResult {
+  coordinates: unknown;
   created_at: Date;
   id: string;
-  latitude: number;
-  longitude: number;
   street: string;
   updated_at: Date;
 }
@@ -100,12 +93,12 @@ export interface IGetAddressByIdQuery {
   result: IGetAddressByIdResult;
 }
 
-const getAddressByIdIR: any = {"usedParamSet":{"id":true,"user_id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":91,"b":93}]},{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":113,"b":120}]}],"statement":"SELECT id, street, longitude, latitude, created_at, updated_at\nFROM address\nWHERE\n    id = :id\n    AND user_id = :user_id"};
+const getAddressByIdIR: any = {"usedParamSet":{"id":true,"user_id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":83,"b":85}]},{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":105,"b":112}]}],"statement":"SELECT id, street, coordinates, created_at, updated_at\nFROM address\nWHERE\n    id = :id\n    AND user_id = :user_id"};
 
 /**
  * Query generated from SQL:
  * ```
- * SELECT id, street, longitude, latitude, created_at, updated_at
+ * SELECT id, street, coordinates, created_at, updated_at
  * FROM address
  * WHERE
  *     id = :id
@@ -122,10 +115,9 @@ export interface IGetAllUserAddressesParams {
 
 /** 'GetAllUserAddresses' return type */
 export interface IGetAllUserAddressesResult {
+  coordinates: unknown;
   created_at: Date;
   id: string;
-  latitude: number;
-  longitude: number;
   street: string;
   updated_at: Date;
 }
@@ -136,12 +128,12 @@ export interface IGetAllUserAddressesQuery {
   result: IGetAllUserAddressesResult;
 }
 
-const getAllUserAddressesIR: any = {"usedParamSet":{"user_id":true},"params":[{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":92,"b":99}]}],"statement":"SELECT id, street, longitude, latitude, created_at, updated_at\nFROM address\nWHERE user_id = :user_id"};
+const getAllUserAddressesIR: any = {"usedParamSet":{"user_id":true},"params":[{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":84,"b":91}]}],"statement":"SELECT id, street, coordinates, created_at, updated_at\nFROM address\nWHERE user_id = :user_id"};
 
 /**
  * Query generated from SQL:
  * ```
- * SELECT id, street, longitude, latitude, created_at, updated_at
+ * SELECT id, street, coordinates, created_at, updated_at
  * FROM address
  * WHERE user_id = :user_id
  * ```
@@ -160,10 +152,9 @@ export interface IUpdateUserAddressByIdParams {
 
 /** 'UpdateUserAddressById' return type */
 export interface IUpdateUserAddressByIdResult {
+  coordinates: unknown;
   created_at: Date;
   id: string;
-  latitude: number;
-  longitude: number;
   street: string;
   updated_at: Date;
 }
@@ -174,7 +165,7 @@ export interface IUpdateUserAddressByIdQuery {
   result: IUpdateUserAddressByIdResult;
 }
 
-const updateUserAddressByIdIR: any = {"usedParamSet":{"street":true,"longitude":true,"latitude":true,"id":true,"user_id":true},"params":[{"name":"street","required":false,"transform":{"type":"scalar"},"locs":[{"a":32,"b":38}]},{"name":"longitude","required":false,"transform":{"type":"scalar"},"locs":[{"a":57,"b":66}]},{"name":"latitude","required":false,"transform":{"type":"scalar"},"locs":[{"a":84,"b":92}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":109,"b":111}]},{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":131,"b":138}]}],"statement":"UPDATE address\nSET\n    street = :street,\n    longitude = :longitude,\n    latitude = :latitude\nWHERE\n    id = :id\n    AND user_id = :user_id\nRETURNING id, street, longitude, latitude, created_at, updated_at"};
+const updateUserAddressByIdIR: any = {"usedParamSet":{"street":true,"longitude":true,"latitude":true,"id":true,"user_id":true},"params":[{"name":"street","required":false,"transform":{"type":"scalar"},"locs":[{"a":32,"b":38}]},{"name":"longitude","required":false,"transform":{"type":"scalar"},"locs":[{"a":72,"b":81}]},{"name":"latitude","required":false,"transform":{"type":"scalar"},"locs":[{"a":84,"b":92}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":110,"b":112}]},{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":132,"b":139}]}],"statement":"UPDATE address\nSET\n    street = :street,\n    coordinates = ST_MakePoint(:longitude, :latitude)\nWHERE\n    id = :id\n    AND user_id = :user_id\nRETURNING id, street, coordinates, created_at, updated_at"};
 
 /**
  * Query generated from SQL:
@@ -182,12 +173,11 @@ const updateUserAddressByIdIR: any = {"usedParamSet":{"street":true,"longitude":
  * UPDATE address
  * SET
  *     street = :street,
- *     longitude = :longitude,
- *     latitude = :latitude
+ *     coordinates = ST_MakePoint(:longitude, :latitude)
  * WHERE
  *     id = :id
  *     AND user_id = :user_id
- * RETURNING id, street, longitude, latitude, created_at, updated_at
+ * RETURNING id, street, coordinates, created_at, updated_at
  * ```
  */
 export const updateUserAddressById = new PreparedQuery<IUpdateUserAddressByIdParams,IUpdateUserAddressByIdResult>(updateUserAddressByIdIR);

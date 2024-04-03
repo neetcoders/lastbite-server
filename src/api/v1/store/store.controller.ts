@@ -22,11 +22,9 @@ export default class StoreController {
       pool.query("BEGIN");
 
       const newAddress = await createStoreAddress.run({
-        address: {
-          street: req.body.address.street,
-          longitude: req.body.address.longitude,
-          latitude: req.body.address.latitude,
-        }
+        street: req.body.address.street,
+        longitude: req.body.address.longitude,
+        latitude: req.body.address.latitude,
       }, pool);
 
       const hashedPassword = await hashPassword(req.body.password);
@@ -48,8 +46,7 @@ export default class StoreController {
           display_name: newStore[0].display_name,
           address: {
             street: newAddress[0].street,
-            longitude: newAddress[0].longitude,
-            latitude: newAddress[0].latitude,
+            coordinates: newAddress[0].coordinates,
             created_at: newAddress[0].created_at,
             updated_at: newAddress[0].updated_at,
           },
@@ -96,8 +93,7 @@ export default class StoreController {
             bio: requestedStore[0].bio,
             address: {
               street: requestedStore[0].street,
-              longitude: requestedStore[0].longitude,
-              latitude: requestedStore[0].latitude,
+              coordinates: requestedStore[0].coordinates,
               created_at: requestedStore[0].address_created_at,
               updated_at: requestedStore[0].adress_updated_at,
             },
@@ -133,8 +129,7 @@ export default class StoreController {
           bio: currentStore[0].bio,
           address: {
             street: currentStore[0].street,
-            longitude: currentStore[0].longitude,
-            latitude: currentStore[0].latitude,
+            coordinates: currentStore[0].coordinates,
             created_at: currentStore[0].address_created_at,
             updated_at: currentStore[0].adress_updated_at,
           },

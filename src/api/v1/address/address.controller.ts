@@ -10,12 +10,10 @@ export default class AddressController {
   static async createUserAddress(req: Request<ParamsDictionary, any, CreateUserAddressSchema>, res: Response) {
     try {
       const newAddress = await createUserAddress.run({
-        address: {
-          street: req.body.street,
-          longitude: req.body.longitude,
-          latitude: req.body.latitude,
-          user_id: req.body.payload.sub,
-        }
+        street: req.body.street,
+        longitude: req.body.longitude,
+        latitude: req.body.latitude,
+        user_id: req.body.payload.sub,
       }, pool);
 
       return res.status(201).json(

@@ -158,9 +158,8 @@ export interface IGetProductByIdParams {
 
 /** 'GetProductById' return type */
 export interface IGetProductByIdResult {
+  address_coordinates: unknown;
   address_created_at: Date;
-  address_latitude: number;
-  address_longitude: number;
   address_street: string;
   address_updated_at: Date;
   category_display_name: string;
@@ -186,7 +185,7 @@ export interface IGetProductByIdQuery {
   result: IGetProductByIdResult;
 }
 
-const getProductByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":746,"b":748}]}],"statement":"SELECT\n    p.id,\n    p.display_name,\n    p.description,\n    p.price_before,\n    p.price_after,\n    p.expiration_date,\n    p.stock,\n    s.id as \"store_id\",\n    s.display_name as \"store_display_name\",\n    s.created_at as \"store_created_at\",\n    s.updated_at as \"store_updated_at\",\n    a.street as \"address_street\",\n    a.longitude as \"address_longitude\",\n    a.latitude as \"address_latitude\",\n    a.created_at as \"address_created_at\",\n    a.updated_at as \"address_updated_at\",\n    c.slug as \"category_slug\",\n    c.display_name as \"category_display_name\",\n    p.created_at,\n    p.updated_at\nFROM product p\nINNER JOIN store s ON s.id = p.store_id\nINNER JOIN address a ON a.id = s.address_id\nINNER JOIN category c ON c.id = p.category_id\nWHERE p.id = :id"};
+const getProductByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":712,"b":714}]}],"statement":"SELECT\n    p.id,\n    p.display_name,\n    p.description,\n    p.price_before,\n    p.price_after,\n    p.expiration_date,\n    p.stock,\n    s.id as \"store_id\",\n    s.display_name as \"store_display_name\",\n    s.created_at as \"store_created_at\",\n    s.updated_at as \"store_updated_at\",\n    a.street as \"address_street\",\n    a.coordinates as \"address_coordinates\",\n    a.created_at as \"address_created_at\",\n    a.updated_at as \"address_updated_at\",\n    c.slug as \"category_slug\",\n    c.display_name as \"category_display_name\",\n    p.created_at,\n    p.updated_at\nFROM product p\nINNER JOIN store s ON s.id = p.store_id\nINNER JOIN address a ON a.id = s.address_id\nINNER JOIN category c ON c.id = p.category_id\nWHERE p.id = :id"};
 
 /**
  * Query generated from SQL:
@@ -204,8 +203,7 @@ const getProductByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id"
  *     s.created_at as "store_created_at",
  *     s.updated_at as "store_updated_at",
  *     a.street as "address_street",
- *     a.longitude as "address_longitude",
- *     a.latitude as "address_latitude",
+ *     a.coordinates as "address_coordinates",
  *     a.created_at as "address_created_at",
  *     a.updated_at as "address_updated_at",
  *     c.slug as "category_slug",

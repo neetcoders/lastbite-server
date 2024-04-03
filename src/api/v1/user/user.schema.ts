@@ -21,8 +21,7 @@ export function convertToGetUserResponse(user: IGetUserWithAddressResult) {
     active_address: user.address_id ? {
       id: user.address_id,
       street: user.address_street,
-      longitude: user.address_longitude,
-      latitude: user.address_latitude,
+      coordinates: user.address_coordinates,
       created_at: user.address_created_at,
       updated_at: user.address_updated_at,
     } : null,

@@ -48,8 +48,7 @@ export function convertToGetProductResponse(product: IGetProductByIdResult) {
       display_name: product.store_display_name,
       address: {
         street: product.address_street,
-        longitude: product.address_longitude,
-        latitude: product.address_latitude,
+        coordinates: product.address_coordinates,
         created_at: product.address_created_at,
         updated_at: product.address_updated_at,
       },
