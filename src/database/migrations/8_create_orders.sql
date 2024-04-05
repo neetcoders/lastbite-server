@@ -8,7 +8,7 @@ CREATE TABLE orders (
     customer_id UUID NOT NULL,
     store_id UUID NOT NULL,
 
-    status ORDER_STATUS NOT NULL,
+    status ORDER_STATUS NOT NULL DEFAULT 'in-cart',
 
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     updated_at TIMESTAMP NOT NULL DEFAULT now(),
