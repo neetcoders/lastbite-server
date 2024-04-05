@@ -1,6 +1,6 @@
 -- Up Migration
 
-CREATE TYPE ORDER_STATUS AS ENUM ('in-cart', 'waiting', 'processed', 'ready', 'done', 'cancelled', 'rejected');
+CREATE TYPE ORDER_STATUS AS ENUM ('in-cart-selected', 'in-cart-unselected', 'waiting', 'processed', 'ready', 'done', 'cancelled', 'rejected');
 
 CREATE TABLE orders (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -8,7 +8,7 @@ CREATE TABLE orders (
     customer_id UUID NOT NULL,
     store_id UUID NOT NULL,
 
-    status ORDER_STATUS NOT NULL DEFAULT 'in-cart',
+    status ORDER_STATUS NOT NULL DEFAULT 'in-cart-unselected',
 
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     updated_at TIMESTAMP NOT NULL DEFAULT now(),
@@ -27,4 +27,5 @@ EXECUTE PROCEDURE update_timestamp();
 
 -- Down Migration
 
+DROP TYPE ORDER_STATUS;
 DROP TABLE orders;

@@ -7,6 +7,7 @@ CREATE TABLE order_product (
     product_id UUID NOT NULL,
 
     quantity INT NOT NULL,
+    selected BOOLEAN NOT NULL DEFAULT TRUE,
     
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     updated_at TIMESTAMP NOT NULL DEFAULT now(),
