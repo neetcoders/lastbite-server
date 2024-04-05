@@ -62,6 +62,23 @@ WHERE
 RETURNING id;
 
 
+/* @name GetOrderProductQuantity */
+SELECT
+    p.id,
+    p.display_name,
+    p.price_before,
+    p.price_after,
+    p.stock,
+    op.quantity
+FROM product p
+INNER JOIN order_product op ON op.product_id = p.id
+INNER JOIN orders o ON op.order_id = o.id
+WHERE
+    p.id = :product_id
+    AND o.customer_id = :user_id
+    AND status IN ('in-cart-selected', 'in-cart-unselected');
+
+
 /* @name GetOrderByID */
 SELECT
     o.id,

@@ -216,6 +216,52 @@ const decreaseOrderProductQuantityIR: any = {"usedParamSet":{"product_id":true,"
 export const decreaseOrderProductQuantity = new PreparedQuery<IDecreaseOrderProductQuantityParams,IDecreaseOrderProductQuantityResult>(decreaseOrderProductQuantityIR);
 
 
+/** 'GetOrderProductQuantity' parameters type */
+export interface IGetOrderProductQuantityParams {
+  product_id?: string | null | void;
+  user_id?: string | null | void;
+}
+
+/** 'GetOrderProductQuantity' return type */
+export interface IGetOrderProductQuantityResult {
+  display_name: string;
+  id: string;
+  price_after: number;
+  price_before: number;
+  quantity: number;
+  stock: number;
+}
+
+/** 'GetOrderProductQuantity' query type */
+export interface IGetOrderProductQuantityQuery {
+  params: IGetOrderProductQuantityParams;
+  result: IGetOrderProductQuantityResult;
+}
+
+const getOrderProductQuantityIR: any = {"usedParamSet":{"product_id":true,"user_id":true},"params":[{"name":"product_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":231,"b":241}]},{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":267,"b":274}]}],"statement":"SELECT\n    p.id,\n    p.display_name,\n    p.price_before,\n    p.price_after,\n    p.stock,\n    op.quantity\nFROM product p\nINNER JOIN order_product op ON op.product_id = p.id\nINNER JOIN orders o ON op.order_id = o.id\nWHERE\n    p.id = :product_id\n    AND o.customer_id = :user_id\n    AND status IN ('in-cart-selected', 'in-cart-unselected')"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT
+ *     p.id,
+ *     p.display_name,
+ *     p.price_before,
+ *     p.price_after,
+ *     p.stock,
+ *     op.quantity
+ * FROM product p
+ * INNER JOIN order_product op ON op.product_id = p.id
+ * INNER JOIN orders o ON op.order_id = o.id
+ * WHERE
+ *     p.id = :product_id
+ *     AND o.customer_id = :user_id
+ *     AND status IN ('in-cart-selected', 'in-cart-unselected')
+ * ```
+ */
+export const getOrderProductQuantity = new PreparedQuery<IGetOrderProductQuantityParams,IGetOrderProductQuantityResult>(getOrderProductQuantityIR);
+
+
 /** 'GetOrderById' parameters type */
 export interface IGetOrderByIdParams {
   id?: string | null | void;

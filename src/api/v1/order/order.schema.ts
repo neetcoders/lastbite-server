@@ -1,4 +1,4 @@
-import { IGetOrderByIdResult, IGetUserCartByUserResult } from "./order.queries";
+import { IGetOrderByIdResult, IGetOrderProductQuantityResult, IGetUserCartByUserResult } from "./order.queries";
 
 export type AddToCartSchema = {
   product_id: string;
@@ -24,6 +24,19 @@ export type DecreaseProductQtySchema = {
   product_id: string;
   payload: {
     sub: string;
+  }
+}
+
+
+export function convertToGetProductQtySchema(product: IGetOrderProductQuantityResult) {
+  return {
+    id: product.id,
+    display_name: product.display_name,
+    price_before: product.price_before,
+    price_after: product.price_after,
+    stock: product.stock,
+    quantity: product.quantity,
+    total_price: product.price_after * product.quantity,
   }
 }
 

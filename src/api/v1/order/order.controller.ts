@@ -3,8 +3,8 @@ import { Request, Response, query } from "express";
 
 import pool from "@/database/pool";
 import { buildResponse } from "@/utils/response";
-import { AddToCartSchema, DecreaseProductQtySchema, GetProductQtySchema, IncreaseProductQtySchema, convertToGetOrderSchema, convertToGetUserCartSchema } from "./order.schema";
-import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser, decreaseOrderProductQuantity } from "./order.queries";
+import { AddToCartSchema, DecreaseProductQtySchema, GetProductQtySchema, IncreaseProductQtySchema, convertToGetOrderSchema, convertToGetProductQtySchema, convertToGetUserCartSchema } from "./order.schema";
+import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser, decreaseOrderProductQuantity, getOrderProductQuantity } from "./order.queries";
 import { getMinimumProduct } from "../product/product.queries";
 
 export default class UserController {
@@ -253,8 +253,7 @@ export default class UserController {
         ) 
       }
 
-      const orderProduct = await getOrderProductId.run({
-        order_id: order[0].id, 
+      const orderProduct = await getOrderProductQuantity.run({
         product_id: req.params.product_id, 
         user_id: req.body.payload.sub,
       }, pool);
@@ -266,7 +265,7 @@ export default class UserController {
       }
 
       res.status(200).json(
-        buildResponse({ quantity: orderProduct[0].quantity }, true, "Quantity fetched successfully")
+        buildResponse(convertToGetProductQtySchema(orderProduct[0]), true, "Quantity fetched successfully")
       );
 
     }
