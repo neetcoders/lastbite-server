@@ -3,8 +3,8 @@ import { Request, Response, query } from "express";
 
 import pool from "@/database/pool";
 import { buildResponse } from "@/utils/response";
-import { AddToCartSchema, DecreaseProductQtySchema, GetProductQtySchema, IncreaseProductQtySchema, ToggleProductSelectedSchema, convertToGetOrderSchema, convertToGetProductQtySchema, convertToGetUserCartSchema } from "./order.schema";
-import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser, decreaseOrderProductQuantity, getOrderProductQuantity, toggleOrderProductSelected } from "./order.queries";
+import { AddToCartSchema, DecreaseProductQtySchema, GetProductQtySchema, IncreaseProductQtySchema, ToggleProductSelectedSchema, ToggleStoreSelectedSchema, convertToGetOrderSchema, convertToGetProductQtySchema, convertToGetUserCartSchema } from "./order.schema";
+import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser, decreaseOrderProductQuantity, getOrderProductQuantity, toggleOrderProductSelected, toggleOrderStoreSelected } from "./order.queries";
 import { getMinimumProduct } from "../product/product.queries";
 
 export default class UserController {
@@ -325,6 +325,41 @@ export default class UserController {
 
       res.status(200).json(
         buildResponse(convertToGetProductQtySchema(updatedProduct[0]), true, "Product toggled successfully")
+      );
+
+    }
+    catch (err) {
+      console.error(err);
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
+
+
+  static async toggleStoreSelected(req: Request<ParamsDictionary, any, ToggleStoreSelectedSchema>, res: Response) {
+    try {
+      const order = await toggleOrderStoreSelected.run({
+        store_id: req.body.store_id,
+        user_id: req.body.payload.sub,
+      }, pool);
+
+      if (!order || order.length === 0) {
+        return res.status(404).json(
+          buildResponse(null, false, "Order not found")
+        );
+      }
+
+      const fullOrder = await getOrderById.run({ id: order[0].id }, pool)
+
+      if (!fullOrder || fullOrder.length === 0) {
+        return res.status(404).json(
+          buildResponse(null, false, "Order not found")
+        );
+      }
+
+      res.status(200).json(
+        buildResponse(convertToGetOrderSchema(fullOrder), true, "Order toggled successfully")
       );
 
     }

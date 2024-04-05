@@ -77,6 +77,21 @@ WHERE
 RETURNING id;
 
 
+/* @name ToggleOrderStoreSelected */
+UPDATE orders
+SET status = (
+    CASE
+        WHEN status = 'in-cart-selected' THEN 'in-cart-unselected'::ORDER_STATUS
+        WHEN status = 'in-cart-unselected' THEN 'in-cart-selected'::ORDER_STATUS
+    END
+)
+WHERE
+    store_id = :store_id
+    AND customer_id = :user_id
+    AND status IN ('in-cart-selected', 'in-cart-unselected')
+RETURNING id;
+
+
 /* @name GetOrderProductQuantity */
 SELECT
     p.id,

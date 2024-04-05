@@ -256,6 +256,45 @@ const toggleOrderProductSelectedIR: any = {"usedParamSet":{"product_id":true,"or
 export const toggleOrderProductSelected = new PreparedQuery<IToggleOrderProductSelectedParams,IToggleOrderProductSelectedResult>(toggleOrderProductSelectedIR);
 
 
+/** 'ToggleOrderStoreSelected' parameters type */
+export interface IToggleOrderStoreSelectedParams {
+  store_id?: string | null | void;
+  user_id?: string | null | void;
+}
+
+/** 'ToggleOrderStoreSelected' return type */
+export interface IToggleOrderStoreSelectedResult {
+  id: string;
+}
+
+/** 'ToggleOrderStoreSelected' query type */
+export interface IToggleOrderStoreSelectedQuery {
+  params: IToggleOrderStoreSelectedParams;
+  result: IToggleOrderStoreSelectedResult;
+}
+
+const toggleOrderStoreSelectedIR: any = {"usedParamSet":{"store_id":true,"user_id":true},"params":[{"name":"store_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":231,"b":239}]},{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":263,"b":270}]}],"statement":"UPDATE orders\nSET status = (\n    CASE\n        WHEN status = 'in-cart-selected' THEN 'in-cart-unselected'::ORDER_STATUS\n        WHEN status = 'in-cart-unselected' THEN 'in-cart-selected'::ORDER_STATUS\n    END\n)\nWHERE\n    store_id = :store_id\n    AND customer_id = :user_id\n    AND status IN ('in-cart-selected', 'in-cart-unselected')\nRETURNING id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE orders
+ * SET status = (
+ *     CASE
+ *         WHEN status = 'in-cart-selected' THEN 'in-cart-unselected'::ORDER_STATUS
+ *         WHEN status = 'in-cart-unselected' THEN 'in-cart-selected'::ORDER_STATUS
+ *     END
+ * )
+ * WHERE
+ *     store_id = :store_id
+ *     AND customer_id = :user_id
+ *     AND status IN ('in-cart-selected', 'in-cart-unselected')
+ * RETURNING id
+ * ```
+ */
+export const toggleOrderStoreSelected = new PreparedQuery<IToggleOrderStoreSelectedParams,IToggleOrderStoreSelectedResult>(toggleOrderStoreSelectedIR);
+
+
 /** 'GetOrderProductQuantity' parameters type */
 export interface IGetOrderProductQuantityParams {
   product_id?: string | null | void;

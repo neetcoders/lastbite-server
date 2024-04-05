@@ -14,7 +14,7 @@ router.post("/qty/increase", verifyAuthToken, validateIncreaseProductQty(), vali
 router.post("/qty/decrease", verifyAuthToken, validateDecreaseProductQty(), validate, OrderController.decreaseProductQty);
 router.get("/qty/:product_id", verifyAuthToken, OrderController.getProductQty);
 
-router.post("/store/toggle_selected", verifyAuthToken, validateToggleStoreSchema(), validate);
 router.post("/product/toggle_selected", verifyAuthToken, validateToggleProductSchema(), validate, OrderController.toggleProductSelected);
+router.post("/store/toggle_selected", verifyAuthToken, validateToggleStoreSchema(), validate, OrderController.toggleStoreSelected);
 
 export default router;
