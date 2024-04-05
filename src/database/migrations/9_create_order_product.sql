@@ -12,8 +12,8 @@ CREATE TABLE order_product (
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     updated_at TIMESTAMP NOT NULL DEFAULT now(),
 
-    CONSTRAINT fk_order_product_order FOREIGN KEY (order_id) REFERENCES orders (id),
-    CONSTRAINT fk_order_product_product FOREIGN KEY (product_id) REFERENCES product (id),
+    CONSTRAINT fk_order_product_order FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE,
+    CONSTRAINT fk_order_product_product FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE,
     CONSTRAINT check_order_product_quantity CHECK (quantity > 0)
 );
 

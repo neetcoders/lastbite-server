@@ -13,8 +13,8 @@ CREATE TABLE orders (
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     updated_at TIMESTAMP NOT NULL DEFAULT now(),
 
-    CONSTRAINT fk_orders_users FOREIGN KEY (customer_id) REFERENCES users (id),
-    CONSTRAINT fk_orders_store FOREIGN KEY (store_id) REFERENCES store (id)
+    CONSTRAINT fk_orders_users FOREIGN KEY (customer_id) REFERENCES users (id) ON DELETE CASCADE,
+    CONSTRAINT fk_orders_store FOREIGN KEY (store_id) REFERENCES store (id) ON DELETE CASCADE
 );
 
 CREATE INDEX idx_fk_orders_users ON orders (customer_id);
