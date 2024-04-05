@@ -8,8 +8,10 @@ import { validateAddToCart, validateDecreaseProductQty, validateIncreaseProductQ
 const router = Router();
 
 router.post("/add", verifyAuthToken, validateAddToCart(), validate, OrderController.addToCart);
-router.post("/increase", verifyAuthToken, validateIncreaseProductQty(), validate, OrderController.increaseProductQty);
-router.post("/decrease", verifyAuthToken, validateDecreaseProductQty(), validate, OrderController.decreaseProductQty);
+
+router.post("/qty/increase", verifyAuthToken, validateIncreaseProductQty(), validate, OrderController.increaseProductQty);
+router.post("/qty/decrease", verifyAuthToken, validateDecreaseProductQty(), validate, OrderController.decreaseProductQty);
+router.get("/qty/:product_id", verifyAuthToken, OrderController.getProductQty);
 
 router.get("/", verifyAuthToken, OrderController.getUserCart);
 
