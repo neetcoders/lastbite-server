@@ -47,6 +47,21 @@ WHERE
 RETURNING id;
 
 
+/* @name DecreaseOrderProductQuantity */
+UPDATE order_product
+SET quantity = GREATEST(1, quantity - 1)
+WHERE
+    product_id = :product_id
+    AND order_id = (
+        SELECT id
+        FROM orders
+        WHERE
+            id = :order_id
+            AND customer_id = :customer_id
+    )
+RETURNING id;
+
+
 /* @name GetOrderByID */
 SELECT
     o.id,

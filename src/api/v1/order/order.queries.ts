@@ -176,6 +176,46 @@ const increaseOrderProductQuantityIR: any = {"usedParamSet":{"product_id":true,"
 export const increaseOrderProductQuantity = new PreparedQuery<IIncreaseOrderProductQuantityParams,IIncreaseOrderProductQuantityResult>(increaseOrderProductQuantityIR);
 
 
+/** 'DecreaseOrderProductQuantity' parameters type */
+export interface IDecreaseOrderProductQuantityParams {
+  customer_id?: string | null | void;
+  order_id?: string | null | void;
+  product_id?: string | null | void;
+}
+
+/** 'DecreaseOrderProductQuantity' return type */
+export interface IDecreaseOrderProductQuantityResult {
+  id: string;
+}
+
+/** 'DecreaseOrderProductQuantity' query type */
+export interface IDecreaseOrderProductQuantityQuery {
+  params: IDecreaseOrderProductQuantityParams;
+  result: IDecreaseOrderProductQuantityResult;
+}
+
+const decreaseOrderProductQuantityIR: any = {"usedParamSet":{"product_id":true,"order_id":true,"customer_id":true},"params":[{"name":"product_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":85,"b":95}]},{"name":"order_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":187,"b":195}]},{"name":"customer_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":227,"b":238}]}],"statement":"UPDATE order_product\nSET quantity = GREATEST(1, quantity - 1)\nWHERE\n    product_id = :product_id\n    AND order_id = (\n        SELECT id\n        FROM orders\n        WHERE\n            id = :order_id\n            AND customer_id = :customer_id\n    )\nRETURNING id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE order_product
+ * SET quantity = GREATEST(1, quantity - 1)
+ * WHERE
+ *     product_id = :product_id
+ *     AND order_id = (
+ *         SELECT id
+ *         FROM orders
+ *         WHERE
+ *             id = :order_id
+ *             AND customer_id = :customer_id
+ *     )
+ * RETURNING id
+ * ```
+ */
+export const decreaseOrderProductQuantity = new PreparedQuery<IDecreaseOrderProductQuantityParams,IDecreaseOrderProductQuantityResult>(decreaseOrderProductQuantityIR);
+
+
 /** 'GetOrderById' parameters type */
 export interface IGetOrderByIdParams {
   id?: string | null | void;
