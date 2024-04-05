@@ -1,4 +1,4 @@
-import { IGetOrderByIdResult } from "./order.queries";
+import { IGetOrderByIdResult, IGetUserCartByUserResult } from "./order.queries";
 
 export type AddToCartSchema = {
   product_id: string;
@@ -30,4 +30,49 @@ export function convertToGetOrderSchema(order: IGetOrderByIdResult[]) {
         .map(o => o.product_price_after * o.order_product_quantity)
         .reduce((prev, curr) => prev + curr),
   }
+}
+
+
+export function convertToGetUserCartSchema(cart: IGetUserCartByUserResult[]) {
+  const order: Record<string, any> = {};
+
+  cart.forEach(item => {
+    if (!order[item.id]) {
+      order[item.id] = {};
+    }
+    order[item.id]["id"] = item.id;
+    order[item.id]["status"] = item.status;
+    order[item.id]["store"] = {
+      id: item.store_id,
+      display_name: item.store_display_name,
+    }
+    if (!order[item.id]["products"]) {
+      order[item.id]["products"] = [];
+    }
+    order[item.id]["products"].push({
+      id: item.product_id,
+      selected: item.order_product_selected,
+      quantity: item.order_product_quantity,
+      display_name: item.product_display_name,
+      price_before: item.product_price_before,
+      price_after: item.product_price_after,
+      stock: item.product_stock,
+    });
+
+    if (!order[item.id]["total_price"]) {
+      order[item.id]["total_price"] = 0;
+    }
+    order[item.id]["total_price"] += 
+      item.status === "in-cart-unselected"
+      ? 0
+      : item.order_product_selected
+        ? (item.order_product_quantity * item.product_price_after)
+        : 0;
+  });
+  
+  const orders = Object.values(order);
+  return {
+    orders,
+    total_price: orders.map(o => o.total_price).reduce((prev, next) => prev + next),
+  } 
 }

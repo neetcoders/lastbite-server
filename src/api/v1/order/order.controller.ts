@@ -3,8 +3,8 @@ import { Request, Response, query } from "express";
 
 import pool from "@/database/pool";
 import { buildResponse } from "@/utils/response";
-import { AddToCartSchema, convertToGetOrderSchema } from "./order.schema";
-import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById } from "./order.queries";
+import { AddToCartSchema, convertToGetOrderSchema, convertToGetUserCartSchema } from "./order.schema";
+import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser } from "./order.queries";
 import { getMinimumProduct } from "../product/product.queries";
 
 export default class UserController {
@@ -78,7 +78,10 @@ export default class UserController {
 
   static async getUserCart(req: Request, res: Response) {
     try {
-      //
+      const userCart = await getUserCartByUser.run({ user_id: req.body.payload.sub }, pool);
+      return res.status(200).json(
+        buildResponse(convertToGetUserCartSchema(userCart), true, "User cart fetched successfully")
+      );
     }
     catch (err) {
       console.error(err);
