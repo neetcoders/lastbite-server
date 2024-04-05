@@ -3,7 +3,7 @@ import { Request, Response, query } from "express";
 
 import pool from "@/database/pool";
 import { buildResponse } from "@/utils/response";
-import { AddToCartSchema, convertToGetOrderSchema, convertToGetUserCartSchema } from "./order.schema";
+import { AddToCartSchema, IncreaseProductQtySchema, convertToGetOrderSchema, convertToGetUserCartSchema } from "./order.schema";
 import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser } from "./order.queries";
 import { getMinimumProduct } from "../product/product.queries";
 
@@ -11,6 +11,12 @@ export default class UserController {
   static async addToCart(req: Request<ParamsDictionary, any, AddToCartSchema>, res: Response) {
     try {
       const product = await getMinimumProduct.run({ id: req.body.product_id }, pool);
+
+      if (!product || product.length === 0) {
+        return res.status(404).json(
+          buildResponse(null, false, "Product not found")
+        );
+      }
 
       if (product[0].stock <= 0) {
         return res.status(400).json(
@@ -62,7 +68,7 @@ export default class UserController {
       await pool.query("COMMIT");
 
       res.status(200).json(
-        buildResponse(convertToGetOrderSchema(newOrderProduct), true, "")
+        buildResponse(convertToGetOrderSchema(newOrderProduct), true, "Product added sucessfully")
       );
 
     }
@@ -82,6 +88,74 @@ export default class UserController {
       return res.status(200).json(
         buildResponse(convertToGetUserCartSchema(userCart), true, "User cart fetched successfully")
       );
+    }
+    catch (err) {
+      console.error(err);
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
+
+
+  static async increaseProductQty(req: Request<ParamsDictionary, any, IncreaseProductQtySchema>, res: Response) {
+    try {
+      const product = await getMinimumProduct.run({ id: req.body.product_id }, pool);
+
+      if (!product || product.length === 0) {
+        return res.status(404).json(
+          buildResponse(null, false, "Product not found")
+        );
+      }
+
+      if (product[0].stock <= 0) {
+        return res.status(400).json(
+          buildResponse(null, false, "Product is sold out")
+        );
+      }
+
+      const order = await getOrderInCartId.run({ user_id: req.body.payload.sub, store_id: product[0].store_id }, pool);
+      if (!order || order.length === 0) {
+        return res.status(404).json(
+          buildResponse(null, false, "Order is not found")
+        ) 
+      }
+
+      const orderProduct = await getOrderProductId.run({
+        order_id: order[0].id, 
+        product_id: req.body.product_id, 
+        user_id: req.body.payload.sub,
+      }, pool);
+
+      if (!orderProduct || orderProduct.length === 0) {
+        return res.status(404).json(
+          buildResponse(null, false, "Product is not in cart yet")
+        );
+      }
+
+      
+      if (orderProduct[0].quantity >= product[0].stock) {
+        await pool.query("ROLLBACK")
+        return res.status(400).json(
+          buildResponse(null, false, "Stock is not sufficient")
+        );
+      }
+      else {
+        await increaseOrderProductQuantity.run({
+          product_id: req.body.product_id,
+          customer_id: req.body.payload.sub,
+          order_id: order[0].id,
+        }, pool);
+      }
+      
+
+      const updatedOrder = await getOrderById.run({ id: order[0].id }, pool);
+      await pool.query("COMMIT");
+
+      res.status(200).json(
+        buildResponse(convertToGetOrderSchema(updatedOrder), true, "Quantity increased successfully")
+      );
+
     }
     catch (err) {
       console.error(err);
