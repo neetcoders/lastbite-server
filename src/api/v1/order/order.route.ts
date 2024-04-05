@@ -9,7 +9,7 @@ const router = Router();
 
 router.post("/add", verifyAuthToken, validateAddToCart(), validate, OrderController.addToCart);
 router.post("/increase", verifyAuthToken, validateIncreaseProductQty(), validate, OrderController.increaseProductQty);
-router.post("/decrease", verifyAuthToken, validateDecreaseProductQty(), validate);
+router.post("/decrease", verifyAuthToken, validateDecreaseProductQty(), validate, OrderController.decreaseProductQty);
 
 router.get("/", verifyAuthToken, OrderController.getUserCart);
 
