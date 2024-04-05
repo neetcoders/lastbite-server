@@ -216,6 +216,46 @@ const decreaseOrderProductQuantityIR: any = {"usedParamSet":{"product_id":true,"
 export const decreaseOrderProductQuantity = new PreparedQuery<IDecreaseOrderProductQuantityParams,IDecreaseOrderProductQuantityResult>(decreaseOrderProductQuantityIR);
 
 
+/** 'ToggleOrderProductSelected' parameters type */
+export interface IToggleOrderProductSelectedParams {
+  customer_id?: string | null | void;
+  order_id?: string | null | void;
+  product_id?: string | null | void;
+}
+
+/** 'ToggleOrderProductSelected' return type */
+export interface IToggleOrderProductSelectedResult {
+  id: string;
+}
+
+/** 'ToggleOrderProductSelected' query type */
+export interface IToggleOrderProductSelectedQuery {
+  params: IToggleOrderProductSelectedParams;
+  result: IToggleOrderProductSelectedResult;
+}
+
+const toggleOrderProductSelectedIR: any = {"usedParamSet":{"product_id":true,"order_id":true,"customer_id":true},"params":[{"name":"product_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":72,"b":82}]},{"name":"order_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":174,"b":182}]},{"name":"customer_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":214,"b":225}]}],"statement":"UPDATE order_product\nSET selected = NOT selected\nWHERE\n    product_id = :product_id\n    AND order_id = (\n        SELECT id\n        FROM orders\n        WHERE\n            id = :order_id\n            AND customer_id = :customer_id\n    )\nRETURNING id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE order_product
+ * SET selected = NOT selected
+ * WHERE
+ *     product_id = :product_id
+ *     AND order_id = (
+ *         SELECT id
+ *         FROM orders
+ *         WHERE
+ *             id = :order_id
+ *             AND customer_id = :customer_id
+ *     )
+ * RETURNING id
+ * ```
+ */
+export const toggleOrderProductSelected = new PreparedQuery<IToggleOrderProductSelectedParams,IToggleOrderProductSelectedResult>(toggleOrderProductSelectedIR);
+
+
 /** 'GetOrderProductQuantity' parameters type */
 export interface IGetOrderProductQuantityParams {
   product_id?: string | null | void;
@@ -229,6 +269,7 @@ export interface IGetOrderProductQuantityResult {
   price_after: number;
   price_before: number;
   quantity: number;
+  selected: boolean;
   stock: number;
 }
 
@@ -238,13 +279,14 @@ export interface IGetOrderProductQuantityQuery {
   result: IGetOrderProductQuantityResult;
 }
 
-const getOrderProductQuantityIR: any = {"usedParamSet":{"product_id":true,"user_id":true},"params":[{"name":"product_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":231,"b":241}]},{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":267,"b":274}]}],"statement":"SELECT\n    p.id,\n    p.display_name,\n    p.price_before,\n    p.price_after,\n    p.stock,\n    op.quantity\nFROM product p\nINNER JOIN order_product op ON op.product_id = p.id\nINNER JOIN orders o ON op.order_id = o.id\nWHERE\n    p.id = :product_id\n    AND o.customer_id = :user_id\n    AND status IN ('in-cart-selected', 'in-cart-unselected')"};
+const getOrderProductQuantityIR: any = {"usedParamSet":{"product_id":true,"user_id":true},"params":[{"name":"product_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":248,"b":258}]},{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":284,"b":291}]}],"statement":"SELECT\n    p.id,\n    op.selected,\n    p.display_name,\n    p.price_before,\n    p.price_after,\n    p.stock,\n    op.quantity\nFROM product p\nINNER JOIN order_product op ON op.product_id = p.id\nINNER JOIN orders o ON op.order_id = o.id\nWHERE\n    p.id = :product_id\n    AND o.customer_id = :user_id\n    AND status IN ('in-cart-selected', 'in-cart-unselected')"};
 
 /**
  * Query generated from SQL:
  * ```
  * SELECT
  *     p.id,
+ *     op.selected,
  *     p.display_name,
  *     p.price_before,
  *     p.price_after,

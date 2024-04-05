@@ -62,9 +62,25 @@ WHERE
 RETURNING id;
 
 
+/* @name ToggleOrderProductSelected */
+UPDATE order_product
+SET selected = NOT selected
+WHERE
+    product_id = :product_id
+    AND order_id = (
+        SELECT id
+        FROM orders
+        WHERE
+            id = :order_id
+            AND customer_id = :customer_id
+    )
+RETURNING id;
+
+
 /* @name GetOrderProductQuantity */
 SELECT
     p.id,
+    op.selected,
     p.display_name,
     p.price_before,
     p.price_after,

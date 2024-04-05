@@ -3,16 +3,18 @@ import { Router } from "express";
 import OrderController from "./order.controller";
 import { verifyAuthToken } from "@/services/jwt.service";
 import { validate } from "@/services/validator.service";
-import { validateAddToCart, validateDecreaseProductQty, validateIncreaseProductQty } from "./order.validator";
+import { validateAddToCart, validateDecreaseProductQty, validateIncreaseProductQty, validateToggleProductSchema, validateToggleStoreSchema } from "./order.validator";
 
 const router = Router();
 
+router.get("/", verifyAuthToken, OrderController.getUserCart);
 router.post("/add", verifyAuthToken, validateAddToCart(), validate, OrderController.addToCart);
 
 router.post("/qty/increase", verifyAuthToken, validateIncreaseProductQty(), validate, OrderController.increaseProductQty);
 router.post("/qty/decrease", verifyAuthToken, validateDecreaseProductQty(), validate, OrderController.decreaseProductQty);
 router.get("/qty/:product_id", verifyAuthToken, OrderController.getProductQty);
 
-router.get("/", verifyAuthToken, OrderController.getUserCart);
+router.post("/store/toggle_selected", verifyAuthToken, validateToggleStoreSchema(), validate);
+router.post("/product/toggle_selected", verifyAuthToken, validateToggleProductSchema(), validate, OrderController.toggleProductSelected);
 
 export default router;
