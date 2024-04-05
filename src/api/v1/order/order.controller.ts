@@ -148,12 +148,14 @@ export default class UserController {
       }
       
 
-      const updatedOrder = await getOrderById.run({ id: order[0].id }, pool);
+      const updatedOrder = await getOrderProductQuantity.run({
+        product_id: req.body.product_id, 
+        user_id: req.body.payload.sub,
+      }, pool);
 
       res.status(200).json(
-        buildResponse(convertToGetOrderSchema(updatedOrder), true, "Quantity increased successfully")
+        buildResponse(convertToGetProductQtySchema(updatedOrder[0]), true, "Quantity increased successfully")
       );
-
     }
     catch (err) {
       console.error(err);
@@ -214,10 +216,13 @@ export default class UserController {
       }
       
 
-      const updatedOrder = await getOrderById.run({ id: order[0].id }, pool);
+      const updatedOrder = await getOrderProductQuantity.run({
+        product_id: req.body.product_id, 
+        user_id: req.body.payload.sub,
+      }, pool);
 
       res.status(200).json(
-        buildResponse(convertToGetOrderSchema(updatedOrder), true, "Quantity increased successfully")
+        buildResponse(convertToGetProductQtySchema(updatedOrder[0]), true, "Quantity decreased successfully")
       );
 
     }
