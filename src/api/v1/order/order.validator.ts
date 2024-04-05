@@ -23,3 +23,18 @@ export function validateDecreaseProductQty() {
       .isUUID().withMessage("Invalid product ID")
   ];
 }
+
+export function validateToggleProductSchema() {
+  return [
+    body("product_id")
+      .notEmpty().withMessage("Product ID is required")
+      .isUUID().withMessage("Invalid product ID")
+  ];
+}
+export function validateToggleStoreSchema() {
+  return [
+    body("store_id")
+      .notEmpty().withMessage("Store ID is required")
+      .isUUID().withMessage("Invalid store ID")
+  ];
+}

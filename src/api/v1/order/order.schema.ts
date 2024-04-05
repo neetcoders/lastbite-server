@@ -27,10 +27,25 @@ export type DecreaseProductQtySchema = {
   }
 }
 
+export type ToggleStoreSelectedSchema = {
+  product_id: string;
+  payload: {
+    sub: string;
+  }
+}
+
+export type ToggleProductSelectedSchema = {
+  product_id: string;
+  payload: {
+    sub: string;
+  }
+}
+
 
 export function convertToGetProductQtySchema(product: IGetOrderProductQuantityResult) {
   return {
     id: product.id,
+    selected: product.selected,
     display_name: product.display_name,
     price_before: product.price_before,
     price_after: product.price_after,
@@ -62,7 +77,7 @@ export function convertToGetOrderSchema(order: IGetOrderByIdResult[]) {
       ? 0 
       : order.filter(o => o.order_product_selected)
         .map(o => o.product_price_after * o.order_product_quantity)
-        .reduce((prev, curr) => prev + curr),
+        .reduce((prev, curr) => prev + curr, 0),
   }
 }
 
