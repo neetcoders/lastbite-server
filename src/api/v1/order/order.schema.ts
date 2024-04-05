@@ -7,6 +7,23 @@ export type AddToCartSchema = {
   }
 }
 
+export type IncreaseProductQtySchema = {
+  order_id: string;
+  product_id: string;
+  payload: {
+    sub: string;
+  }
+}
+
+export type DecreaseProductQtySchema = {
+  order_id: string;
+  product_id: string;
+  payload: {
+    sub: string;
+  }
+}
+
+
 export function convertToGetOrderSchema(order: IGetOrderByIdResult[]) {
   return {
     id: order[0].id,
