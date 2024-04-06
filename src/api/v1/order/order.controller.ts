@@ -3,8 +3,8 @@ import { Request, Response, query } from "express";
 
 import pool from "@/database/pool";
 import { buildResponse } from "@/utils/response";
-import { AddToCartSchema, DecreaseProductQtySchema, DeleteOrderFromProduct, DeleteOrderFromStore, GetOrderDetailsSchema, GetOrderListSchema, GetProductQtySchema, IncreaseProductQtySchema, ToggleProductSelectedSchema, ToggleStoreSelectedSchema, convertToGetOrderSchema, convertToGetProductQtySchema, convertToGetUserCartSchema } from "./order.schema";
-import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser, decreaseOrderProductQuantity, getOrderProductQuantity, toggleOrderProductSelected, toggleOrderStoreSelected, deleteOrderStore, deleteOrderProduct, deleteEmptyOrder, getUserOrderList, order_status } from "./order.queries";
+import { AddToCartSchema, CheckoutProductSchema as CheckoutOrderSchema, DecreaseProductQtySchema, DeleteOrderFromProductSchema, DeleteOrderFromStoreSchema, GetOrderDetailsSchema, GetOrderListSchema, GetProductQtySchema, IncreaseProductQtySchema, ToggleProductSelectedSchema, ToggleStoreSelectedSchema, convertToGetOrderSchema, convertToGetProductQtySchema, convertToGetUserCartSchema } from "./order.schema";
+import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser, decreaseOrderProductQuantity, getOrderProductQuantity, toggleOrderProductSelected, toggleOrderStoreSelected, deleteOrderStore, deleteOrderProduct, deleteEmptyOrder, getUserOrderList, order_status, getUserCartSelectedIdList, checkoutSelectedOrderProduct, createNewWaitingOrder } from "./order.queries";
 import { getMinimumProduct } from "../product/product.queries";
 
 export default class UserController {
@@ -414,7 +414,7 @@ export default class UserController {
   }
 
 
-  static async deleteOrderFromStore(req: Request<ParamsDictionary, any, DeleteOrderFromStore>, res: Response) {
+  static async deleteOrderFromStore(req: Request<ParamsDictionary, any, DeleteOrderFromStoreSchema>, res: Response) {
     try {
       const order = await deleteOrderStore.run({
         store_id: req.params.store_id,
@@ -441,7 +441,7 @@ export default class UserController {
   }
 
 
-  static async deleteOrderFromProduct(req: Request<ParamsDictionary, any, DeleteOrderFromProduct>, res: Response) {
+  static async deleteOrderFromProduct(req: Request<ParamsDictionary, any, DeleteOrderFromProductSchema>, res: Response) {
     try {
       await pool.query("BEGIN");
 
@@ -461,6 +461,52 @@ export default class UserController {
       await pool.query("COMMIT");
       res.status(200).json(
         buildResponse(null, true, "Product deleted from order successfully")
+      );
+    }
+    catch (err) {
+      await pool.query("ROLLBACK");
+      console.error(err);
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
+
+
+  static async checkoutOrder(req: Request<ParamsDictionary, any, CheckoutOrderSchema>, res: Response) {
+    try {
+      const userOrders = await getUserCartSelectedIdList.run({ user_id: req.body.payload.sub }, pool);
+      
+      if (!userOrders || userOrders.length === 0) {
+        return res.status(400).json(
+          buildResponse(null, false, "User cart is empty")
+        );
+      }
+
+      await pool.query("BEGIN");
+
+      for (let order of userOrders) {
+        const newOrder = await createNewWaitingOrder.run({
+          store_id: order.store_id, 
+          customer_id: req.body.payload.sub 
+        }, pool);
+
+        await checkoutSelectedOrderProduct.run({
+          old_order_id: order.id,
+          new_order_id: newOrder[0].id
+        }, pool);
+
+        await deleteEmptyOrder.run(void {}, pool);
+      };
+
+      const waitingOrders = await getUserOrderList.run({
+        user_id: req.body.payload.sub,
+        status: "waiting"
+      }, pool);
+
+      await pool.query("COMMIT");
+      return res.status(200).json(
+        buildResponse(convertToGetUserCartSchema(waitingOrders), true, "Checkout success")
       );
     }
     catch (err) {

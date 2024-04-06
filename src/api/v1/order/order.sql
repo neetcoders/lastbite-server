@@ -13,6 +13,12 @@ VALUES (:customer_id, :store_id)
 RETURNING id;
 
 
+/* @name CreateNewWaitingOrder */
+INSERT INTO orders (customer_id, store_id, status)
+VALUES (:customer_id, :store_id, 'waiting')
+RETURNING id;
+
+
 /* @name CreateOrderProduct */
 INSERT INTO order_product (order_id, product_id, quantity)
 VALUES (:order_id, :product_id, 1)
@@ -224,3 +230,19 @@ WHERE
     o.customer_id = :user_id
     AND o.status = :status
 ORDER BY o.updated_at DESC;
+
+
+/* @name GetUserCartSelectedIDList */
+SELECT id, store_id
+FROM orders
+WHERE 
+    customer_id = :user_id
+    AND status = 'in-cart-selected';
+
+
+/* @name CheckoutSelectedOrderProduct */
+UPDATE order_product
+SET order_id = :new_order_id
+WHERE
+    order_id = :old_order_id
+    AND selected IS TRUE;

@@ -53,13 +53,19 @@ export type ToggleProductSelectedSchema = {
   }
 }
 
-export type DeleteOrderFromStore = {
+export type DeleteOrderFromStoreSchema = {
   payload: {
     sub: string;
   }
 }
 
-export type DeleteOrderFromProduct = {
+export type DeleteOrderFromProductSchema = {
+  payload: {
+    sub: string;
+  }
+}
+
+export type CheckoutProductSchema = {
   payload: {
     sub: string;
   }

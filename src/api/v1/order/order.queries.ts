@@ -66,6 +66,36 @@ const createNewOrderIR: any = {"usedParamSet":{"customer_id":true,"store_id":tru
 export const createNewOrder = new PreparedQuery<ICreateNewOrderParams,ICreateNewOrderResult>(createNewOrderIR);
 
 
+/** 'CreateNewWaitingOrder' parameters type */
+export interface ICreateNewWaitingOrderParams {
+  customer_id?: string | null | void;
+  store_id?: string | null | void;
+}
+
+/** 'CreateNewWaitingOrder' return type */
+export interface ICreateNewWaitingOrderResult {
+  id: string;
+}
+
+/** 'CreateNewWaitingOrder' query type */
+export interface ICreateNewWaitingOrderQuery {
+  params: ICreateNewWaitingOrderParams;
+  result: ICreateNewWaitingOrderResult;
+}
+
+const createNewWaitingOrderIR: any = {"usedParamSet":{"customer_id":true,"store_id":true},"params":[{"name":"customer_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":59,"b":70}]},{"name":"store_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":73,"b":81}]}],"statement":"INSERT INTO orders (customer_id, store_id, status)\nVALUES (:customer_id, :store_id, 'waiting')\nRETURNING id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * INSERT INTO orders (customer_id, store_id, status)
+ * VALUES (:customer_id, :store_id, 'waiting')
+ * RETURNING id
+ * ```
+ */
+export const createNewWaitingOrder = new PreparedQuery<ICreateNewWaitingOrderParams,ICreateNewWaitingOrderResult>(createNewWaitingOrderIR);
+
+
 /** 'CreateOrderProduct' parameters type */
 export interface ICreateOrderProductParams {
   order_id?: string | null | void;
@@ -639,5 +669,67 @@ const getUserOrderListIR: any = {"usedParamSet":{"user_id":true,"status":true},"
  * ```
  */
 export const getUserOrderList = new PreparedQuery<IGetUserOrderListParams,IGetUserOrderListResult>(getUserOrderListIR);
+
+
+/** 'GetUserCartSelectedIdList' parameters type */
+export interface IGetUserCartSelectedIdListParams {
+  user_id?: string | null | void;
+}
+
+/** 'GetUserCartSelectedIdList' return type */
+export interface IGetUserCartSelectedIdListResult {
+  id: string;
+  store_id: string;
+}
+
+/** 'GetUserCartSelectedIdList' query type */
+export interface IGetUserCartSelectedIdListQuery {
+  params: IGetUserCartSelectedIdListParams;
+  result: IGetUserCartSelectedIdListResult;
+}
+
+const getUserCartSelectedIdListIR: any = {"usedParamSet":{"user_id":true},"params":[{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":57,"b":64}]}],"statement":"SELECT id, store_id\nFROM orders\nWHERE \n    customer_id = :user_id\n    AND status = 'in-cart-selected'"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT id, store_id
+ * FROM orders
+ * WHERE 
+ *     customer_id = :user_id
+ *     AND status = 'in-cart-selected'
+ * ```
+ */
+export const getUserCartSelectedIdList = new PreparedQuery<IGetUserCartSelectedIdListParams,IGetUserCartSelectedIdListResult>(getUserCartSelectedIdListIR);
+
+
+/** 'CheckoutSelectedOrderProduct' parameters type */
+export interface ICheckoutSelectedOrderProductParams {
+  new_order_id?: string | null | void;
+  old_order_id?: string | null | void;
+}
+
+/** 'CheckoutSelectedOrderProduct' return type */
+export type ICheckoutSelectedOrderProductResult = void;
+
+/** 'CheckoutSelectedOrderProduct' query type */
+export interface ICheckoutSelectedOrderProductQuery {
+  params: ICheckoutSelectedOrderProductParams;
+  result: ICheckoutSelectedOrderProductResult;
+}
+
+const checkoutSelectedOrderProductIR: any = {"usedParamSet":{"new_order_id":true,"old_order_id":true},"params":[{"name":"new_order_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":36,"b":48}]},{"name":"old_order_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":71,"b":83}]}],"statement":"UPDATE order_product\nSET order_id = :new_order_id\nWHERE\n    order_id = :old_order_id\n    AND selected IS TRUE"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE order_product
+ * SET order_id = :new_order_id
+ * WHERE
+ *     order_id = :old_order_id
+ *     AND selected IS TRUE
+ * ```
+ */
+export const checkoutSelectedOrderProduct = new PreparedQuery<ICheckoutSelectedOrderProductParams,ICheckoutSelectedOrderProductResult>(checkoutSelectedOrderProductIR);
 
 
