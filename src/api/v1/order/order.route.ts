@@ -3,7 +3,7 @@ import { Router } from "express";
 import OrderController from "./order.controller";
 import { verifyAuthToken } from "@/services/jwt.service";
 import { validate } from "@/services/validator.service";
-import { validateAddToCart, validateChangeOrderStatusSchema, validateDecreaseProductQty, validateDeleteOrderFromProductSchema, validateDeleteOrderFromStoreSchema, validateGetOrderListSchema, validateGetOrderSchema, validateIncreaseProductQty, validateToggleProductSchema, validateToggleStoreSchema } from "./order.validator";
+import { validateAddToCart, validateChangeOrderStatusSchema, validateDecreaseProductQty, validateDeleteOrderFromProductSchema, validateDeleteOrderFromStoreSchema, validateGetOrderListSchema, validateGetOrderSchema, validateGetProductQty, validateIncreaseProductQty, validateToggleProductSchema, validateToggleStoreSchema } from "./order.validator";
 
 const router = Router();
 
@@ -12,9 +12,9 @@ router.post("/add", verifyAuthToken, validateAddToCart(), validate, OrderControl
 
 router.post("/checkout", verifyAuthToken, OrderController.checkoutOrder);
 
-router.post("/qty/increase", verifyAuthToken, validateIncreaseProductQty(), validate, OrderController.increaseProductQty);
-router.post("/qty/decrease", verifyAuthToken, validateDecreaseProductQty(), validate, OrderController.decreaseProductQty);
-router.get("/qty/:product_id", verifyAuthToken, OrderController.getProductQty);
+router.get("/qty/:product_id", verifyAuthToken, validateGetProductQty(), validate, OrderController.getProductQty);
+router.post("/qty/:product_id/increase", verifyAuthToken, validateIncreaseProductQty(), validate, OrderController.increaseProductQty);
+router.post("/qty/:product_id/decrease", verifyAuthToken, validateDecreaseProductQty(), validate, OrderController.decreaseProductQty);
 
 router.post("/product/toggle_selected", verifyAuthToken, validateToggleProductSchema(), validate, OrderController.toggleProductSelected);
 router.delete("/product/:product_id", verifyAuthToken, validateDeleteOrderFromProductSchema(), validate, OrderController.deleteOrderFromProduct);

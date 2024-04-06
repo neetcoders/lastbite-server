@@ -143,7 +143,7 @@ export default class UserController {
 
   static async increaseProductQty(req: Request<ParamsDictionary, any, IncreaseProductQtySchema>, res: Response) {
     try {
-      const product = await getMinimumProduct.run({ id: req.body.product_id }, pool);
+      const product = await getMinimumProduct.run({ id: req.params.product_id }, pool);
 
       if (!product || product.length === 0) {
         return res.status(404).json(
@@ -166,7 +166,7 @@ export default class UserController {
 
       const orderProduct = await getOrderProductId.run({
         order_id: order[0].id, 
-        product_id: req.body.product_id, 
+        product_id: req.params.product_id, 
         user_id: req.body.payload.sub,
       }, pool);
 
@@ -184,7 +184,7 @@ export default class UserController {
       }
       else {
         await increaseOrderProductQuantity.run({
-          product_id: req.body.product_id,
+          product_id: req.params.product_id,
           customer_id: req.body.payload.sub,
           order_id: order[0].id,
         }, pool);
@@ -192,7 +192,7 @@ export default class UserController {
       
 
       const updatedOrder = await getOrderProductQuantity.run({
-        product_id: req.body.product_id, 
+        product_id: req.params.product_id, 
         user_id: req.body.payload.sub,
       }, pool);
 
@@ -211,7 +211,7 @@ export default class UserController {
 
   static async decreaseProductQty(req: Request<ParamsDictionary, any, DecreaseProductQtySchema>, res: Response) {
     try {
-      const product = await getMinimumProduct.run({ id: req.body.product_id }, pool);
+      const product = await getMinimumProduct.run({ id: req.params.product_id }, pool);
 
       if (!product || product.length === 0) {
         return res.status(404).json(
@@ -234,7 +234,7 @@ export default class UserController {
 
       const orderProduct = await getOrderProductId.run({
         order_id: order[0].id, 
-        product_id: req.body.product_id, 
+        product_id: req.params.product_id, 
         user_id: req.body.payload.sub,
       }, pool);
 
@@ -252,7 +252,7 @@ export default class UserController {
       }
       else {
         await decreaseOrderProductQuantity.run({
-          product_id: req.body.product_id,
+          product_id: req.params.product_id,
           customer_id: req.body.payload.sub,
           order_id: order[0].id,
         }, pool);
@@ -260,7 +260,7 @@ export default class UserController {
       
 
       const updatedOrder = await getOrderProductQuantity.run({
-        product_id: req.body.product_id, 
+        product_id: req.params.product_id, 
         user_id: req.body.payload.sub,
       }, pool);
 

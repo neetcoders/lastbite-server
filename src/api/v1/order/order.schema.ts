@@ -26,14 +26,12 @@ export type GetProductQtySchema = {
 }
 
 export type IncreaseProductQtySchema = {
-  product_id: string;
   payload: {
     sub: string;
   }
 }
 
 export type DecreaseProductQtySchema = {
-  product_id: string;
   payload: {
     sub: string;
   }
