@@ -3,8 +3,8 @@ import { Request, Response, query } from "express";
 
 import pool from "@/database/pool";
 import { buildResponse } from "@/utils/response";
-import { AddToCartSchema, DecreaseProductQtySchema, DeleteOrderFromProduct, DeleteOrderFromStore, GetOrderDetailsSchema, GetProductQtySchema, IncreaseProductQtySchema, ToggleProductSelectedSchema, ToggleStoreSelectedSchema, convertToGetOrderSchema, convertToGetProductQtySchema, convertToGetUserCartSchema } from "./order.schema";
-import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser, decreaseOrderProductQuantity, getOrderProductQuantity, toggleOrderProductSelected, toggleOrderStoreSelected, deleteOrderStore, deleteOrderProduct, deleteEmptyOrder } from "./order.queries";
+import { AddToCartSchema, DecreaseProductQtySchema, DeleteOrderFromProduct, DeleteOrderFromStore, GetOrderDetailsSchema, GetOrderListSchema, GetProductQtySchema, IncreaseProductQtySchema, ToggleProductSelectedSchema, ToggleStoreSelectedSchema, convertToGetOrderSchema, convertToGetProductQtySchema, convertToGetUserCartSchema } from "./order.schema";
+import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser, decreaseOrderProductQuantity, getOrderProductQuantity, toggleOrderProductSelected, toggleOrderStoreSelected, deleteOrderStore, deleteOrderProduct, deleteEmptyOrder, getUserOrderList, order_status } from "./order.queries";
 import { getMinimumProduct } from "../product/product.queries";
 
 export default class UserController {
@@ -87,6 +87,26 @@ export default class UserController {
       const userCart = await getUserCartByUser.run({ user_id: req.body.payload.sub }, pool);
       return res.status(200).json(
         buildResponse(convertToGetUserCartSchema(userCart), true, "User cart fetched successfully")
+      );
+    }
+    catch (err) {
+      console.error(err);
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
+
+
+  static async getOrderList(req: Request<ParamsDictionary, any, GetOrderListSchema>, res: Response) {
+    try {
+      const userOrders = await getUserOrderList.run({ 
+        user_id: req.body.payload.sub, 
+        status: req.query.status as order_status,
+      }, pool);
+
+      return res.status(200).json(
+        buildResponse(convertToGetUserCartSchema(userOrders), true, "User orders fetched successfully")
       );
     }
     catch (err) {

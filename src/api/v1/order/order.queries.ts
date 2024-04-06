@@ -578,3 +578,66 @@ const getUserCartByUserIR: any = {"usedParamSet":{"user_id":true},"params":[{"na
 export const getUserCartByUser = new PreparedQuery<IGetUserCartByUserParams,IGetUserCartByUserResult>(getUserCartByUserIR);
 
 
+/** 'GetUserOrderList' parameters type */
+export interface IGetUserOrderListParams {
+  status?: order_status | null | void;
+  user_id?: string | null | void;
+}
+
+/** 'GetUserOrderList' return type */
+export interface IGetUserOrderListResult {
+  created_at: Date;
+  id: string;
+  order_product_id: string;
+  order_product_quantity: number;
+  order_product_selected: boolean;
+  product_display_name: string;
+  product_id: string;
+  product_price_after: number;
+  product_price_before: number;
+  product_stock: number;
+  status: order_status;
+  store_display_name: string;
+  store_id: string;
+  updated_at: Date;
+}
+
+/** 'GetUserOrderList' query type */
+export interface IGetUserOrderListQuery {
+  params: IGetUserOrderListParams;
+  result: IGetUserOrderListResult;
+}
+
+const getUserOrderListIR: any = {"usedParamSet":{"user_id":true,"status":true},"params":[{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":627,"b":634}]},{"name":"status","required":false,"transform":{"type":"scalar"},"locs":[{"a":655,"b":661}]}],"statement":"SELECT\n    o.id,\n    o.status,\n    s.id AS \"store_id\",\n    s.display_name AS \"store_display_name\",\n    p.id AS \"product_id\",\n    op.id AS \"order_product_id\",\n    op.selected AS \"order_product_selected\",\n    op.quantity AS \"order_product_quantity\",\n    p.display_name AS \"product_display_name\",\n    p.price_before AS \"product_price_before\",\n    p.price_after AS \"product_price_after\",\n    p.stock AS \"product_stock\",\n    o.created_at,\n    o.updated_at\nFROM orders o\nINNER JOIN order_product op ON o.id = op.order_id\nINNER JOIN store s ON s.id = o.store_id\nINNER JOIN product p ON p.id = op.product_id\nWHERE \n    o.customer_id = :user_id\n    AND o.status = :status\nORDER BY o.updated_at DESC"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT
+ *     o.id,
+ *     o.status,
+ *     s.id AS "store_id",
+ *     s.display_name AS "store_display_name",
+ *     p.id AS "product_id",
+ *     op.id AS "order_product_id",
+ *     op.selected AS "order_product_selected",
+ *     op.quantity AS "order_product_quantity",
+ *     p.display_name AS "product_display_name",
+ *     p.price_before AS "product_price_before",
+ *     p.price_after AS "product_price_after",
+ *     p.stock AS "product_stock",
+ *     o.created_at,
+ *     o.updated_at
+ * FROM orders o
+ * INNER JOIN order_product op ON o.id = op.order_id
+ * INNER JOIN store s ON s.id = o.store_id
+ * INNER JOIN product p ON p.id = op.product_id
+ * WHERE 
+ *     o.customer_id = :user_id
+ *     AND o.status = :status
+ * ORDER BY o.updated_at DESC
+ * ```
+ */
+export const getUserOrderList = new PreparedQuery<IGetUserOrderListParams,IGetUserOrderListResult>(getUserOrderListIR);
+
+

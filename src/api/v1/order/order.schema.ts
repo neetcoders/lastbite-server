@@ -13,6 +13,12 @@ export type GetOrderDetailsSchema = {
   }
 }
 
+export type GetOrderListSchema = {
+  payload: {
+    sub: string;
+  }
+}
+
 export type GetProductQtySchema = {
   payload: {
     sub: string;

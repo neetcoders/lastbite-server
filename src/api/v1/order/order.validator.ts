@@ -1,4 +1,4 @@
-import { body, param } from "express-validator";
+import { body, param, query } from "express-validator";
 
 export function validateAddToCart() {
   return [
@@ -62,4 +62,12 @@ export function validateGetOrderSchema() {
       .notEmpty().withMessage("Order ID is required")
       .isUUID().withMessage("Invalid order ID")
   ];
+}
+
+export function validateGetOrderListSchema() {
+  return [
+    query("status")
+      .notEmpty().withMessage("Status is required")
+      .isIn(["waiting", "processed", "ready", "done", "cancelled", "rejected"]).withMessage("Invalid status")
+  ]
 }

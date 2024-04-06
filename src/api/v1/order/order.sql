@@ -198,3 +198,29 @@ INNER JOIN product p ON p.id = op.product_id
 WHERE 
     o.customer_id = :user_id
     AND o.status IN ('in-cart-selected', 'in-cart-unselected');
+
+
+/* @name GetUserOrderList */
+SELECT
+    o.id,
+    o.status,
+    s.id AS "store_id",
+    s.display_name AS "store_display_name",
+    p.id AS "product_id",
+    op.id AS "order_product_id",
+    op.selected AS "order_product_selected",
+    op.quantity AS "order_product_quantity",
+    p.display_name AS "product_display_name",
+    p.price_before AS "product_price_before",
+    p.price_after AS "product_price_after",
+    p.stock AS "product_stock",
+    o.created_at,
+    o.updated_at
+FROM orders o
+INNER JOIN order_product op ON o.id = op.order_id
+INNER JOIN store s ON s.id = o.store_id
+INNER JOIN product p ON p.id = op.product_id
+WHERE 
+    o.customer_id = :user_id
+    AND o.status = :status
+ORDER BY o.updated_at DESC;
