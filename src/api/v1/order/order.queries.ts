@@ -608,6 +608,68 @@ const getUserCartByUserIR: any = {"usedParamSet":{"user_id":true},"params":[{"na
 export const getUserCartByUser = new PreparedQuery<IGetUserCartByUserParams,IGetUserCartByUserResult>(getUserCartByUserIR);
 
 
+/** 'GetUserSelectedCartByUser' parameters type */
+export interface IGetUserSelectedCartByUserParams {
+  user_id?: string | null | void;
+}
+
+/** 'GetUserSelectedCartByUser' return type */
+export interface IGetUserSelectedCartByUserResult {
+  created_at: Date;
+  id: string;
+  order_product_id: string;
+  order_product_quantity: number;
+  order_product_selected: boolean;
+  product_display_name: string;
+  product_id: string;
+  product_price_after: number;
+  product_price_before: number;
+  product_stock: number;
+  status: order_status;
+  store_display_name: string;
+  store_id: string;
+  updated_at: Date;
+}
+
+/** 'GetUserSelectedCartByUser' query type */
+export interface IGetUserSelectedCartByUserQuery {
+  params: IGetUserSelectedCartByUserParams;
+  result: IGetUserSelectedCartByUserResult;
+}
+
+const getUserSelectedCartByUserIR: any = {"usedParamSet":{"user_id":true},"params":[{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":627,"b":634}]}],"statement":"SELECT\n    o.id,\n    o.status,\n    s.id AS \"store_id\",\n    s.display_name AS \"store_display_name\",\n    p.id AS \"product_id\",\n    op.id AS \"order_product_id\",\n    op.selected AS \"order_product_selected\",\n    op.quantity AS \"order_product_quantity\",\n    p.display_name AS \"product_display_name\",\n    p.price_before AS \"product_price_before\",\n    p.price_after AS \"product_price_after\",\n    p.stock AS \"product_stock\",\n    o.created_at,\n    o.updated_at\nFROM orders o\nINNER JOIN order_product op ON o.id = op.order_id\nINNER JOIN store s ON s.id = o.store_id\nINNER JOIN product p ON p.id = op.product_id\nWHERE \n    o.customer_id = :user_id\n    AND o.status = 'in-cart-selected'\n    AND op.selected IS TRUE"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT
+ *     o.id,
+ *     o.status,
+ *     s.id AS "store_id",
+ *     s.display_name AS "store_display_name",
+ *     p.id AS "product_id",
+ *     op.id AS "order_product_id",
+ *     op.selected AS "order_product_selected",
+ *     op.quantity AS "order_product_quantity",
+ *     p.display_name AS "product_display_name",
+ *     p.price_before AS "product_price_before",
+ *     p.price_after AS "product_price_after",
+ *     p.stock AS "product_stock",
+ *     o.created_at,
+ *     o.updated_at
+ * FROM orders o
+ * INNER JOIN order_product op ON o.id = op.order_id
+ * INNER JOIN store s ON s.id = o.store_id
+ * INNER JOIN product p ON p.id = op.product_id
+ * WHERE 
+ *     o.customer_id = :user_id
+ *     AND o.status = 'in-cart-selected'
+ *     AND op.selected IS TRUE
+ * ```
+ */
+export const getUserSelectedCartByUser = new PreparedQuery<IGetUserSelectedCartByUserParams,IGetUserSelectedCartByUserResult>(getUserSelectedCartByUserIR);
+
+
 /** 'GetOrderListByUser' parameters type */
 export interface IGetOrderListByUserParams {
   status?: order_status | null | void;

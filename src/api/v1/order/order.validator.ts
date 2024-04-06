@@ -1,5 +1,13 @@
 import { body, param, query } from "express-validator";
 
+export function validateGetCart() {
+  return [
+    query("selected_only")
+      .optional()
+      .isBoolean().withMessage("Selected must be either true or false"),
+  ];
+}
+
 export function validateAddToCart() {
   return [
     body("product_id")
