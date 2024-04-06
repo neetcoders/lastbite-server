@@ -3,7 +3,7 @@ import { Router } from "express";
 import OrderController from "./order.controller";
 import { verifyAuthToken } from "@/services/jwt.service";
 import { validate } from "@/services/validator.service";
-import { validateAddToCart, validateDecreaseProductQty, validateDeleteOrderFromPoductSchema, validateDeleteOrderFromStoreSchema, validateIncreaseProductQty, validateToggleProductSchema, validateToggleStoreSchema } from "./order.validator";
+import { validateAddToCart, validateDecreaseProductQty, validateDeleteOrderFromProductSchema, validateDeleteOrderFromStoreSchema, validateGetOrderSchema, validateIncreaseProductQty, validateToggleProductSchema, validateToggleStoreSchema } from "./order.validator";
 
 const router = Router();
 
@@ -15,9 +15,11 @@ router.post("/qty/decrease", verifyAuthToken, validateDecreaseProductQty(), vali
 router.get("/qty/:product_id", verifyAuthToken, OrderController.getProductQty);
 
 router.post("/product/toggle_selected", verifyAuthToken, validateToggleProductSchema(), validate, OrderController.toggleProductSelected);
-router.delete("/product/:product_id", verifyAuthToken, validateDeleteOrderFromPoductSchema(), validate, OrderController.deleteOrderFromProduct);
+router.delete("/product/:product_id", verifyAuthToken, validateDeleteOrderFromProductSchema(), validate, OrderController.deleteOrderFromProduct);
 
 router.post("/store/toggle_selected", verifyAuthToken, validateToggleStoreSchema(), validate, OrderController.toggleStoreSelected);
 router.delete("/store/:store_id", verifyAuthToken, validateDeleteOrderFromStoreSchema(), validate, OrderController.deleteOrderFromStore);
+
+router.get("/details/:order_id", verifyAuthToken, validateGetOrderSchema(), validate, OrderController.getOrderDetails);
 
 export default router;

@@ -7,6 +7,12 @@ export type AddToCartSchema = {
   }
 }
 
+export type GetOrderDetailsSchema = {
+  payload: {
+    sub: string;
+  }
+}
+
 export type GetProductQtySchema = {
   payload: {
     sub: string;
@@ -75,6 +81,15 @@ export function convertToGetOrderSchema(order: IGetOrderByIdResult[]) {
     store: {
       id: order[0].store_id,
       display_name: order[0].store_display_name,
+    },
+    user: {
+      email: order[0].user_email,
+      display_name: order[0].user_display_name,
+      address: {
+        street: order[0].address_street,
+        longitude: order[0].address_longitude,
+        latitude: order[0].address_latitude,
+      },
     },
     products: order.map(o => ({
       id: o.product_id,

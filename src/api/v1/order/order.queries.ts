@@ -450,6 +450,9 @@ export interface IGetOrderByIdParams {
 
 /** 'GetOrderById' return type */
 export interface IGetOrderByIdResult {
+  address_latitude: number | null;
+  address_longitude: number | null;
+  address_street: string;
   created_at: Date;
   id: string;
   order_product_id: string;
@@ -464,6 +467,9 @@ export interface IGetOrderByIdResult {
   store_display_name: string;
   store_id: string;
   updated_at: Date;
+  user_display_name: string;
+  user_email: string;
+  user_id: string;
 }
 
 /** 'GetOrderById' query type */
@@ -472,7 +478,7 @@ export interface IGetOrderByIdQuery {
   result: IGetOrderByIdResult;
 }
 
-const getOrderByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":618,"b":620}]}],"statement":"SELECT\n    o.id,\n    o.status,\n    s.id AS \"store_id\",\n    s.display_name AS \"store_display_name\",\n    p.id AS \"product_id\",\n    op.id AS \"order_product_id\",\n    op.selected AS \"order_product_selected\",\n    op.quantity AS \"order_product_quantity\",\n    p.display_name AS \"product_display_name\",\n    p.price_before AS \"product_price_before\",\n    p.price_after AS \"product_price_after\",\n    p.stock AS \"product_stock\",\n    o.created_at,\n    o.updated_at\nFROM orders o\nINNER JOIN order_product op ON o.id = op.order_id\nINNER JOIN store s ON s.id = o.store_id\nINNER JOIN product p ON p.id = op.product_id\nWHERE \n    o.id = :id"};
+const getOrderByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":953,"b":955}]}],"statement":"SELECT\n    o.id,\n    o.status,\n    s.id AS \"store_id\",\n    s.display_name AS \"store_display_name\",\n    u.id AS \"user_id\",\n    u.email AS \"user_email\",\n    u.display_name AS \"user_display_name\",\n    a.street AS \"address_street\", \n    ST_X(coordinates::geometry) as \"address_longitude\",\n    ST_Y(coordinates::geometry) as \"address_latitude\", \n    p.id AS \"product_id\",\n    op.id AS \"order_product_id\",\n    op.selected AS \"order_product_selected\",\n    op.quantity AS \"order_product_quantity\",\n    p.display_name AS \"product_display_name\",\n    p.price_before AS \"product_price_before\",\n    p.price_after AS \"product_price_after\",\n    p.stock AS \"product_stock\",\n    o.created_at,\n    o.updated_at\nFROM orders o\nINNER JOIN order_product op ON o.id = op.order_id\nINNER JOIN store s ON s.id = o.store_id\nINNER JOIN product p ON p.id = op.product_id\nINNER JOIN users u ON u.id = o.customer_id\nLEFT JOIN address a ON u.active_address_id = a.id\nWHERE \n    o.id = :id"};
 
 /**
  * Query generated from SQL:
@@ -482,6 +488,12 @@ const getOrderByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","
  *     o.status,
  *     s.id AS "store_id",
  *     s.display_name AS "store_display_name",
+ *     u.id AS "user_id",
+ *     u.email AS "user_email",
+ *     u.display_name AS "user_display_name",
+ *     a.street AS "address_street", 
+ *     ST_X(coordinates::geometry) as "address_longitude",
+ *     ST_Y(coordinates::geometry) as "address_latitude", 
  *     p.id AS "product_id",
  *     op.id AS "order_product_id",
  *     op.selected AS "order_product_selected",
@@ -496,6 +508,8 @@ const getOrderByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","
  * INNER JOIN order_product op ON o.id = op.order_id
  * INNER JOIN store s ON s.id = o.store_id
  * INNER JOIN product p ON p.id = op.product_id
+ * INNER JOIN users u ON u.id = o.customer_id
+ * LEFT JOIN address a ON u.active_address_id = a.id
  * WHERE 
  *     o.id = :id
  * ```

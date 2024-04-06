@@ -3,7 +3,7 @@ import { Request, Response, query } from "express";
 
 import pool from "@/database/pool";
 import { buildResponse } from "@/utils/response";
-import { AddToCartSchema, DecreaseProductQtySchema, DeleteOrderFromProduct, DeleteOrderFromStore, GetProductQtySchema, IncreaseProductQtySchema, ToggleProductSelectedSchema, ToggleStoreSelectedSchema, convertToGetOrderSchema, convertToGetProductQtySchema, convertToGetUserCartSchema } from "./order.schema";
+import { AddToCartSchema, DecreaseProductQtySchema, DeleteOrderFromProduct, DeleteOrderFromStore, GetOrderDetailsSchema, GetProductQtySchema, IncreaseProductQtySchema, ToggleProductSelectedSchema, ToggleStoreSelectedSchema, convertToGetOrderSchema, convertToGetProductQtySchema, convertToGetUserCartSchema } from "./order.schema";
 import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser, decreaseOrderProductQuantity, getOrderProductQuantity, toggleOrderProductSelected, toggleOrderStoreSelected, deleteOrderStore, deleteOrderProduct, deleteEmptyOrder } from "./order.queries";
 import { getMinimumProduct } from "../product/product.queries";
 
@@ -87,6 +87,28 @@ export default class UserController {
       const userCart = await getUserCartByUser.run({ user_id: req.body.payload.sub }, pool);
       return res.status(200).json(
         buildResponse(convertToGetUserCartSchema(userCart), true, "User cart fetched successfully")
+      );
+    }
+    catch (err) {
+      console.error(err);
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
+
+
+  static async getOrderDetails(req: Request<ParamsDictionary, any, GetOrderDetailsSchema>, res: Response) {
+    try {
+      const order = await getOrderById.run({ id: req.params.order_id }, pool);
+      if (!order || order.length === 0 || order[0].user_id !== req.body.payload.sub) {
+        return res.status(404).json(
+          buildResponse(null, false, "Order not found")
+        );
+      }
+
+      return res.status(200).json(
+        buildResponse(convertToGetOrderSchema(order), true, "Order fetched successfully")
       );
     }
     catch (err) {

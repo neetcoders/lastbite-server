@@ -149,6 +149,12 @@ SELECT
     o.status,
     s.id AS "store_id",
     s.display_name AS "store_display_name",
+    u.id AS "user_id",
+    u.email AS "user_email",
+    u.display_name AS "user_display_name",
+    a.street AS "address_street", 
+    ST_X(coordinates::geometry) as "address_longitude",
+    ST_Y(coordinates::geometry) as "address_latitude", 
     p.id AS "product_id",
     op.id AS "order_product_id",
     op.selected AS "order_product_selected",
@@ -163,6 +169,8 @@ FROM orders o
 INNER JOIN order_product op ON o.id = op.order_id
 INNER JOIN store s ON s.id = o.store_id
 INNER JOIN product p ON p.id = op.product_id
+INNER JOIN users u ON u.id = o.customer_id
+LEFT JOIN address a ON u.active_address_id = a.id
 WHERE 
     o.id = :id;
 

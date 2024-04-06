@@ -48,10 +48,18 @@ export function validateDeleteOrderFromStoreSchema() {
   ];
 }
 
-export function validateDeleteOrderFromPoductSchema() {
+export function validateDeleteOrderFromProductSchema() {
   return [
     param("product_id")
       .notEmpty().withMessage("Product ID is required")
       .isUUID().withMessage("Invalid product ID")
+  ];
+}
+
+export function validateGetOrderSchema() {
+  return [
+    param("order_id")
+      .notEmpty().withMessage("Order ID is required")
+      .isUUID().withMessage("Invalid order ID")
   ];
 }
