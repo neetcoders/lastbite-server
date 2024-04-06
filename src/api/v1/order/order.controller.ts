@@ -6,6 +6,7 @@ import { buildResponse } from "@/utils/response";
 import { AddToCartSchema, CheckoutProductSchema as CheckoutOrderSchema, DecreaseProductQtySchema, DeleteOrderFromProductSchema, DeleteOrderFromStoreSchema, GetOrderDetailsSchema, GetOrderListSchema, GetProductQtySchema, IncreaseProductQtySchema, ToggleProductSelectedSchema, ToggleStoreSelectedSchema, convertToGetOrderSchema, convertToGetProductQtySchema, convertToGetUserCartSchema } from "./order.schema";
 import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser, decreaseOrderProductQuantity, getOrderProductQuantity, toggleOrderProductSelected, toggleOrderStoreSelected, deleteOrderStore, deleteOrderProduct, deleteEmptyOrder, getUserOrderList, order_status, getUserCartSelectedIdList, checkoutSelectedOrderProduct, createNewWaitingOrder } from "./order.queries";
 import { getMinimumProduct } from "../product/product.queries";
+import { checkUserActiveAddress } from "../address/address.queries";
 
 export default class UserController {
   static async addToCart(req: Request<ParamsDictionary, any, AddToCartSchema>, res: Response) {
@@ -475,6 +476,13 @@ export default class UserController {
 
   static async checkoutOrder(req: Request<ParamsDictionary, any, CheckoutOrderSchema>, res: Response) {
     try {
+      const activeAddress = await checkUserActiveAddress.run({ id: req.body.payload.sub }, pool);
+      if (!activeAddress[0].exists) {
+        return res.status(400).json(
+          buildResponse(null, false, "Active address not selected")
+        );
+      }
+
       const userOrders = await getUserCartSelectedIdList.run({ user_id: req.body.payload.sub }, pool);
       
       if (!userOrders || userOrders.length === 0) {

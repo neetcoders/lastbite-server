@@ -99,3 +99,14 @@ WHERE id = (
     WHERE id = :user_id
     LIMIT 1
 );
+
+
+/* @name CheckUserActiveAddress */
+SELECT
+    EXISTS (
+        SELECT 1 
+        FROM users 
+        WHERE 
+            id = :id 
+            AND active_address_id IS NOT NULL 
+    );
