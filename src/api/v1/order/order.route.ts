@@ -16,10 +16,10 @@ router.get("/qty/:product_id", verifyAuthToken, validateGetProductQty(), validat
 router.post("/qty/:product_id/increase", verifyAuthToken, validateIncreaseProductQty(), validate, OrderController.increaseProductQty);
 router.post("/qty/:product_id/decrease", verifyAuthToken, validateDecreaseProductQty(), validate, OrderController.decreaseProductQty);
 
-router.post("/product/toggle_selected", verifyAuthToken, validateToggleProductSchema(), validate, OrderController.toggleProductSelected);
+router.post("/product/:product_id/toggle_selected", verifyAuthToken, validateToggleProductSchema(), validate, OrderController.toggleProductSelected);
 router.delete("/product/:product_id", verifyAuthToken, validateDeleteOrderFromProductSchema(), validate, OrderController.deleteOrderFromProduct);
 
-router.post("/store/toggle_selected", verifyAuthToken, validateToggleStoreSchema(), validate, OrderController.toggleStoreSelected);
+router.post("/store/:store_id/toggle_selected", verifyAuthToken, validateToggleStoreSchema(), validate, OrderController.toggleStoreSelected);
 router.delete("/store/:store_id", verifyAuthToken, validateDeleteOrderFromStoreSchema(), validate, OrderController.deleteOrderFromStore);
 
 router.get("/details", verifyAuthToken, validateGetOrderListSchema(), validate, OrderController.getUserOrderList);

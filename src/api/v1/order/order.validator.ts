@@ -34,7 +34,7 @@ export function validateGetProductQty() {
 
 export function validateToggleProductSchema() {
   return [
-    body("product_id")
+    param("product_id")
       .notEmpty().withMessage("Product ID is required")
       .isUUID().withMessage("Invalid product ID")
   ];
@@ -42,7 +42,7 @@ export function validateToggleProductSchema() {
 
 export function validateToggleStoreSchema() {
   return [
-    body("store_id")
+    param("store_id")
       .notEmpty().withMessage("Store ID is required")
       .isUUID().withMessage("Invalid store ID")
   ];

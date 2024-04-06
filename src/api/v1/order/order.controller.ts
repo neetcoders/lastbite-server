@@ -328,7 +328,7 @@ export default class UserController {
 
   static async toggleProductSelected(req: Request<ParamsDictionary, any, ToggleProductSelectedSchema>, res: Response) {
     try {
-      const product = await getMinimumProduct.run({ id: req.body.product_id }, pool);
+      const product = await getMinimumProduct.run({ id: req.params.product_id }, pool);
 
       if (!product || product.length === 0) {
         return res.status(404).json(
@@ -350,7 +350,7 @@ export default class UserController {
       }
 
       const orderProduct = await toggleOrderProductSelected.run({
-        product_id: req.body.product_id,
+        product_id: req.params.product_id,
         order_id: order[0].id,
         customer_id: req.body.payload.sub,
       }, pool);
@@ -362,7 +362,7 @@ export default class UserController {
       }
 
       const updatedProduct = await getOrderProductQuantity.run({
-        product_id: req.body.product_id, 
+        product_id: req.params.product_id, 
         user_id: req.body.payload.sub,
       }, pool);
 
@@ -383,7 +383,7 @@ export default class UserController {
   static async toggleStoreSelected(req: Request<ParamsDictionary, any, ToggleStoreSelectedSchema>, res: Response) {
     try {
       const order = await toggleOrderStoreSelected.run({
-        store_id: req.body.store_id,
+        store_id: req.params.store_id,
         user_id: req.body.payload.sub,
       }, pool);
 

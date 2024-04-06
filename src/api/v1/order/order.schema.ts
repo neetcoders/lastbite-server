@@ -38,14 +38,12 @@ export type DecreaseProductQtySchema = {
 }
 
 export type ToggleStoreSelectedSchema = {
-  store_id: string;
   payload: {
     sub: string;
   }
 }
 
 export type ToggleProductSelectedSchema = {
-  product_id: string;
   payload: {
     sub: string;
   }
