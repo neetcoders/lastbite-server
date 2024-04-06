@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 
 export function validateAddToCart() {
   return [
@@ -31,9 +31,18 @@ export function validateToggleProductSchema() {
       .isUUID().withMessage("Invalid product ID")
   ];
 }
+
 export function validateToggleStoreSchema() {
   return [
     body("store_id")
+      .notEmpty().withMessage("Store ID is required")
+      .isUUID().withMessage("Invalid store ID")
+  ];
+}
+
+export function validateDeleteOrderFromStoreSchema() {
+  return [
+    param("store_id")
       .notEmpty().withMessage("Store ID is required")
       .isUUID().withMessage("Invalid store ID")
   ];

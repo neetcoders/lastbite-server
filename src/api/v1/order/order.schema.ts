@@ -41,6 +41,12 @@ export type ToggleProductSelectedSchema = {
   }
 }
 
+export type DeleteOrderFromStore = {
+  payload: {
+    sub: string;
+  }
+}
+
 
 export function convertToGetProductQtySchema(product: IGetOrderProductQuantityResult) {
   return {
@@ -122,6 +128,6 @@ export function convertToGetUserCartSchema(cart: IGetUserCartByUserResult[]) {
   const orders = Object.values(order);
   return {
     orders,
-    total_price: orders.map(o => o.total_price).reduce((prev, next) => prev + next),
+    total_price: orders.map(o => o.total_price).reduce((prev, next) => prev + next, 0),
   } 
 }

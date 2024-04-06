@@ -295,6 +295,39 @@ const toggleOrderStoreSelectedIR: any = {"usedParamSet":{"store_id":true,"user_i
 export const toggleOrderStoreSelected = new PreparedQuery<IToggleOrderStoreSelectedParams,IToggleOrderStoreSelectedResult>(toggleOrderStoreSelectedIR);
 
 
+/** 'DeleteOrderStore' parameters type */
+export interface IDeleteOrderStoreParams {
+  store_id?: string | null | void;
+  user_id?: string | null | void;
+}
+
+/** 'DeleteOrderStore' return type */
+export interface IDeleteOrderStoreResult {
+  id: string;
+}
+
+/** 'DeleteOrderStore' query type */
+export interface IDeleteOrderStoreQuery {
+  params: IDeleteOrderStoreParams;
+  result: IDeleteOrderStoreResult;
+}
+
+const deleteOrderStoreIR: any = {"usedParamSet":{"store_id":true,"user_id":true},"params":[{"name":"store_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":40,"b":48}]},{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":72,"b":79}]}],"statement":"DELETE FROM orders\nWHERE\n    store_id = :store_id\n    AND customer_id = :user_id\n    AND status IN ('in-cart-selected', 'in-cart-unselected')\nRETURNING id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * DELETE FROM orders
+ * WHERE
+ *     store_id = :store_id
+ *     AND customer_id = :user_id
+ *     AND status IN ('in-cart-selected', 'in-cart-unselected')
+ * RETURNING id
+ * ```
+ */
+export const deleteOrderStore = new PreparedQuery<IDeleteOrderStoreParams,IDeleteOrderStoreResult>(deleteOrderStoreIR);
+
+
 /** 'GetOrderProductQuantity' parameters type */
 export interface IGetOrderProductQuantityParams {
   product_id?: string | null | void;

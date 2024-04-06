@@ -92,6 +92,15 @@ WHERE
 RETURNING id;
 
 
+/* @name DeleteOrderStore */
+DELETE FROM orders
+WHERE
+    store_id = :store_id
+    AND customer_id = :user_id
+    AND status IN ('in-cart-selected', 'in-cart-unselected')
+RETURNING id;
+
+
 /* @name GetOrderProductQuantity */
 SELECT
     p.id,
