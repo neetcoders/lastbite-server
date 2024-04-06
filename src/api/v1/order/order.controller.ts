@@ -119,7 +119,7 @@ export default class UserController {
   }
 
 
-  static async getOrderDetails(req: Request<ParamsDictionary, any, GetOrderDetailsSchema>, res: Response) {
+  static async getUserOrderDetails(req: Request<ParamsDictionary, any, GetOrderDetailsSchema>, res: Response) {
     try {
       const order = await getOrderById.run({ id: req.params.order_id }, pool);
       if (!order || order.length === 0 || order[0].user_id !== req.body.payload.sub) {
@@ -536,6 +536,34 @@ export default class UserController {
 
       return res.status(200).json(
         buildResponse(convertToGetOrderListSchema(storeOrders), true, "Store orders fetched successfully")
+      );
+    }
+    catch (err) {
+      console.error(err);
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
+
+
+  static async getStoreOrderDetails(req: Request<ParamsDictionary, any, GetOrderDetailsSchema>, res: Response) {
+    try {
+      const order = await getOrderById.run({ id: req.params.order_id }, pool);
+      if (
+        !order || 
+        order.length === 0 || 
+        order[0].store_id !== req.body.payload.sub ||
+        order[0].status === "in-cart-selected" ||
+        order[0].status === "in-cart-unselected"
+      ) {
+        return res.status(404).json(
+          buildResponse(null, false, "Order not found")
+        );
+      }
+
+      return res.status(200).json(
+        buildResponse(convertToGetOrderSchema(order), true, "Order fetched successfully")
       );
     }
     catch (err) {
