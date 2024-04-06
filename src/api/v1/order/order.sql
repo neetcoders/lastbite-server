@@ -77,6 +77,30 @@ WHERE
 RETURNING id;
 
 
+/* @name DeleteOrderProduct */
+DELETE FROM order_product
+WHERE
+    product_id = :product_id
+    AND order_id = (
+        SELECT id
+        FROM orders
+        WHERE
+            customer_id = :customer_id
+            AND status IN ('in-cart-selected', 'in-cart-unselected')
+            AND store_id = (
+                SELECT store_id FROM product WHERE id = :product_id
+            )
+    )
+RETURNING id;
+
+
+/* @name DeleteEmptyOrder */
+DELETE FROM orders o
+WHERE NOT EXISTS (
+    SELECT 1 FROM order_product op WHERE op.order_id = o.id
+);
+
+
 /* @name ToggleOrderStoreSelected */
 UPDATE orders
 SET status = (

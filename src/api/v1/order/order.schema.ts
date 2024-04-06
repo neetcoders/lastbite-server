@@ -47,6 +47,12 @@ export type DeleteOrderFromStore = {
   }
 }
 
+export type DeleteOrderFromProduct = {
+  payload: {
+    sub: string;
+  }
+}
+
 
 export function convertToGetProductQtySchema(product: IGetOrderProductQuantityResult) {
   return {

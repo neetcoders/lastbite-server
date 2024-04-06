@@ -256,6 +256,73 @@ const toggleOrderProductSelectedIR: any = {"usedParamSet":{"product_id":true,"or
 export const toggleOrderProductSelected = new PreparedQuery<IToggleOrderProductSelectedParams,IToggleOrderProductSelectedResult>(toggleOrderProductSelectedIR);
 
 
+/** 'DeleteOrderProduct' parameters type */
+export interface IDeleteOrderProductParams {
+  customer_id?: string | null | void;
+  product_id?: string | null | void;
+}
+
+/** 'DeleteOrderProduct' return type */
+export interface IDeleteOrderProductResult {
+  id: string;
+}
+
+/** 'DeleteOrderProduct' query type */
+export interface IDeleteOrderProductQuery {
+  params: IDeleteOrderProductParams;
+  result: IDeleteOrderProductResult;
+}
+
+const deleteOrderProductIR: any = {"usedParamSet":{"product_id":true,"customer_id":true},"params":[{"name":"product_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":49,"b":59},{"a":327,"b":337}]},{"name":"customer_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":160,"b":171}]}],"statement":"DELETE FROM order_product\nWHERE\n    product_id = :product_id\n    AND order_id = (\n        SELECT id\n        FROM orders\n        WHERE\n            customer_id = :customer_id\n            AND status IN ('in-cart-selected', 'in-cart-unselected')\n            AND store_id = (\n                SELECT store_id FROM product WHERE id = :product_id\n            )\n    )\nRETURNING id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * DELETE FROM order_product
+ * WHERE
+ *     product_id = :product_id
+ *     AND order_id = (
+ *         SELECT id
+ *         FROM orders
+ *         WHERE
+ *             customer_id = :customer_id
+ *             AND status IN ('in-cart-selected', 'in-cart-unselected')
+ *             AND store_id = (
+ *                 SELECT store_id FROM product WHERE id = :product_id
+ *             )
+ *     )
+ * RETURNING id
+ * ```
+ */
+export const deleteOrderProduct = new PreparedQuery<IDeleteOrderProductParams,IDeleteOrderProductResult>(deleteOrderProductIR);
+
+
+/** 'DeleteEmptyOrder' parameters type */
+export type IDeleteEmptyOrderParams = void;
+
+/** 'DeleteEmptyOrder' return type */
+export type IDeleteEmptyOrderResult = void;
+
+/** 'DeleteEmptyOrder' query type */
+export interface IDeleteEmptyOrderQuery {
+  params: IDeleteEmptyOrderParams;
+  result: IDeleteEmptyOrderResult;
+}
+
+const deleteEmptyOrderIR: any = {"usedParamSet":{},"params":[],"statement":"DELETE FROM orders o\nWHERE NOT EXISTS (\n    SELECT 1 FROM order_product op WHERE op.order_id = o.id\n)"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * DELETE FROM orders o
+ * WHERE NOT EXISTS (
+ *     SELECT 1 FROM order_product op WHERE op.order_id = o.id
+ * )
+ * ```
+ */
+export const deleteEmptyOrder = new PreparedQuery<IDeleteEmptyOrderParams,IDeleteEmptyOrderResult>(deleteEmptyOrderIR);
+
+
 /** 'ToggleOrderStoreSelected' parameters type */
 export interface IToggleOrderStoreSelectedParams {
   store_id?: string | null | void;

@@ -3,8 +3,8 @@ import { Request, Response, query } from "express";
 
 import pool from "@/database/pool";
 import { buildResponse } from "@/utils/response";
-import { AddToCartSchema, DecreaseProductQtySchema, DeleteOrderFromStore, GetProductQtySchema, IncreaseProductQtySchema, ToggleProductSelectedSchema, ToggleStoreSelectedSchema, convertToGetOrderSchema, convertToGetProductQtySchema, convertToGetUserCartSchema } from "./order.schema";
-import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser, decreaseOrderProductQuantity, getOrderProductQuantity, toggleOrderProductSelected, toggleOrderStoreSelected, deleteOrderStore } from "./order.queries";
+import { AddToCartSchema, DecreaseProductQtySchema, DeleteOrderFromProduct, DeleteOrderFromStore, GetProductQtySchema, IncreaseProductQtySchema, ToggleProductSelectedSchema, ToggleStoreSelectedSchema, convertToGetOrderSchema, convertToGetProductQtySchema, convertToGetUserCartSchema } from "./order.schema";
+import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser, decreaseOrderProductQuantity, getOrderProductQuantity, toggleOrderProductSelected, toggleOrderStoreSelected, deleteOrderStore, deleteOrderProduct, deleteEmptyOrder } from "./order.queries";
 import { getMinimumProduct } from "../product/product.queries";
 
 export default class UserController {
@@ -391,6 +391,38 @@ export default class UserController {
 
     }
     catch (err) {
+      console.error(err);
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
+
+
+  static async deleteOrderFromProduct(req: Request<ParamsDictionary, any, DeleteOrderFromProduct>, res: Response) {
+    try {
+      await pool.query("BEGIN");
+
+      const orderProduct = await deleteOrderProduct.run({
+        product_id: req.params.product_id,
+        customer_id: req.body.payload.sub,
+      }, pool);
+
+      if (!orderProduct || orderProduct.length === 0) {
+        return res.status(404).json(
+          buildResponse(null, false, "Order not found")
+        );
+      }
+
+      await deleteEmptyOrder.run(void {}, pool);
+
+      await pool.query("COMMIT");
+      res.status(200).json(
+        buildResponse(null, true, "Product deleted from order successfully")
+      );
+    }
+    catch (err) {
+      await pool.query("ROLLBACK");
       console.error(err);
       return res.status(500).json(
         buildResponse(null, false, "Internal server error")

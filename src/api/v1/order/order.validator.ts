@@ -47,3 +47,11 @@ export function validateDeleteOrderFromStoreSchema() {
       .isUUID().withMessage("Invalid store ID")
   ];
 }
+
+export function validateDeleteOrderFromPoductSchema() {
+  return [
+    param("product_id")
+      .notEmpty().withMessage("Product ID is required")
+      .isUUID().withMessage("Invalid product ID")
+  ];
+}
