@@ -280,3 +280,13 @@ WHERE
     o.store_id = :store_id
     AND o.status = :status
 ORDER BY o.updated_at DESC;
+
+
+/* @name ChangeStoreOrderStatus */
+UPDATE orders
+SET status = :status
+WHERE
+    id = :order_id
+    AND store_id = :store_id
+    AND status NOT IN ('in-cart-selected', 'in-cart-unselected')
+RETURNING id;

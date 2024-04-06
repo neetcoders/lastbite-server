@@ -810,3 +810,38 @@ const getOrderListByStoreIR: any = {"usedParamSet":{"store_id":true,"status":tru
 export const getOrderListByStore = new PreparedQuery<IGetOrderListByStoreParams,IGetOrderListByStoreResult>(getOrderListByStoreIR);
 
 
+/** 'ChangeStoreOrderStatus' parameters type */
+export interface IChangeStoreOrderStatusParams {
+  order_id?: string | null | void;
+  status?: order_status | null | void;
+  store_id?: string | null | void;
+}
+
+/** 'ChangeStoreOrderStatus' return type */
+export interface IChangeStoreOrderStatusResult {
+  id: string;
+}
+
+/** 'ChangeStoreOrderStatus' query type */
+export interface IChangeStoreOrderStatusQuery {
+  params: IChangeStoreOrderStatusParams;
+  result: IChangeStoreOrderStatusResult;
+}
+
+const changeStoreOrderStatusIR: any = {"usedParamSet":{"status":true,"order_id":true,"store_id":true},"params":[{"name":"status","required":false,"transform":{"type":"scalar"},"locs":[{"a":27,"b":33}]},{"name":"order_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":50,"b":58}]},{"name":"store_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":79,"b":87}]}],"statement":"UPDATE orders\nSET status = :status\nWHERE\n    id = :order_id\n    AND store_id = :store_id\n    AND status NOT IN ('in-cart-selected', 'in-cart-unselected')\nRETURNING id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE orders
+ * SET status = :status
+ * WHERE
+ *     id = :order_id
+ *     AND store_id = :store_id
+ *     AND status NOT IN ('in-cart-selected', 'in-cart-unselected')
+ * RETURNING id
+ * ```
+ */
+export const changeStoreOrderStatus = new PreparedQuery<IChangeStoreOrderStatusParams,IChangeStoreOrderStatusResult>(changeStoreOrderStatusIR);
+
+

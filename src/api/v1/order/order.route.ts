@@ -3,7 +3,7 @@ import { Router } from "express";
 import OrderController from "./order.controller";
 import { verifyAuthToken } from "@/services/jwt.service";
 import { validate } from "@/services/validator.service";
-import { validateAddToCart, validateDecreaseProductQty, validateDeleteOrderFromProductSchema, validateDeleteOrderFromStoreSchema, validateGetOrderListSchema, validateGetOrderSchema, validateIncreaseProductQty, validateToggleProductSchema, validateToggleStoreSchema } from "./order.validator";
+import { validateAddToCart, validateChangeOrderStatusSchema, validateDecreaseProductQty, validateDeleteOrderFromProductSchema, validateDeleteOrderFromStoreSchema, validateGetOrderListSchema, validateGetOrderSchema, validateIncreaseProductQty, validateToggleProductSchema, validateToggleStoreSchema } from "./order.validator";
 
 const router = Router();
 
@@ -27,5 +27,6 @@ router.get("/details/:order_id", verifyAuthToken, validateGetOrderSchema(), vali
 
 router.get("/store/details", verifyAuthToken, validateGetOrderListSchema(), validate, OrderController.getStoreOrderList);
 router.get("/store/details/:order_id", verifyAuthToken, validateGetOrderSchema(), validate, OrderController.getStoreOrderDetails);
+router.put("/store/details/:order_id", verifyAuthToken, validateChangeOrderStatusSchema(), validate, OrderController.changeOrderStatus);
 
 export default router;

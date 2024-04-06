@@ -3,8 +3,8 @@ import { Request, Response, query } from "express";
 
 import pool from "@/database/pool";
 import { buildResponse } from "@/utils/response";
-import { AddToCartSchema, CheckoutProductSchema as CheckoutOrderSchema, DecreaseProductQtySchema, DeleteOrderFromProductSchema, DeleteOrderFromStoreSchema, GetOrderDetailsSchema, GetUserOrderListSchema as GetUserOrderListSchema, GetProductQtySchema, IncreaseProductQtySchema, ToggleProductSelectedSchema, ToggleStoreSelectedSchema, convertToGetOrderSchema, convertToGetProductQtySchema, convertToGetUserCartSchema, GetStoreOrderListSchema, convertToGetOrderListSchema } from "./order.schema";
-import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser, decreaseOrderProductQuantity, getOrderProductQuantity, toggleOrderProductSelected, toggleOrderStoreSelected, deleteOrderStore, deleteOrderProduct, deleteEmptyOrder, order_status, getUserCartSelectedIdList, checkoutSelectedOrderProduct, createNewWaitingOrder, getOrderListByUser, getOrderListByStore } from "./order.queries";
+import { AddToCartSchema, CheckoutProductSchema as CheckoutOrderSchema, DecreaseProductQtySchema, DeleteOrderFromProductSchema, DeleteOrderFromStoreSchema, GetOrderDetailsSchema, GetUserOrderListSchema as GetUserOrderListSchema, GetProductQtySchema, IncreaseProductQtySchema, ToggleProductSelectedSchema, ToggleStoreSelectedSchema, convertToGetOrderSchema, convertToGetProductQtySchema, convertToGetUserCartSchema, GetStoreOrderListSchema, convertToGetOrderListSchema, ChangeOrderStatusSchema } from "./order.schema";
+import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser, decreaseOrderProductQuantity, getOrderProductQuantity, toggleOrderProductSelected, toggleOrderStoreSelected, deleteOrderStore, deleteOrderProduct, deleteEmptyOrder, order_status, getUserCartSelectedIdList, checkoutSelectedOrderProduct, createNewWaitingOrder, getOrderListByUser, getOrderListByStore, changeStoreOrderStatus } from "./order.queries";
 import { getMinimumProduct } from "../product/product.queries";
 import { checkUserActiveAddress } from "../address/address.queries";
 
@@ -564,6 +564,34 @@ export default class UserController {
 
       return res.status(200).json(
         buildResponse(convertToGetOrderSchema(order), true, "Order fetched successfully")
+      );
+    }
+    catch (err) {
+      console.error(err);
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
+
+
+  static async changeOrderStatus(req: Request<ParamsDictionary, any, ChangeOrderStatusSchema>, res: Response) {
+    try {
+      const updatedOrder = await changeStoreOrderStatus.run({
+        store_id: req.body.payload.sub,
+        order_id: req.params.order_id,
+        status: req.body.status,
+      }, pool);
+
+      if (!updatedOrder || updatedOrder.length === 0) {
+        return res.status(404).json(
+          buildResponse(null, false, "Order not found")
+        );
+      }
+
+      const fullOrder = await getOrderById.run({ id: updatedOrder[0].id }, pool);
+      return res.status(200).json(
+        buildResponse(convertToGetOrderSchema(fullOrder), true, "Order status updated successfully")
       );
     }
     catch (err) {

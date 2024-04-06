@@ -1,4 +1,4 @@
-import { IGetOrderByIdResult, IGetOrderListByStoreResult, IGetOrderProductQuantityResult, IGetUserCartByUserResult } from "./order.queries";
+import { IGetOrderByIdResult, IGetOrderListByStoreResult, IGetOrderProductQuantityResult, IGetUserCartByUserResult, order_status } from "./order.queries";
 
 export type AddToCartSchema = {
   product_id: string;
@@ -72,6 +72,13 @@ export type CheckoutProductSchema = {
 }
 
 export type GetStoreOrderListSchema = {
+  payload: {
+    sub: string;
+  }
+}
+
+export type ChangeOrderStatusSchema = {
+  status: Exclude<order_status, "in-cart-selected" | "in-cart-unselected">
   payload: {
     sub: string;
   }

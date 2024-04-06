@@ -69,5 +69,16 @@ export function validateGetOrderListSchema() {
     query("status")
       .notEmpty().withMessage("Status is required")
       .isIn(["waiting", "processed", "ready", "done", "cancelled", "rejected"]).withMessage("Invalid status")
-  ]
+    ]
+  }
+  
+  export function validateChangeOrderStatusSchema() {
+    return [
+      param("order_id")
+      .notEmpty().withMessage("Order ID is required")
+      .isUUID().withMessage("Invalid order ID"),
+    body("status")
+      .notEmpty().withMessage("Status is required")
+      .isIn(["waiting", "processed", "ready", "done", "cancelled", "rejected"]).withMessage("Invalid status"),
+  ];
 }
