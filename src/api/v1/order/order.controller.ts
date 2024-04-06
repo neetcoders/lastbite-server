@@ -3,8 +3,8 @@ import { Request, Response, query } from "express";
 
 import pool from "@/database/pool";
 import { buildResponse } from "@/utils/response";
-import { AddToCartSchema, CheckoutProductSchema as CheckoutOrderSchema, DecreaseProductQtySchema, DeleteOrderFromProductSchema, DeleteOrderFromStoreSchema, GetOrderDetailsSchema, GetOrderListSchema, GetProductQtySchema, IncreaseProductQtySchema, ToggleProductSelectedSchema, ToggleStoreSelectedSchema, convertToGetOrderSchema, convertToGetProductQtySchema, convertToGetUserCartSchema } from "./order.schema";
-import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser, decreaseOrderProductQuantity, getOrderProductQuantity, toggleOrderProductSelected, toggleOrderStoreSelected, deleteOrderStore, deleteOrderProduct, deleteEmptyOrder, getUserOrderList, order_status, getUserCartSelectedIdList, checkoutSelectedOrderProduct, createNewWaitingOrder } from "./order.queries";
+import { AddToCartSchema, CheckoutProductSchema as CheckoutOrderSchema, DecreaseProductQtySchema, DeleteOrderFromProductSchema, DeleteOrderFromStoreSchema, GetOrderDetailsSchema, GetUserOrderListSchema as GetUserOrderListSchema, GetProductQtySchema, IncreaseProductQtySchema, ToggleProductSelectedSchema, ToggleStoreSelectedSchema, convertToGetOrderSchema, convertToGetProductQtySchema, convertToGetUserCartSchema, GetStoreOrderListSchema, convertToGetOrderListSchema } from "./order.schema";
+import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser, decreaseOrderProductQuantity, getOrderProductQuantity, toggleOrderProductSelected, toggleOrderStoreSelected, deleteOrderStore, deleteOrderProduct, deleteEmptyOrder, order_status, getUserCartSelectedIdList, checkoutSelectedOrderProduct, createNewWaitingOrder, getOrderListByUser, getOrderListByStore } from "./order.queries";
 import { getMinimumProduct } from "../product/product.queries";
 import { checkUserActiveAddress } from "../address/address.queries";
 
@@ -99,15 +99,15 @@ export default class UserController {
   }
 
 
-  static async getOrderList(req: Request<ParamsDictionary, any, GetOrderListSchema>, res: Response) {
+  static async getUserOrderList(req: Request<ParamsDictionary, any, GetUserOrderListSchema>, res: Response) {
     try {
-      const userOrders = await getUserOrderList.run({ 
+      const userOrders = await getOrderListByUser.run({ 
         user_id: req.body.payload.sub, 
         status: req.query.status as order_status,
       }, pool);
 
       return res.status(200).json(
-        buildResponse(convertToGetUserCartSchema(userOrders), true, "User orders fetched successfully")
+        buildResponse(convertToGetOrderListSchema(userOrders), true, "User orders fetched successfully")
       );
     }
     catch (err) {
@@ -507,14 +507,14 @@ export default class UserController {
         await deleteEmptyOrder.run(void {}, pool);
       };
 
-      const waitingOrders = await getUserOrderList.run({
+      const waitingOrders = await getOrderListByUser.run({
         user_id: req.body.payload.sub,
         status: "waiting"
       }, pool);
 
       await pool.query("COMMIT");
       return res.status(200).json(
-        buildResponse(convertToGetUserCartSchema(waitingOrders), true, "Checkout success")
+        buildResponse(convertToGetOrderListSchema(waitingOrders), true, "Checkout success")
       );
     }
     catch (err) {
@@ -526,4 +526,23 @@ export default class UserController {
     }
   }
 
+
+  static async getStoreOrderList(req: Request<ParamsDictionary, any, GetStoreOrderListSchema>, res: Response) {
+    try {
+      const storeOrders = await getOrderListByStore.run({ 
+        store_id: req.body.payload.sub, 
+        status: req.query.status as order_status,
+      }, pool);
+
+      return res.status(200).json(
+        buildResponse(convertToGetOrderListSchema(storeOrders), true, "Store orders fetched successfully")
+      );
+    }
+    catch (err) {
+      console.error(err);
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
 }

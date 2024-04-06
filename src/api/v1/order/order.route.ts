@@ -22,7 +22,9 @@ router.delete("/product/:product_id", verifyAuthToken, validateDeleteOrderFromPr
 router.post("/store/toggle_selected", verifyAuthToken, validateToggleStoreSchema(), validate, OrderController.toggleStoreSelected);
 router.delete("/store/:store_id", verifyAuthToken, validateDeleteOrderFromStoreSchema(), validate, OrderController.deleteOrderFromStore);
 
-router.get("/details", verifyAuthToken, validateGetOrderListSchema(), validate, OrderController.getOrderList);
+router.get("/details", verifyAuthToken, validateGetOrderListSchema(), validate, OrderController.getUserOrderList);
 router.get("/details/:order_id", verifyAuthToken, validateGetOrderSchema(), validate, OrderController.getOrderDetails);
+
+router.get("/store/details", verifyAuthToken, validateGetOrderListSchema(), validate, OrderController.getStoreOrderList);
 
 export default router;

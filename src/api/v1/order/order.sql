@@ -206,12 +206,15 @@ WHERE
     AND o.status IN ('in-cart-selected', 'in-cart-unselected');
 
 
-/* @name GetUserOrderList */
+/* @name GetOrderListByUser */
 SELECT
     o.id,
     o.status,
     s.id AS "store_id",
     s.display_name AS "store_display_name",
+    u.id AS "user_id",
+    u.email AS "user_email",
+    u.display_name AS "user_display_name",
     p.id AS "product_id",
     op.id AS "order_product_id",
     op.selected AS "order_product_selected",
@@ -226,6 +229,7 @@ FROM orders o
 INNER JOIN order_product op ON o.id = op.order_id
 INNER JOIN store s ON s.id = o.store_id
 INNER JOIN product p ON p.id = op.product_id
+INNER JOIN users u ON u.id = o.customer_id
 WHERE 
     o.customer_id = :user_id
     AND o.status = :status
@@ -246,3 +250,33 @@ SET order_id = :new_order_id
 WHERE
     order_id = :old_order_id
     AND selected IS TRUE;
+
+
+/* @name GetOrderListByStore */
+SELECT
+    o.id,
+    o.status,
+    s.id AS "store_id",
+    s.display_name AS "store_display_name",
+    u.id AS "user_id",
+    u.email AS "user_email",
+    u.display_name AS "user_display_name",
+    p.id AS "product_id",
+    op.id AS "order_product_id",
+    op.selected AS "order_product_selected",
+    op.quantity AS "order_product_quantity",
+    p.display_name AS "product_display_name",
+    p.price_before AS "product_price_before",
+    p.price_after AS "product_price_after",
+    p.stock AS "product_stock",
+    o.created_at,
+    o.updated_at
+FROM orders o
+INNER JOIN order_product op ON o.id = op.order_id
+INNER JOIN store s ON s.id = o.store_id
+INNER JOIN product p ON p.id = op.product_id
+INNER JOIN users u ON u.id = o.customer_id
+WHERE 
+    o.store_id = :store_id
+    AND o.status = :status
+ORDER BY o.updated_at DESC;
