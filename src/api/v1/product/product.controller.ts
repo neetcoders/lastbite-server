@@ -1,11 +1,14 @@
 import { ParamsDictionary } from "express-serve-static-core";
-import { Request, Response, query } from "express";
+import { Request, Response } from "express";
 
 import pool from "@/database/pool";
-import { CreateProductSchema, UpdateProductSchema, UpdateStockSchema, convertToGetProductResponse } from "./product.schema";
+import { CreateProductSchema, UpdateProductSchema, UpdateStockSchema, convertToGetProductListResponse, convertToGetProductResponse } from "./product.schema";
 import { buildResponse } from "@/utils/response";
 import { getCategoryIdBySlug } from "../category/category.queries";
-import { createProduct, deleteProductById, getProductById, getProductOwnerById, updateProductDetails, updateProductStock } from "./product.queries";
+import { createProduct, deleteProductById, getProductById, getProductFromNearestStores, getProductFromNearestStoresWithQuery, getProductOwnerById, updateProductDetails, updateProductStock } from "./product.queries";
+import { getCoordinates, getUserActiveCoordinates } from "../address/address.queries";
+
+const DEFAULT_ADDRESS_ID = "2798eb3a-0a3e-4413-9043-1f4eb00cc1fe";
 
 export default class UserController {
   static async createProduct(req: Request<ParamsDictionary, any, CreateProductSchema>, res: Response) {
@@ -174,6 +177,87 @@ export default class UserController {
 
       return res.status(200).json(
         buildResponse(null, true, "Product deleted successfully")
+      );
+    }
+    catch (err) {
+      console.error(err);
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
+
+
+  static async getNearestProducts(req: Request, res: Response) {
+    try {
+      let coordinates;
+
+      const activeAddress = await getUserActiveCoordinates.run({ user_id: req.body.payload.sub }, pool);
+      if (!activeAddress || activeAddress.length === 0) {
+        const defaultAddress = await getCoordinates.run({ id: DEFAULT_ADDRESS_ID }, pool);
+        coordinates = defaultAddress[0].coordinates;
+      }
+      else {
+        coordinates = activeAddress[0].coordinates;
+      }
+
+      let products;
+      if (req.query.search) {
+        products = await getProductFromNearestStoresWithQuery.run({
+          limit: parseInt(req.query.limit!.toString()),
+          offset: parseInt(req.query.offset!.toString()),
+          max_distance: parseInt(req.query.distance!.toString()),
+          user_coordinates: coordinates,
+          product_name: req.query.search.toString(),
+        }, pool);
+      }
+      else {
+        products = await getProductFromNearestStores.run({
+          limit: parseInt(req.query.limit!.toString()),
+          offset: parseInt(req.query.offset!.toString()),
+          max_distance: parseInt(req.query.distance!.toString()),
+          user_coordinates: coordinates,
+        }, pool);
+      }
+
+      return res.status(200).json(
+        buildResponse(convertToGetProductListResponse(products), true, "Product fetched successfully")
+      );
+    }
+    catch (err) {
+      console.error(err);
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
+
+
+  static async getPublicNearestProducts(req: Request, res: Response) {
+    try {
+      const defaultAddress = await getCoordinates.run({ id: DEFAULT_ADDRESS_ID }, pool);
+
+      let products;
+      if (req.query.search) {
+        products = await getProductFromNearestStoresWithQuery.run({
+          limit: parseInt(req.query.limit!.toString()),
+          offset: parseInt(req.query.offset!.toString()),
+          max_distance: parseInt(req.query.distance!.toString()),
+          user_coordinates: defaultAddress[0].coordinates,
+          product_name: req.query.search.toString(),
+        }, pool);
+      }
+      else {
+        products = await getProductFromNearestStores.run({
+          limit: parseInt(req.query.limit!.toString()),
+          offset: parseInt(req.query.offset!.toString()),
+          max_distance: parseInt(req.query.distance!.toString()),
+          user_coordinates: defaultAddress[0].coordinates,
+        }, pool);
+      }
+
+      return res.status(200).json(
+        buildResponse(convertToGetProductListResponse(products), true, "Product fetched successfully")
       );
     }
     catch (err) {
