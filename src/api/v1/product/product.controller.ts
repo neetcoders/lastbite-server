@@ -219,4 +219,28 @@ export default class UserController {
       );
     }
   }
+
+
+  static async getPublicNearestProducts(req: Request, res: Response) {
+    try {
+      const defaultAddress = await getCoordinates.run({ id: DEFAULT_ADDRESS_ID }, pool);
+
+      const products = await getProductFromNearestStores.run({
+        limit: parseInt(req.query.limit!.toString()),
+        offset: parseInt(req.query.offset!.toString()),
+        max_distance: parseInt(req.query.distance!.toString()),
+        user_coordinates: defaultAddress[0].coordinates,
+      }, pool);
+
+      return res.status(200).json(
+        buildResponse(convertToGetProductListResponse(products), true, "Product fetched successfully")
+      );
+    }
+    catch (err) {
+      console.error(err);
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      );
+    }
+  }
 }
