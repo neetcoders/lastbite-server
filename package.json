@@ -16,6 +16,7 @@
     "pgtyped": "pgtyped -w -c pgtyped.config.cjs"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.550.0",
     "@pgtyped/runtime": "^2.3.0",
     "argon2": "^0.40.1",
     "cors": "^2.8.5",
