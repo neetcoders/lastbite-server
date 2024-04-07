@@ -3,6 +3,8 @@ import { PreparedQuery } from '@pgtyped/runtime';
 
 export type DateOrString = Date | string;
 
+export type NumberOrString = number | string;
+
 /** 'CreateProduct' parameters type */
 export interface ICreateProductParams {
   product: {
@@ -279,5 +281,83 @@ const getMinimumProductIR: any = {"usedParamSet":{"id":true},"params":[{"name":"
  * ```
  */
 export const getMinimumProduct = new PreparedQuery<IGetMinimumProductParams,IGetMinimumProductResult>(getMinimumProductIR);
+
+
+/** 'GetProductFromNearestStores' parameters type */
+export interface IGetProductFromNearestStoresParams {
+  limit?: NumberOrString | null | void;
+  max_distance?: number | null | void;
+  offset?: NumberOrString | null | void;
+  user_coordinates?: unknown | null | void;
+}
+
+/** 'GetProductFromNearestStores' return type */
+export interface IGetProductFromNearestStoresResult {
+  address_created_at: Date;
+  address_distance: number | null;
+  address_latitude: number | null;
+  address_longitude: number | null;
+  address_street: string;
+  address_updated_at: Date;
+  category_display_name: string;
+  category_slug: string;
+  created_at: Date;
+  description: string | null;
+  display_name: string;
+  expiration_date: Date;
+  id: string;
+  price_after: number;
+  price_before: number;
+  stock: number;
+  store_created_at: Date;
+  store_display_name: string;
+  store_id: string;
+  store_updated_at: Date;
+  updated_at: Date;
+}
+
+/** 'GetProductFromNearestStores' query type */
+export interface IGetProductFromNearestStoresQuery {
+  params: IGetProductFromNearestStoresParams;
+  result: IGetProductFromNearestStoresResult;
+}
+
+const getProductFromNearestStoresIR: any = {"usedParamSet":{"user_coordinates":true,"max_distance":true,"limit":true,"offset":true},"params":[{"name":"user_coordinates","required":false,"transform":{"type":"scalar"},"locs":[{"a":459,"b":475},{"a":876,"b":892},{"a":947,"b":963}]},{"name":"max_distance","required":false,"transform":{"type":"scalar"},"locs":[{"a":897,"b":909}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":1003,"b":1008}]},{"name":"offset","required":false,"transform":{"type":"scalar"},"locs":[{"a":1017,"b":1023}]}],"statement":"SELECT\n    p.id,\n    p.display_name,\n    p.description,\n    p.price_before,\n    p.price_after,\n    p.expiration_date,\n    p.stock,\n    s.id as \"store_id\",\n    s.display_name as \"store_display_name\",\n    s.created_at as \"store_created_at\",\n    s.updated_at as \"store_updated_at\",\n    a.street as \"address_street\",\n    ST_X(a.coordinates::geometry) as \"address_longitude\",\n    ST_Y(a.coordinates::geometry) as \"address_latitude\",\n    ST_DISTANCE(a.coordinates, :user_coordinates) as \"address_distance\",\n    a.created_at as \"address_created_at\",\n    a.updated_at as \"address_updated_at\",\n    c.slug as \"category_slug\",\n    c.display_name as \"category_display_name\",\n    p.created_at,\n    p.updated_at\nFROM product p\nINNER JOIN store s ON s.id = p.store_id\nINNER JOIN address a ON a.id = s.address_id\nINNER JOIN category c ON c.id = p.category_id\nWHERE ST_DISTANCE(a.coordinates, :user_coordinates) < :max_distance\nORDER BY ST_DISTANCE(a.coordinates, :user_coordinates) ASC, p.updated_at DESC, id ASC\nLIMIT :limit OFFSET :offset"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT
+ *     p.id,
+ *     p.display_name,
+ *     p.description,
+ *     p.price_before,
+ *     p.price_after,
+ *     p.expiration_date,
+ *     p.stock,
+ *     s.id as "store_id",
+ *     s.display_name as "store_display_name",
+ *     s.created_at as "store_created_at",
+ *     s.updated_at as "store_updated_at",
+ *     a.street as "address_street",
+ *     ST_X(a.coordinates::geometry) as "address_longitude",
+ *     ST_Y(a.coordinates::geometry) as "address_latitude",
+ *     ST_DISTANCE(a.coordinates, :user_coordinates) as "address_distance",
+ *     a.created_at as "address_created_at",
+ *     a.updated_at as "address_updated_at",
+ *     c.slug as "category_slug",
+ *     c.display_name as "category_display_name",
+ *     p.created_at,
+ *     p.updated_at
+ * FROM product p
+ * INNER JOIN store s ON s.id = p.store_id
+ * INNER JOIN address a ON a.id = s.address_id
+ * INNER JOIN category c ON c.id = p.category_id
+ * WHERE ST_DISTANCE(a.coordinates, :user_coordinates) < :max_distance
+ * ORDER BY ST_DISTANCE(a.coordinates, :user_coordinates) ASC, p.updated_at DESC, id ASC
+ * LIMIT :limit OFFSET :offset
+ * ```
+ */
+export const getProductFromNearestStores = new PreparedQuery<IGetProductFromNearestStoresParams,IGetProductFromNearestStoresResult>(getProductFromNearestStoresIR);
 
 

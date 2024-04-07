@@ -330,6 +330,71 @@ const getUserActiveAddressIR: any = {"usedParamSet":{"user_id":true},"params":[{
 export const getUserActiveAddress = new PreparedQuery<IGetUserActiveAddressParams,IGetUserActiveAddressResult>(getUserActiveAddressIR);
 
 
+/** 'GetUserActiveCoordinates' parameters type */
+export interface IGetUserActiveCoordinatesParams {
+  user_id?: string | null | void;
+}
+
+/** 'GetUserActiveCoordinates' return type */
+export interface IGetUserActiveCoordinatesResult {
+  coordinates: unknown;
+  id: string;
+}
+
+/** 'GetUserActiveCoordinates' query type */
+export interface IGetUserActiveCoordinatesQuery {
+  params: IGetUserActiveCoordinatesParams;
+  result: IGetUserActiveCoordinatesResult;
+}
+
+const getUserActiveCoordinatesIR: any = {"usedParamSet":{"user_id":true},"params":[{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":108,"b":115}]}],"statement":"SELECT id, coordinates\nFROM address\nWHERE id = (\n    SELECT active_address_id\n    FROM users\n    WHERE id = :user_id\n    LIMIT 1\n)"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT id, coordinates
+ * FROM address
+ * WHERE id = (
+ *     SELECT active_address_id
+ *     FROM users
+ *     WHERE id = :user_id
+ *     LIMIT 1
+ * )
+ * ```
+ */
+export const getUserActiveCoordinates = new PreparedQuery<IGetUserActiveCoordinatesParams,IGetUserActiveCoordinatesResult>(getUserActiveCoordinatesIR);
+
+
+/** 'GetCoordinates' parameters type */
+export interface IGetCoordinatesParams {
+  id?: string | null | void;
+}
+
+/** 'GetCoordinates' return type */
+export interface IGetCoordinatesResult {
+  coordinates: unknown;
+  id: string;
+}
+
+/** 'GetCoordinates' query type */
+export interface IGetCoordinatesQuery {
+  params: IGetCoordinatesParams;
+  result: IGetCoordinatesResult;
+}
+
+const getCoordinatesIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":47,"b":49}]}],"statement":"SELECT id, coordinates\nFROM address\nWHERE id = :id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT id, coordinates
+ * FROM address
+ * WHERE id = :id
+ * ```
+ */
+export const getCoordinates = new PreparedQuery<IGetCoordinatesParams,IGetCoordinatesResult>(getCoordinatesIR);
+
+
 /** 'CheckUserActiveAddress' parameters type */
 export interface ICheckUserActiveAddressParams {
   id?: string | null | void;

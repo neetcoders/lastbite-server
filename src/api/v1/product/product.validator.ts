@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, query } from "express-validator";
 
 export function validateCreateProduct() {
   return [
@@ -64,5 +64,23 @@ export function validateUpdateStock() {
       .notEmpty().withMessage("Stock is required")
       .isNumeric().withMessage("Stock must be a numeric value")
       .custom((value) => (!isNaN(value) && value > 0)).withMessage("Stock must be non-negative"),
+  ];
+}
+
+
+export function validateGetProducts() {
+  return [
+    query("limit")
+      .notEmpty().withMessage("Limit is required")
+      .isNumeric().withMessage("Limit must be a numeric value")
+      .custom((value) => (!isNaN(value) && value >= 0)).withMessage("Limit must be non-negative"),
+    query("offset")
+      .notEmpty().withMessage("Offset is required")
+      .isNumeric().withMessage("Offset must be a numeric value")
+      .custom((value) => (!isNaN(value) && value >= 0)).withMessage("Offset must be non-negative"),
+    query("distance")
+      .notEmpty().withMessage("Distance is required")
+      .isNumeric().withMessage("Distance must be a numeric value")
+      .custom((value) => (!isNaN(value) && value >= 0)).withMessage("Distance must be non-negative"),
   ];
 }

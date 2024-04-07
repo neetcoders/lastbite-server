@@ -101,6 +101,23 @@ WHERE id = (
 );
 
 
+/* @name GetUserActiveCoordinates */
+SELECT id, coordinates
+FROM address
+WHERE id = (
+    SELECT active_address_id
+    FROM users
+    WHERE id = :user_id
+    LIMIT 1
+);
+
+
+/* @name GetCoordinates */
+SELECT id, coordinates
+FROM address
+WHERE id = :id;
+
+
 /* @name CheckUserActiveAddress */
 SELECT
     EXISTS (
