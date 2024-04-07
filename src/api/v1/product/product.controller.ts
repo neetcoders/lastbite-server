@@ -5,7 +5,7 @@ import pool from "@/database/pool";
 import { CreateProductSchema, UpdateProductSchema, UpdateStockSchema, convertToGetProductListResponse, convertToGetProductResponse } from "./product.schema";
 import { buildResponse } from "@/utils/response";
 import { getCategoryIdBySlug } from "../category/category.queries";
-import { createProduct, deleteProductById, getProductById, getProductFromNearestStores, getProductOwnerById, updateProductDetails, updateProductStock } from "./product.queries";
+import { createProduct, deleteProductById, getProductById, getProductFromNearestStores, getProductFromNearestStoresWithQuery, getProductOwnerById, updateProductDetails, updateProductStock } from "./product.queries";
 import { getCoordinates, getUserActiveCoordinates } from "../address/address.queries";
 
 const DEFAULT_ADDRESS_ID = "2798eb3a-0a3e-4413-9043-1f4eb00cc1fe";
@@ -201,12 +201,24 @@ export default class UserController {
         coordinates = activeAddress[0].coordinates;
       }
 
-      const products = await getProductFromNearestStores.run({
-        limit: parseInt(req.query.limit!.toString()),
-        offset: parseInt(req.query.offset!.toString()),
-        max_distance: parseInt(req.query.distance!.toString()),
-        user_coordinates: coordinates,
-      }, pool);
+      let products;
+      if (req.query.search) {
+        products = await getProductFromNearestStoresWithQuery.run({
+          limit: parseInt(req.query.limit!.toString()),
+          offset: parseInt(req.query.offset!.toString()),
+          max_distance: parseInt(req.query.distance!.toString()),
+          user_coordinates: coordinates,
+          product_name: req.query.search.toString(),
+        }, pool);
+      }
+      else {
+        products = await getProductFromNearestStores.run({
+          limit: parseInt(req.query.limit!.toString()),
+          offset: parseInt(req.query.offset!.toString()),
+          max_distance: parseInt(req.query.distance!.toString()),
+          user_coordinates: coordinates,
+        }, pool);
+      }
 
       return res.status(200).json(
         buildResponse(convertToGetProductListResponse(products), true, "Product fetched successfully")
@@ -225,12 +237,24 @@ export default class UserController {
     try {
       const defaultAddress = await getCoordinates.run({ id: DEFAULT_ADDRESS_ID }, pool);
 
-      const products = await getProductFromNearestStores.run({
-        limit: parseInt(req.query.limit!.toString()),
-        offset: parseInt(req.query.offset!.toString()),
-        max_distance: parseInt(req.query.distance!.toString()),
-        user_coordinates: defaultAddress[0].coordinates,
-      }, pool);
+      let products;
+      if (req.query.search) {
+        products = await getProductFromNearestStoresWithQuery.run({
+          limit: parseInt(req.query.limit!.toString()),
+          offset: parseInt(req.query.offset!.toString()),
+          max_distance: parseInt(req.query.distance!.toString()),
+          user_coordinates: defaultAddress[0].coordinates,
+          product_name: req.query.search.toString(),
+        }, pool);
+      }
+      else {
+        products = await getProductFromNearestStores.run({
+          limit: parseInt(req.query.limit!.toString()),
+          offset: parseInt(req.query.offset!.toString()),
+          max_distance: parseInt(req.query.distance!.toString()),
+          user_coordinates: defaultAddress[0].coordinates,
+        }, pool);
+      }
 
       return res.status(200).json(
         buildResponse(convertToGetProductListResponse(products), true, "Product fetched successfully")

@@ -82,5 +82,9 @@ export function validateGetProducts() {
       .notEmpty().withMessage("Distance is required")
       .isNumeric().withMessage("Distance must be a numeric value")
       .custom((value) => (!isNaN(value) && value >= 0)).withMessage("Distance must be non-negative"),
+    query("search")
+      .optional()
+      .isLength({ min: 3 }).withMessage("Search query should be at least be 3 characters long")
+      .isLength({ max: 64 }).withMessage("Search query should be at least be 64 characters long"),
   ];
 }
