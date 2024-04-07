@@ -20,6 +20,9 @@ const config = {
       ca: fs.readFileSync("./certs/pg-ca-certificate.crt").toString()
     },
   },
+  typesOverrides: {
+    numeric: "number",
+  }
 };
 
 module.exports = config;

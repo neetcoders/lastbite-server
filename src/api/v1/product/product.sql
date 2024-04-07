@@ -71,3 +71,9 @@ DELETE FROM product
 WHERE 
     id = :id
     AND store_id = :store_id;
+
+
+/* @name GetMinimumProduct */
+SELECT id, stock, store_id, category_id
+FROM product
+WHERE id = :id;

@@ -330,3 +330,37 @@ const getUserActiveAddressIR: any = {"usedParamSet":{"user_id":true},"params":[{
 export const getUserActiveAddress = new PreparedQuery<IGetUserActiveAddressParams,IGetUserActiveAddressResult>(getUserActiveAddressIR);
 
 
+/** 'CheckUserActiveAddress' parameters type */
+export interface ICheckUserActiveAddressParams {
+  id?: string | null | void;
+}
+
+/** 'CheckUserActiveAddress' return type */
+export interface ICheckUserActiveAddressResult {
+  exists: boolean | null;
+}
+
+/** 'CheckUserActiveAddress' query type */
+export interface ICheckUserActiveAddressQuery {
+  params: ICheckUserActiveAddressParams;
+  result: ICheckUserActiveAddressResult;
+}
+
+const checkUserActiveAddressIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":90,"b":92}]}],"statement":"SELECT\n    EXISTS (\n        SELECT 1 \n        FROM users \n        WHERE \n            id = :id \n            AND active_address_id IS NOT NULL \n    )"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT
+ *     EXISTS (
+ *         SELECT 1 
+ *         FROM users 
+ *         WHERE 
+ *             id = :id 
+ *             AND active_address_id IS NOT NULL 
+ *     )
+ * ```
+ */
+export const checkUserActiveAddress = new PreparedQuery<ICheckUserActiveAddressParams,ICheckUserActiveAddressResult>(checkUserActiveAddressIR);
+
+

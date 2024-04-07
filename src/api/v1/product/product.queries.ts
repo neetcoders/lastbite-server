@@ -3,15 +3,13 @@ import { PreparedQuery } from '@pgtyped/runtime';
 
 export type DateOrString = Date | string;
 
-export type NumberOrString = number | string;
-
 /** 'CreateProduct' parameters type */
 export interface ICreateProductParams {
   product: {
     display_name: string | null | void,
     description: string | null | void,
-    price_before: NumberOrString | null | void,
-    price_after: NumberOrString | null | void,
+    price_before: number | null | void,
+    price_after: number | null | void,
     expiration_date: DateOrString | null | void,
     stock: number | null | void,
     store_id: string | null | void,
@@ -50,8 +48,8 @@ export interface IUpdateProductDetailsParams {
   display_name?: string | null | void;
   expiration_date?: DateOrString | null | void;
   id?: string | null | void;
-  price_after?: NumberOrString | null | void;
-  price_before?: NumberOrString | null | void;
+  price_after?: number | null | void;
+  price_before?: number | null | void;
   store_id?: string | null | void;
 }
 
@@ -170,8 +168,8 @@ export interface IGetProductByIdResult {
   display_name: string;
   expiration_date: Date;
   id: string;
-  price_after: string;
-  price_before: string;
+  price_after: number;
+  price_before: number;
   stock: number;
   store_created_at: Date;
   store_display_name: string;
@@ -249,5 +247,37 @@ const deleteProductByIdIR: any = {"usedParamSet":{"id":true,"store_id":true},"pa
  * ```
  */
 export const deleteProductById = new PreparedQuery<IDeleteProductByIdParams,IDeleteProductByIdResult>(deleteProductByIdIR);
+
+
+/** 'GetMinimumProduct' parameters type */
+export interface IGetMinimumProductParams {
+  id?: string | null | void;
+}
+
+/** 'GetMinimumProduct' return type */
+export interface IGetMinimumProductResult {
+  category_id: string;
+  id: string;
+  stock: number;
+  store_id: string;
+}
+
+/** 'GetMinimumProduct' query type */
+export interface IGetMinimumProductQuery {
+  params: IGetMinimumProductParams;
+  result: IGetMinimumProductResult;
+}
+
+const getMinimumProductIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":64,"b":66}]}],"statement":"SELECT id, stock, store_id, category_id\nFROM product\nWHERE id = :id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT id, stock, store_id, category_id
+ * FROM product
+ * WHERE id = :id
+ * ```
+ */
+export const getMinimumProduct = new PreparedQuery<IGetMinimumProductParams,IGetMinimumProductResult>(getMinimumProductIR);
 
 
