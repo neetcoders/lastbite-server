@@ -34,7 +34,7 @@ export class UploadController {
 
       await pool.query("COMMIT");
       return res.status(200).json(
-        buildResponse(null, true, "Image uploaded successfully")
+        buildResponse({ id: uuid }, true, "Image uploaded successfully")
       );
     }
     catch (err) {
