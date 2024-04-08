@@ -27,6 +27,9 @@ export function validateCreateProduct() {
       .notEmpty().withMessage("Category slug is required")
       .isLength({ min: 3 }).withMessage("Category slug should be at least 3 characters long")
       .isLength({ max: 50 }).withMessage("Category slug should be at most 50 characters long"),
+    body("image_id")
+      .optional()
+      .isUUID().withMessage("Image ID is not valid")
   ];
 }
 
@@ -54,6 +57,9 @@ export function validateUpdateProduct() {
       .notEmpty().withMessage("Category slug is required")
       .isLength({ min: 3 }).withMessage("Category slug should be at least 3 characters long")
       .isLength({ max: 50 }).withMessage("Category slug should be at most 50 characters long"),
+    body("image_id")
+      .optional()
+      .isUUID().withMessage("Image ID is not valid")
   ];
 }
 

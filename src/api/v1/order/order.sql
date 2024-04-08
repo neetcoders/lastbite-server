@@ -169,6 +169,8 @@ SELECT
     p.price_before AS "product_price_before",
     p.price_after AS "product_price_after",
     p.stock AS "product_stock",
+    i.id as "image_id",
+    i.ext as "image_ext",
     o.created_at,
     o.updated_at
 FROM orders o
@@ -177,6 +179,7 @@ INNER JOIN store s ON s.id = o.store_id
 INNER JOIN product p ON p.id = op.product_id
 INNER JOIN users u ON u.id = o.customer_id
 LEFT JOIN address a ON u.active_address_id = a.id
+LEFT JOIN upload i ON i.id = p.image_id
 WHERE 
     o.id = :id;
 
@@ -195,12 +198,15 @@ SELECT
     p.price_before AS "product_price_before",
     p.price_after AS "product_price_after",
     p.stock AS "product_stock",
+    i.id as "image_id",
+    i.ext as "image_ext",
     o.created_at,
     o.updated_at
 FROM orders o
 INNER JOIN order_product op ON o.id = op.order_id
 INNER JOIN store s ON s.id = o.store_id
 INNER JOIN product p ON p.id = op.product_id
+LEFT JOIN upload i ON i.id = p.image_id 
 WHERE 
     o.customer_id = :user_id
     AND o.status IN ('in-cart-selected', 'in-cart-unselected');
@@ -220,12 +226,15 @@ SELECT
     p.price_before AS "product_price_before",
     p.price_after AS "product_price_after",
     p.stock AS "product_stock",
+    i.id as "image_id",
+    i.ext as "image_ext",
     o.created_at,
     o.updated_at
 FROM orders o
 INNER JOIN order_product op ON o.id = op.order_id
 INNER JOIN store s ON s.id = o.store_id
 INNER JOIN product p ON p.id = op.product_id
+LEFT JOIN upload i ON i.id = p.image_id 
 WHERE 
     o.customer_id = :user_id
     AND o.status = 'in-cart-selected'
@@ -249,6 +258,8 @@ SELECT
     p.price_before AS "product_price_before",
     p.price_after AS "product_price_after",
     p.stock AS "product_stock",
+    i.id as "image_id",
+    i.ext as "image_ext",
     o.created_at,
     o.updated_at
 FROM orders o
@@ -256,6 +267,7 @@ INNER JOIN order_product op ON o.id = op.order_id
 INNER JOIN store s ON s.id = o.store_id
 INNER JOIN product p ON p.id = op.product_id
 INNER JOIN users u ON u.id = o.customer_id
+LEFT JOIN upload i ON i.id = p.image_id 
 WHERE 
     o.customer_id = :user_id
     AND o.status = :status
@@ -295,6 +307,8 @@ SELECT
     p.price_before AS "product_price_before",
     p.price_after AS "product_price_after",
     p.stock AS "product_stock",
+    i.id as "image_id",
+    i.ext as "image_ext",
     o.created_at,
     o.updated_at
 FROM orders o
@@ -302,6 +316,7 @@ INNER JOIN order_product op ON o.id = op.order_id
 INNER JOIN store s ON s.id = o.store_id
 INNER JOIN product p ON p.id = op.product_id
 INNER JOIN users u ON u.id = o.customer_id
+LEFT JOIN upload i ON i.id = p.image_id 
 WHERE 
     o.store_id = :store_id
     AND o.status = :status

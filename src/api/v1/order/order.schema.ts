@@ -120,6 +120,9 @@ export function convertToGetOrderSchema(order: IGetOrderByIdResult[]) {
       price_before: o.product_price_before,
       price_after: o.product_price_after,
       stock: o.product_stock,
+      image_url: o.image_id
+      ? `${process.env.IMAGE_CDN_ENDPOINT}/store/${o.image_id}${o.image_ext}`
+      : null,
     })),
     total_price: order[0].status === "in-cart-unselected" 
       ? 0 
@@ -154,6 +157,9 @@ export function convertToGetUserCartSchema(cart: IGetUserCartByUserResult[]) {
       price_before: item.product_price_before,
       price_after: item.product_price_after,
       stock: item.product_stock,
+      image_url: item.image_id
+      ? `${process.env.IMAGE_CDN_ENDPOINT}/store/${item.image_id}${item.image_ext}`
+      : null,
     });
 
     if (!order[item.id]["total_price"]) {
@@ -203,6 +209,9 @@ export function convertToGetOrderListSchema(cart: IGetOrderListByStoreResult[]) 
       price_before: item.product_price_before,
       price_after: item.product_price_after,
       stock: item.product_stock,
+      image_url: item.image_id
+      ? `${process.env.IMAGE_CDN_ENDPOINT}/store/${item.image_id}${item.image_ext}`
+      : null,
     });
 
     if (!order[item.id]["total_price"]) {
