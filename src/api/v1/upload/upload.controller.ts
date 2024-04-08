@@ -6,6 +6,7 @@ import { randomUUID } from "crypto";
 import { Request, Response } from "express";
 import path from "path";
 import { createStoreUpload, removeStoreUpload } from "./upload.queries";
+import { filterImage } from "@/services/filter.service";
 
 
 export class UploadController {
@@ -22,6 +23,14 @@ export class UploadController {
           store_id: req.body.payload.sub,
         }
       }, pool);
+
+      const filtered = await filterImage(req.file!.buffer, 0.5);
+      if (filtered) {
+        await pool.query("ROLLBACK");
+        return res.status(400).json(
+          buildResponse(null, false, "Uploaded image violates the TOS")
+        );
+      }
 
       const command = new PutObjectCommand({
         Bucket: process.env.AWS_S3_BUCKET_NAME,
