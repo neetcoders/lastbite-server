@@ -62,3 +62,37 @@ const createStoreUploadIR: any = {"usedParamSet":{"upload":true},"params":[{"nam
 export const createStoreUpload = new PreparedQuery<ICreateStoreUploadParams,ICreateStoreUploadResult>(createStoreUploadIR);
 
 
+/** 'RemoveStoreUpload' parameters type */
+export interface IRemoveStoreUploadParams {
+  id?: string | null | void;
+  store_id?: string | null | void;
+}
+
+/** 'RemoveStoreUpload' return type */
+export interface IRemoveStoreUploadResult {
+  ext: string;
+  id: string;
+}
+
+/** 'RemoveStoreUpload' query type */
+export interface IRemoveStoreUploadQuery {
+  params: IRemoveStoreUploadParams;
+  result: IRemoveStoreUploadResult;
+}
+
+const removeStoreUploadIR: any = {"usedParamSet":{"id":true,"store_id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":35,"b":37}]},{"name":"store_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":58,"b":66}]}],"statement":"DELETE FROM upload\nWHERE \n    id = :id\n    AND store_id = :store_id\n    AND store_id IS NOT NULL\nRETURNING id, ext"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * DELETE FROM upload
+ * WHERE 
+ *     id = :id
+ *     AND store_id = :store_id
+ *     AND store_id IS NOT NULL
+ * RETURNING id, ext
+ * ```
+ */
+export const removeStoreUpload = new PreparedQuery<IRemoveStoreUploadParams,IRemoveStoreUploadResult>(removeStoreUploadIR);
+
+
