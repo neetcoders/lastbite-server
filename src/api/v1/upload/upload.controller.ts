@@ -34,7 +34,10 @@ export class UploadController {
 
       await pool.query("COMMIT");
       return res.status(200).json(
-        buildResponse({ id: uuid }, true, "Image uploaded successfully")
+        buildResponse({ 
+          id: uuid,
+          image_url: `${process.env.IMAGE_CDN_ENDPOINT}/store/${uuid}${ext}`
+        }, true, "Image uploaded successfully")
       );
     }
     catch (err) {
