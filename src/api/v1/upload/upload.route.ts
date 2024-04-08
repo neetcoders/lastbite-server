@@ -6,6 +6,6 @@ import { UploadController } from "./upload.controller";
 
 const router = Router();
 
-router.post("/store", verifyAuthToken, upload.single("file"), validateImageUpload, UploadController.uploadStoreContent);
+router.post("/store", upload.single("file"), verifyAuthToken, validateImageUpload, UploadController.uploadStoreContent);
 
 export default router;
