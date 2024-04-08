@@ -1,3 +1,8 @@
+/* @name GetStoreUploadOwner */
+SELECT store_id FROM upload
+WHERE id = :id;
+
+
 /* 
     @name CreateStoreUpload 
     @param upload -> (id, ext, store_id)

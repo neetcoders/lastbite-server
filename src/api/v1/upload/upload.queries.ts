@@ -1,6 +1,34 @@
 /** Types generated for queries found in "src/api/v1/upload/upload.sql" */
 import { PreparedQuery } from '@pgtyped/runtime';
 
+/** 'GetStoreUploadOwner' parameters type */
+export interface IGetStoreUploadOwnerParams {
+  id?: string | null | void;
+}
+
+/** 'GetStoreUploadOwner' return type */
+export interface IGetStoreUploadOwnerResult {
+  store_id: string | null;
+}
+
+/** 'GetStoreUploadOwner' query type */
+export interface IGetStoreUploadOwnerQuery {
+  params: IGetStoreUploadOwnerParams;
+  result: IGetStoreUploadOwnerResult;
+}
+
+const getStoreUploadOwnerIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":39,"b":41}]}],"statement":"SELECT store_id FROM upload\nWHERE id = :id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT store_id FROM upload
+ * WHERE id = :id
+ * ```
+ */
+export const getStoreUploadOwner = new PreparedQuery<IGetStoreUploadOwnerParams,IGetStoreUploadOwnerResult>(getStoreUploadOwnerIR);
+
+
 /** 'CreateStoreUpload' parameters type */
 export interface ICreateStoreUploadParams {
   upload: {

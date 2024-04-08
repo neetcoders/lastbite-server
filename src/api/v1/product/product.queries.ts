@@ -15,7 +15,8 @@ export interface ICreateProductParams {
     expiration_date: DateOrString | null | void,
     stock: number | null | void,
     store_id: string | null | void,
-    category_id: string | null | void
+    category_id: string | null | void,
+    image_id: string | null | void
   };
 }
 
@@ -30,12 +31,12 @@ export interface ICreateProductQuery {
   result: ICreateProductResult;
 }
 
-const createProductIR: any = {"usedParamSet":{"product":true},"params":[{"name":"product","required":false,"transform":{"type":"pick_tuple","keys":[{"name":"display_name","required":false},{"name":"description","required":false},{"name":"price_before","required":false},{"name":"price_after","required":false},{"name":"expiration_date","required":false},{"name":"stock","required":false},{"name":"store_id","required":false},{"name":"category_id","required":false}]},"locs":[{"a":129,"b":136}]}],"statement":"INSERT INTO product (display_name, description, price_before, price_after, expiration_date, stock, store_id, category_id)\nVALUES :product\nRETURNING id"};
+const createProductIR: any = {"usedParamSet":{"product":true},"params":[{"name":"product","required":false,"transform":{"type":"pick_tuple","keys":[{"name":"display_name","required":false},{"name":"description","required":false},{"name":"price_before","required":false},{"name":"price_after","required":false},{"name":"expiration_date","required":false},{"name":"stock","required":false},{"name":"store_id","required":false},{"name":"category_id","required":false},{"name":"image_id","required":false}]},"locs":[{"a":139,"b":146}]}],"statement":"INSERT INTO product (display_name, description, price_before, price_after, expiration_date, stock, store_id, category_id, image_id)\nVALUES :product\nRETURNING id"};
 
 /**
  * Query generated from SQL:
  * ```
- * INSERT INTO product (display_name, description, price_before, price_after, expiration_date, stock, store_id, category_id)
+ * INSERT INTO product (display_name, description, price_before, price_after, expiration_date, stock, store_id, category_id, image_id)
  * VALUES :product
  * RETURNING id
  * ```
@@ -50,6 +51,7 @@ export interface IUpdateProductDetailsParams {
   display_name?: string | null | void;
   expiration_date?: DateOrString | null | void;
   id?: string | null | void;
+  image_id?: string | null | void;
   price_after?: number | null | void;
   price_before?: number | null | void;
   store_id?: string | null | void;
@@ -66,7 +68,7 @@ export interface IUpdateProductDetailsQuery {
   result: IUpdateProductDetailsResult;
 }
 
-const updateProductDetailsIR: any = {"usedParamSet":{"display_name":true,"description":true,"price_before":true,"price_after":true,"expiration_date":true,"category_id":true,"id":true,"store_id":true},"params":[{"name":"display_name","required":false,"transform":{"type":"scalar"},"locs":[{"a":38,"b":50}]},{"name":"description","required":false,"transform":{"type":"scalar"},"locs":[{"a":71,"b":82}]},{"name":"price_before","required":false,"transform":{"type":"scalar"},"locs":[{"a":104,"b":116}]},{"name":"price_after","required":false,"transform":{"type":"scalar"},"locs":[{"a":137,"b":148}]},{"name":"expiration_date","required":false,"transform":{"type":"scalar"},"locs":[{"a":173,"b":188}]},{"name":"category_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":209,"b":220}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":238,"b":240}]},{"name":"store_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":261,"b":269}]}],"statement":"UPDATE product\nSET\n    display_name = :display_name,\n    description = :description,\n    price_before = :price_before,\n    price_after = :price_after,\n    expiration_date = :expiration_date,\n    category_id = :category_id\nWHERE \n    id = :id\n    AND store_id = :store_id\nRETURNING id"};
+const updateProductDetailsIR: any = {"usedParamSet":{"display_name":true,"description":true,"price_before":true,"price_after":true,"expiration_date":true,"category_id":true,"image_id":true,"id":true,"store_id":true},"params":[{"name":"display_name","required":false,"transform":{"type":"scalar"},"locs":[{"a":38,"b":50}]},{"name":"description","required":false,"transform":{"type":"scalar"},"locs":[{"a":71,"b":82}]},{"name":"price_before","required":false,"transform":{"type":"scalar"},"locs":[{"a":104,"b":116}]},{"name":"price_after","required":false,"transform":{"type":"scalar"},"locs":[{"a":137,"b":148}]},{"name":"expiration_date","required":false,"transform":{"type":"scalar"},"locs":[{"a":173,"b":188}]},{"name":"category_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":209,"b":220}]},{"name":"image_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":238,"b":246}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":264,"b":266}]},{"name":"store_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":287,"b":295}]}],"statement":"UPDATE product\nSET\n    display_name = :display_name,\n    description = :description,\n    price_before = :price_before,\n    price_after = :price_after,\n    expiration_date = :expiration_date,\n    category_id = :category_id,\n    image_id = :image_id\nWHERE \n    id = :id\n    AND store_id = :store_id\nRETURNING id"};
 
 /**
  * Query generated from SQL:
@@ -78,7 +80,8 @@ const updateProductDetailsIR: any = {"usedParamSet":{"display_name":true,"descri
  *     price_before = :price_before,
  *     price_after = :price_after,
  *     expiration_date = :expiration_date,
- *     category_id = :category_id
+ *     category_id = :category_id,
+ *     image_id = :image_id
  * WHERE 
  *     id = :id
  *     AND store_id = :store_id
@@ -170,6 +173,8 @@ export interface IGetProductByIdResult {
   display_name: string;
   expiration_date: Date;
   id: string;
+  image_ext: string;
+  image_id: string;
   price_after: number;
   price_before: number;
   stock: number;
@@ -186,7 +191,7 @@ export interface IGetProductByIdQuery {
   result: IGetProductByIdResult;
 }
 
-const getProductByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":783,"b":785}]}],"statement":"SELECT\n    p.id,\n    p.display_name,\n    p.description,\n    p.price_before,\n    p.price_after,\n    p.expiration_date,\n    p.stock,\n    s.id as \"store_id\",\n    s.display_name as \"store_display_name\",\n    s.created_at as \"store_created_at\",\n    s.updated_at as \"store_updated_at\",\n    a.street as \"address_street\",\n    ST_X(a.coordinates::geometry) as \"address_longitude\",\n    ST_Y(a.coordinates::geometry) as \"address_latitude\",\n    a.created_at as \"address_created_at\",\n    a.updated_at as \"address_updated_at\",\n    c.slug as \"category_slug\",\n    c.display_name as \"category_display_name\",\n    p.created_at,\n    p.updated_at\nFROM product p\nINNER JOIN store s ON s.id = p.store_id\nINNER JOIN address a ON a.id = s.address_id\nINNER JOIN category c ON c.id = p.category_id\nWHERE p.id = :id"};
+const getProductByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":874,"b":876}]}],"statement":"SELECT\n    p.id,\n    p.display_name,\n    p.description,\n    p.price_before,\n    p.price_after,\n    p.expiration_date,\n    p.stock,\n    s.id as \"store_id\",\n    s.display_name as \"store_display_name\",\n    s.created_at as \"store_created_at\",\n    s.updated_at as \"store_updated_at\",\n    a.street as \"address_street\",\n    ST_X(a.coordinates::geometry) as \"address_longitude\",\n    ST_Y(a.coordinates::geometry) as \"address_latitude\",\n    a.created_at as \"address_created_at\",\n    a.updated_at as \"address_updated_at\",\n    c.slug as \"category_slug\",\n    c.display_name as \"category_display_name\",\n    i.id as \"image_id\",\n    i.ext as \"image_ext\",\n    p.created_at,\n    p.updated_at\nFROM product p\nINNER JOIN store s ON s.id = p.store_id\nINNER JOIN address a ON a.id = s.address_id\nINNER JOIN category c ON c.id = p.category_id\nLEFT JOIN upload i ON i.id = p.image_id \nWHERE p.id = :id"};
 
 /**
  * Query generated from SQL:
@@ -210,12 +215,15 @@ const getProductByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id"
  *     a.updated_at as "address_updated_at",
  *     c.slug as "category_slug",
  *     c.display_name as "category_display_name",
+ *     i.id as "image_id",
+ *     i.ext as "image_ext",
  *     p.created_at,
  *     p.updated_at
  * FROM product p
  * INNER JOIN store s ON s.id = p.store_id
  * INNER JOIN address a ON a.id = s.address_id
  * INNER JOIN category c ON c.id = p.category_id
+ * LEFT JOIN upload i ON i.id = p.image_id 
  * WHERE p.id = :id
  * ```
  */
@@ -306,6 +314,8 @@ export interface IGetProductFromNearestStoresResult {
   display_name: string;
   expiration_date: Date;
   id: string;
+  image_ext: string;
+  image_id: string;
   price_after: number;
   price_before: number;
   stock: number;
@@ -322,7 +332,7 @@ export interface IGetProductFromNearestStoresQuery {
   result: IGetProductFromNearestStoresResult;
 }
 
-const getProductFromNearestStoresIR: any = {"usedParamSet":{"user_coordinates":true,"max_distance":true,"limit":true,"offset":true},"params":[{"name":"user_coordinates","required":false,"transform":{"type":"scalar"},"locs":[{"a":459,"b":475},{"a":876,"b":892},{"a":947,"b":963}]},{"name":"max_distance","required":false,"transform":{"type":"scalar"},"locs":[{"a":897,"b":909}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":1003,"b":1008}]},{"name":"offset","required":false,"transform":{"type":"scalar"},"locs":[{"a":1017,"b":1023}]}],"statement":"SELECT\n    p.id,\n    p.display_name,\n    p.description,\n    p.price_before,\n    p.price_after,\n    p.expiration_date,\n    p.stock,\n    s.id as \"store_id\",\n    s.display_name as \"store_display_name\",\n    s.created_at as \"store_created_at\",\n    s.updated_at as \"store_updated_at\",\n    a.street as \"address_street\",\n    ST_X(a.coordinates::geometry) as \"address_longitude\",\n    ST_Y(a.coordinates::geometry) as \"address_latitude\",\n    ST_DISTANCE(a.coordinates, :user_coordinates) as \"address_distance\",\n    a.created_at as \"address_created_at\",\n    a.updated_at as \"address_updated_at\",\n    c.slug as \"category_slug\",\n    c.display_name as \"category_display_name\",\n    p.created_at,\n    p.updated_at\nFROM product p\nINNER JOIN store s ON s.id = p.store_id\nINNER JOIN address a ON a.id = s.address_id\nINNER JOIN category c ON c.id = p.category_id\nWHERE ST_DISTANCE(a.coordinates, :user_coordinates) < :max_distance\nORDER BY ST_DISTANCE(a.coordinates, :user_coordinates) ASC, p.updated_at DESC, id ASC\nLIMIT :limit OFFSET :offset"};
+const getProductFromNearestStoresIR: any = {"usedParamSet":{"user_coordinates":true,"max_distance":true,"limit":true,"offset":true},"params":[{"name":"user_coordinates","required":false,"transform":{"type":"scalar"},"locs":[{"a":459,"b":475},{"a":966,"b":982},{"a":1037,"b":1053}]},{"name":"max_distance","required":false,"transform":{"type":"scalar"},"locs":[{"a":987,"b":999}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":1093,"b":1098}]},{"name":"offset","required":false,"transform":{"type":"scalar"},"locs":[{"a":1107,"b":1113}]}],"statement":"SELECT\n    p.id,\n    p.display_name,\n    p.description,\n    p.price_before,\n    p.price_after,\n    p.expiration_date,\n    p.stock,\n    s.id as \"store_id\",\n    s.display_name as \"store_display_name\",\n    s.created_at as \"store_created_at\",\n    s.updated_at as \"store_updated_at\",\n    a.street as \"address_street\",\n    ST_X(a.coordinates::geometry) as \"address_longitude\",\n    ST_Y(a.coordinates::geometry) as \"address_latitude\",\n    ST_DISTANCE(a.coordinates, :user_coordinates) as \"address_distance\",\n    a.created_at as \"address_created_at\",\n    a.updated_at as \"address_updated_at\",\n    c.slug as \"category_slug\",\n    c.display_name as \"category_display_name\",\n    i.id as \"image_id\",\n    i.ext as \"image_ext\",\n    p.created_at,\n    p.updated_at\nFROM product p\nINNER JOIN store s ON s.id = p.store_id\nINNER JOIN address a ON a.id = s.address_id\nINNER JOIN category c ON c.id = p.category_id\nLEFT JOIN upload i ON i.id = p.image_id\nWHERE ST_DISTANCE(a.coordinates, :user_coordinates) < :max_distance\nORDER BY ST_DISTANCE(a.coordinates, :user_coordinates) ASC, p.updated_at DESC, id ASC\nLIMIT :limit OFFSET :offset"};
 
 /**
  * Query generated from SQL:
@@ -347,12 +357,15 @@ const getProductFromNearestStoresIR: any = {"usedParamSet":{"user_coordinates":t
  *     a.updated_at as "address_updated_at",
  *     c.slug as "category_slug",
  *     c.display_name as "category_display_name",
+ *     i.id as "image_id",
+ *     i.ext as "image_ext",
  *     p.created_at,
  *     p.updated_at
  * FROM product p
  * INNER JOIN store s ON s.id = p.store_id
  * INNER JOIN address a ON a.id = s.address_id
  * INNER JOIN category c ON c.id = p.category_id
+ * LEFT JOIN upload i ON i.id = p.image_id
  * WHERE ST_DISTANCE(a.coordinates, :user_coordinates) < :max_distance
  * ORDER BY ST_DISTANCE(a.coordinates, :user_coordinates) ASC, p.updated_at DESC, id ASC
  * LIMIT :limit OFFSET :offset
@@ -385,6 +398,8 @@ export interface IGetProductFromNearestStoresWithQueryResult {
   display_name: string;
   expiration_date: Date;
   id: string;
+  image_ext: string;
+  image_id: string;
   price_after: number;
   price_before: number;
   stock: number;
@@ -401,7 +416,7 @@ export interface IGetProductFromNearestStoresWithQueryQuery {
   result: IGetProductFromNearestStoresWithQueryResult;
 }
 
-const getProductFromNearestStoresWithQueryIR: any = {"usedParamSet":{"user_coordinates":true,"max_distance":true,"product_name":true,"limit":true,"offset":true},"params":[{"name":"user_coordinates","required":false,"transform":{"type":"scalar"},"locs":[{"a":459,"b":475},{"a":881,"b":897},{"a":1042,"b":1058}]},{"name":"max_distance","required":false,"transform":{"type":"scalar"},"locs":[{"a":902,"b":914}]},{"name":"product_name","required":false,"transform":{"type":"scalar"},"locs":[{"a":986,"b":998}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":1107,"b":1112}]},{"name":"offset","required":false,"transform":{"type":"scalar"},"locs":[{"a":1121,"b":1127}]}],"statement":"SELECT\n    p.id,\n    p.display_name,\n    p.description,\n    p.price_before,\n    p.price_after,\n    p.expiration_date,\n    p.stock,\n    s.id as \"store_id\",\n    s.display_name as \"store_display_name\",\n    s.created_at as \"store_created_at\",\n    s.updated_at as \"store_updated_at\",\n    a.street as \"address_street\",\n    ST_X(a.coordinates::geometry) as \"address_longitude\",\n    ST_Y(a.coordinates::geometry) as \"address_latitude\",\n    ST_DISTANCE(a.coordinates, :user_coordinates) as \"address_distance\",\n    a.created_at as \"address_created_at\",\n    a.updated_at as \"address_updated_at\",\n    c.slug as \"category_slug\",\n    c.display_name as \"category_display_name\",\n    p.created_at,\n    p.updated_at\nFROM product p\nINNER JOIN store s ON s.id = p.store_id\nINNER JOIN address a ON a.id = s.address_id\nINNER JOIN category c ON c.id = p.category_id\nWHERE \n    ST_DISTANCE(a.coordinates, :user_coordinates) < :max_distance\n    AND to_tsvector('simple', p.display_name) @@ to_tsquery('simple', :product_name)\nORDER BY \n    ST_DISTANCE(a.coordinates, :user_coordinates) ASC,\n    p.updated_at DESC, \n    id ASC\nLIMIT :limit OFFSET :offset"};
+const getProductFromNearestStoresWithQueryIR: any = {"usedParamSet":{"user_coordinates":true,"max_distance":true,"product_name":true,"limit":true,"offset":true},"params":[{"name":"user_coordinates","required":false,"transform":{"type":"scalar"},"locs":[{"a":459,"b":475},{"a":971,"b":987},{"a":1132,"b":1148}]},{"name":"max_distance","required":false,"transform":{"type":"scalar"},"locs":[{"a":992,"b":1004}]},{"name":"product_name","required":false,"transform":{"type":"scalar"},"locs":[{"a":1076,"b":1088}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":1197,"b":1202}]},{"name":"offset","required":false,"transform":{"type":"scalar"},"locs":[{"a":1211,"b":1217}]}],"statement":"SELECT\n    p.id,\n    p.display_name,\n    p.description,\n    p.price_before,\n    p.price_after,\n    p.expiration_date,\n    p.stock,\n    s.id as \"store_id\",\n    s.display_name as \"store_display_name\",\n    s.created_at as \"store_created_at\",\n    s.updated_at as \"store_updated_at\",\n    a.street as \"address_street\",\n    ST_X(a.coordinates::geometry) as \"address_longitude\",\n    ST_Y(a.coordinates::geometry) as \"address_latitude\",\n    ST_DISTANCE(a.coordinates, :user_coordinates) as \"address_distance\",\n    a.created_at as \"address_created_at\",\n    a.updated_at as \"address_updated_at\",\n    c.slug as \"category_slug\",\n    c.display_name as \"category_display_name\",\n    i.id as \"image_id\",\n    i.ext as \"image_ext\",\n    p.created_at,\n    p.updated_at\nFROM product p\nINNER JOIN store s ON s.id = p.store_id\nINNER JOIN address a ON a.id = s.address_id\nINNER JOIN category c ON c.id = p.category_id\nLEFT JOIN upload i ON i.id = p.image_id\nWHERE \n    ST_DISTANCE(a.coordinates, :user_coordinates) < :max_distance\n    AND to_tsvector('simple', p.display_name) @@ to_tsquery('simple', :product_name)\nORDER BY \n    ST_DISTANCE(a.coordinates, :user_coordinates) ASC,\n    p.updated_at DESC, \n    id ASC\nLIMIT :limit OFFSET :offset"};
 
 /**
  * Query generated from SQL:
@@ -426,12 +441,15 @@ const getProductFromNearestStoresWithQueryIR: any = {"usedParamSet":{"user_coord
  *     a.updated_at as "address_updated_at",
  *     c.slug as "category_slug",
  *     c.display_name as "category_display_name",
+ *     i.id as "image_id",
+ *     i.ext as "image_ext",
  *     p.created_at,
  *     p.updated_at
  * FROM product p
  * INNER JOIN store s ON s.id = p.store_id
  * INNER JOIN address a ON a.id = s.address_id
  * INNER JOIN category c ON c.id = p.category_id
+ * LEFT JOIN upload i ON i.id = p.image_id
  * WHERE 
  *     ST_DISTANCE(a.coordinates, :user_coordinates) < :max_distance
  *     AND to_tsvector('simple', p.display_name) @@ to_tsquery('simple', :product_name)

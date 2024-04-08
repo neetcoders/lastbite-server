@@ -8,6 +8,7 @@ export type CreateProductSchema = {
   expiration_date: string;
   stock: number;
   category_slug: string;
+  image_id?: string;
   payload: {
     sub: string;
   }
@@ -20,6 +21,7 @@ export type UpdateProductSchema = {
   price_after: number;
   expiration_date: string;
   category_slug: string;
+  image_id?: string;
   payload: {
     sub: string;
   }
@@ -43,6 +45,9 @@ export function convertToGetProductResponse(product: IGetProductByIdResult) {
     price_after: product.price_after,
     expiration_date: product.expiration_date,
     stock: product.stock,
+    image_url: product.image_id
+      ? `${process.env.IMAGE_CDN_ENDPOINT}/store/${product.image_id}${product.image_ext}`
+      : null,
     store: {
       id: product.store_id,
       display_name: product.store_display_name,
@@ -75,6 +80,9 @@ export function convertToGetProductListResponse(products: IGetProductByIdResult[
     price_after: product.price_after,
     expiration_date: product.expiration_date,
     stock: product.stock,
+    image_url: product.image_id
+      ? `${process.env.IMAGE_CDN_ENDPOINT}/store/${product.image_id}${product.image_ext}`
+      : null,
     store: {
       id: product.store_id,
       display_name: product.store_display_name,

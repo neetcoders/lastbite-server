@@ -7,6 +7,7 @@ import { buildResponse } from "@/utils/response";
 import { getCategoryIdBySlug } from "../category/category.queries";
 import { createProduct, deleteProductById, getProductById, getProductFromNearestStores, getProductFromNearestStoresWithQuery, getProductOwnerById, updateProductDetails, updateProductStock } from "./product.queries";
 import { getCoordinates, getUserActiveCoordinates } from "../address/address.queries";
+import { getStoreUploadOwner } from "../upload/upload.queries";
 
 const DEFAULT_ADDRESS_ID = "2798eb3a-0a3e-4413-9043-1f4eb00cc1fe";
 
@@ -21,6 +22,14 @@ export default class UserController {
         );
       }
 
+      const image = await getStoreUploadOwner.run({ id: req.body.image_id }, pool);
+      if ((req.body.image_id && (!image || image.length === 0))
+      || (req.body.image_id && image && image.length > 0 && image[0].store_id !== req.body.payload.sub)) {
+        return res.status(404).json(
+          buildResponse(null, false, "Image not found")
+        );
+      }
+
       const createdProduct = await createProduct.run({
         product: {
           display_name: req.body.display_name,
@@ -30,7 +39,8 @@ export default class UserController {
           expiration_date: req.body.expiration_date,
           stock: req.body.stock,
           store_id: req.body.payload.sub,
-          category_id: category[0].id
+          category_id: category[0].id,
+          image_id: req.body?.image_id,
         }
       }, pool);
 
@@ -96,6 +106,14 @@ export default class UserController {
         );
       }
 
+      const image = await getStoreUploadOwner.run({ id: req.body.image_id }, pool);
+      if ((req.body.image_id && (!image || image.length === 0))
+      || (req.body.image_id && image && image.length > 0 && image[0].store_id !== req.body.payload.sub)) {
+        return res.status(404).json(
+          buildResponse(null, false, "Image not found")
+        );
+      }
+
       const updatedProduct = await updateProductDetails.run({
         id: req.params.product_id,
         display_name: req.body.display_name,
@@ -105,6 +123,7 @@ export default class UserController {
         expiration_date: req.body.expiration_date,
         category_id: category[0].id,
         store_id: req.body.payload.sub,
+        image_id: req.body.image_id,
       }, pool);
 
       const newProduct = await getProductById.run({ id: updatedProduct[0].id }, pool);
