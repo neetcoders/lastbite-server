@@ -822,6 +822,36 @@ const checkoutSelectedOrderProductIR: any = {"usedParamSet":{"new_order_id":true
 export const checkoutSelectedOrderProduct = new PreparedQuery<ICheckoutSelectedOrderProductParams,ICheckoutSelectedOrderProductResult>(checkoutSelectedOrderProductIR);
 
 
+/** 'ReduceProductStockByOrderQuantity' parameters type */
+export interface IReduceProductStockByOrderQuantityParams {
+  order_id?: string | null | void;
+}
+
+/** 'ReduceProductStockByOrderQuantity' return type */
+export type IReduceProductStockByOrderQuantityResult = void;
+
+/** 'ReduceProductStockByOrderQuantity' query type */
+export interface IReduceProductStockByOrderQuantityQuery {
+  params: IReduceProductStockByOrderQuantityParams;
+  result: IReduceProductStockByOrderQuantityResult;
+}
+
+const reduceProductStockByOrderQuantityIR: any = {"usedParamSet":{"order_id":true},"params":[{"name":"order_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":159,"b":167}]}],"statement":"UPDATE product\nSET stock = stock - order_product.quantity\nFROM order_product\nWHERE \n    product.id = order_product.product_id\n    AND order_product.order_id = :order_id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE product
+ * SET stock = stock - order_product.quantity
+ * FROM order_product
+ * WHERE 
+ *     product.id = order_product.product_id
+ *     AND order_product.order_id = :order_id
+ * ```
+ */
+export const reduceProductStockByOrderQuantity = new PreparedQuery<IReduceProductStockByOrderQuantityParams,IReduceProductStockByOrderQuantityResult>(reduceProductStockByOrderQuantityIR);
+
+
 /** 'GetOrderListByStore' parameters type */
 export interface IGetOrderListByStoreParams {
   status?: order_status | null | void;
@@ -930,5 +960,38 @@ const changeStoreOrderStatusIR: any = {"usedParamSet":{"status":true,"order_id":
  * ```
  */
 export const changeStoreOrderStatus = new PreparedQuery<IChangeStoreOrderStatusParams,IChangeStoreOrderStatusResult>(changeStoreOrderStatusIR);
+
+
+/** 'UnselectInsufficientStock' parameters type */
+export interface IUnselectInsufficientStockParams {
+  order_id?: string | null | void;
+}
+
+/** 'UnselectInsufficientStock' return type */
+export type IUnselectInsufficientStockResult = void;
+
+/** 'UnselectInsufficientStock' query type */
+export interface IUnselectInsufficientStockQuery {
+  params: IUnselectInsufficientStockParams;
+  result: IUnselectInsufficientStockResult;
+}
+
+const unselectInsufficientStockIR: any = {"usedParamSet":{"order_id":true},"params":[{"name":"order_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":66,"b":74}]}],"statement":"UPDATE order_product op\nSET selected = FALSE\nWHERE\n    order_id = :order_id\n    AND selected IS TRUE\n    AND product_id IN (\n        SELECT id FROM product p\n        WHERE p.stock < op.quantity\n    )"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE order_product op
+ * SET selected = FALSE
+ * WHERE
+ *     order_id = :order_id
+ *     AND selected IS TRUE
+ *     AND product_id IN (
+ *         SELECT id FROM product p
+ *         WHERE p.stock < op.quantity
+ *     )
+ * ```
+ */
+export const unselectInsufficientStock = new PreparedQuery<IUnselectInsufficientStockParams,IUnselectInsufficientStockResult>(unselectInsufficientStockIR);
 
 

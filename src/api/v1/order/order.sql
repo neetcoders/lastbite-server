@@ -290,6 +290,15 @@ WHERE
     AND selected IS TRUE;
 
 
+/* @name ReduceProductStockByOrderQuantity */
+UPDATE product
+SET stock = stock - order_product.quantity
+FROM order_product
+WHERE 
+    product.id = order_product.product_id
+    AND order_product.order_id = :order_id;
+
+
 /* @name GetOrderListByStore */
 SELECT
     o.id,
@@ -331,3 +340,15 @@ WHERE
     AND store_id = :store_id
     AND status NOT IN ('in-cart-selected', 'in-cart-unselected')
 RETURNING id;
+
+
+/* @name UnselectInsufficientStock */
+UPDATE order_product op
+SET selected = FALSE
+WHERE
+    order_id = :order_id
+    AND selected IS TRUE
+    AND product_id IN (
+        SELECT id FROM product p
+        WHERE p.stock < op.quantity
+    );
