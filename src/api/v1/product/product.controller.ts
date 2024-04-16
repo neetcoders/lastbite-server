@@ -293,14 +293,8 @@ export default class UserController {
     try {
       const products = await getProductByIdStoreId.run({id: req.body.payload.sub}, pool)
 
-      if(!products || products.length === 0) {
-        return res.status(404).json(
-          buildResponse(null, false, "No products found")
-        )
-      }
-
       return res.status(200).json(
-        buildResponse(products, true, "Product fetched successfully")
+        buildResponse(convertToGetProductListResponse(products), true, "Product fetched successfully")
       )
     } catch (error) {
       console.error(error);
