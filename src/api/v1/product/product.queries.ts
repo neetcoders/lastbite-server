@@ -463,3 +463,79 @@ const getProductFromNearestStoresWithQueryIR: any = {"usedParamSet":{"user_coord
 export const getProductFromNearestStoresWithQuery = new PreparedQuery<IGetProductFromNearestStoresWithQueryParams,IGetProductFromNearestStoresWithQueryResult>(getProductFromNearestStoresWithQueryIR);
 
 
+/** 'GetProductByIdStoreId' parameters type */
+export interface IGetProductByIdStoreIdParams {
+  id?: string | null | void;
+}
+
+/** 'GetProductByIdStoreId' return type */
+export interface IGetProductByIdStoreIdResult {
+  address_created_at: Date;
+  address_latitude: number | null;
+  address_longitude: number | null;
+  address_street: string;
+  address_updated_at: Date;
+  category_display_name: string;
+  category_slug: string;
+  created_at: Date;
+  description: string | null;
+  display_name: string;
+  expiration_date: Date;
+  id: string;
+  image_ext: string;
+  image_id: string;
+  price_after: number;
+  price_before: number;
+  stock: number;
+  store_created_at: Date;
+  store_display_name: string;
+  store_id: string;
+  store_updated_at: Date;
+  updated_at: Date;
+}
+
+/** 'GetProductByIdStoreId' query type */
+export interface IGetProductByIdStoreIdQuery {
+  params: IGetProductByIdStoreIdParams;
+  result: IGetProductByIdStoreIdResult;
+}
+
+const getProductByIdStoreIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":874,"b":876}]}],"statement":"SELECT\n    p.id,\n    p.display_name,\n    p.description,\n    p.price_before,\n    p.price_after,\n    p.expiration_date,\n    p.stock,\n    s.id as \"store_id\",\n    s.display_name as \"store_display_name\",\n    s.created_at as \"store_created_at\",\n    s.updated_at as \"store_updated_at\",\n    a.street as \"address_street\",\n    ST_X(a.coordinates::geometry) as \"address_longitude\",\n    ST_Y(a.coordinates::geometry) as \"address_latitude\",\n    a.created_at as \"address_created_at\",\n    a.updated_at as \"address_updated_at\",\n    c.slug as \"category_slug\",\n    c.display_name as \"category_display_name\",\n    i.id as \"image_id\",\n    i.ext as \"image_ext\",\n    p.created_at,\n    p.updated_at\nFROM product p\nINNER JOIN store s ON s.id = p.store_id\nINNER JOIN address a ON a.id = s.address_id\nINNER JOIN category c ON c.id = p.category_id\nLEFT JOIN upload i ON i.id = p.image_id \nWHERE s.id = :id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT
+ *     p.id,
+ *     p.display_name,
+ *     p.description,
+ *     p.price_before,
+ *     p.price_after,
+ *     p.expiration_date,
+ *     p.stock,
+ *     s.id as "store_id",
+ *     s.display_name as "store_display_name",
+ *     s.created_at as "store_created_at",
+ *     s.updated_at as "store_updated_at",
+ *     a.street as "address_street",
+ *     ST_X(a.coordinates::geometry) as "address_longitude",
+ *     ST_Y(a.coordinates::geometry) as "address_latitude",
+ *     a.created_at as "address_created_at",
+ *     a.updated_at as "address_updated_at",
+ *     c.slug as "category_slug",
+ *     c.display_name as "category_display_name",
+ *     i.id as "image_id",
+ *     i.ext as "image_ext",
+ *     p.created_at,
+ *     p.updated_at
+ * FROM product p
+ * INNER JOIN store s ON s.id = p.store_id
+ * INNER JOIN address a ON a.id = s.address_id
+ * INNER JOIN category c ON c.id = p.category_id
+ * LEFT JOIN upload i ON i.id = p.image_id 
+ * WHERE s.id = :id
+ * ```
+ */
+export const getProductByIdStoreId = new PreparedQuery<IGetProductByIdStoreIdParams,IGetProductByIdStoreIdResult>(getProductByIdStoreIdIR);
+
+
