@@ -331,3 +331,15 @@ WHERE
     AND store_id = :store_id
     AND status NOT IN ('in-cart-selected', 'in-cart-unselected')
 RETURNING id;
+
+
+/* @name UnselectInsufficientStock */
+UPDATE order_product op
+SET selected = FALSE
+WHERE
+    order_id = :order_id
+    AND selected IS TRUE
+    AND product_id IN (
+        SELECT id FROM product p
+        WHERE p.stock < op.quantity
+    );

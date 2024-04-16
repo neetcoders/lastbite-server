@@ -932,3 +932,36 @@ const changeStoreOrderStatusIR: any = {"usedParamSet":{"status":true,"order_id":
 export const changeStoreOrderStatus = new PreparedQuery<IChangeStoreOrderStatusParams,IChangeStoreOrderStatusResult>(changeStoreOrderStatusIR);
 
 
+/** 'UnselectInsufficientStock' parameters type */
+export interface IUnselectInsufficientStockParams {
+  order_id?: string | null | void;
+}
+
+/** 'UnselectInsufficientStock' return type */
+export type IUnselectInsufficientStockResult = void;
+
+/** 'UnselectInsufficientStock' query type */
+export interface IUnselectInsufficientStockQuery {
+  params: IUnselectInsufficientStockParams;
+  result: IUnselectInsufficientStockResult;
+}
+
+const unselectInsufficientStockIR: any = {"usedParamSet":{"order_id":true},"params":[{"name":"order_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":66,"b":74}]}],"statement":"UPDATE order_product op\nSET selected = FALSE\nWHERE\n    order_id = :order_id\n    AND selected IS TRUE\n    AND product_id IN (\n        SELECT id FROM product p\n        WHERE p.stock < op.quantity\n    )"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE order_product op
+ * SET selected = FALSE
+ * WHERE
+ *     order_id = :order_id
+ *     AND selected IS TRUE
+ *     AND product_id IN (
+ *         SELECT id FROM product p
+ *         WHERE p.stock < op.quantity
+ *     )
+ * ```
+ */
+export const unselectInsufficientStock = new PreparedQuery<IUnselectInsufficientStockParams,IUnselectInsufficientStockResult>(unselectInsufficientStockIR);
+
+
