@@ -4,7 +4,7 @@ import { Request, Response, query } from "express";
 import pool from "@/database/pool";
 import { buildResponse } from "@/utils/response";
 import { AddToCartSchema, CheckoutProductSchema as CheckoutOrderSchema, DecreaseProductQtySchema, DeleteOrderFromProductSchema, DeleteOrderFromStoreSchema, GetOrderDetailsSchema, GetUserOrderListSchema as GetUserOrderListSchema, GetProductQtySchema, IncreaseProductQtySchema, ToggleProductSelectedSchema, ToggleStoreSelectedSchema, convertToGetOrderSchema, convertToGetProductQtySchema, convertToGetUserCartSchema, GetStoreOrderListSchema, convertToGetOrderListSchema, ChangeOrderStatusSchema } from "./order.schema";
-import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser, decreaseOrderProductQuantity, getOrderProductQuantity, toggleOrderProductSelected, toggleOrderStoreSelected, deleteOrderStore, deleteOrderProduct, deleteEmptyOrder, order_status, getUserCartSelectedIdList, checkoutSelectedOrderProduct, createNewWaitingOrder, getOrderListByUser, getOrderListByStore, changeStoreOrderStatus, getUserSelectedCartByUser, unselectInsufficientStock } from "./order.queries";
+import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser, decreaseOrderProductQuantity, getOrderProductQuantity, toggleOrderProductSelected, toggleOrderStoreSelected, deleteOrderStore, deleteOrderProduct, deleteEmptyOrder, order_status, getUserCartSelectedIdList, checkoutSelectedOrderProduct, createNewWaitingOrder, getOrderListByUser, getOrderListByStore, changeStoreOrderStatus, getUserSelectedCartByUser, unselectInsufficientStock, reduceProductStockByOrderQuantity } from "./order.queries";
 import { getMinimumProduct } from "../product/product.queries";
 import { checkUserActiveAddress } from "../address/address.queries";
 
@@ -496,7 +496,7 @@ export default class UserController {
           buildResponse(null, false, "User cart is empty")
         );
       }
-            
+
       await pool.query("BEGIN");
       
       for (let order of userOrders) {
@@ -511,6 +511,8 @@ export default class UserController {
           old_order_id: order.id,
           new_order_id: newOrder[0].id
         }, pool);
+
+        await reduceProductStockByOrderQuantity.run({ order_id: newOrder[0].id }, pool);
 
         await deleteEmptyOrder.run(void {}, pool);
       };

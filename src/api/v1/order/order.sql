@@ -290,6 +290,15 @@ WHERE
     AND selected IS TRUE;
 
 
+/* @name ReduceProductStockByOrderQuantity */
+UPDATE product
+SET stock = stock - order_product.quantity
+FROM order_product
+WHERE 
+    product.id = order_product.product_id
+    AND order_product.order_id = :order_id;
+
+
 /* @name GetOrderListByStore */
 SELECT
     o.id,
