@@ -84,7 +84,7 @@ export function validateGetOrderListSchema() {
   return [
     query("status")
       .notEmpty().withMessage("Status is required")
-      .isIn(["waiting", "processed", "ready", "done", "cancelled", "rejected"]).withMessage("Invalid status")
+      .isIn(["waiting", "processed", "ready", "done", "cancelled", "rejected", "all"]).withMessage("Invalid status")
     ]
   }
   

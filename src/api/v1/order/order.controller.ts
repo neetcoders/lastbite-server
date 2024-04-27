@@ -4,7 +4,7 @@ import { Request, Response, query } from "express";
 import pool from "@/database/pool";
 import { buildResponse } from "@/utils/response";
 import { AddToCartSchema, CheckoutProductSchema as CheckoutOrderSchema, DecreaseProductQtySchema, DeleteOrderFromProductSchema, DeleteOrderFromStoreSchema, GetOrderDetailsSchema, GetUserOrderListSchema as GetUserOrderListSchema, GetProductQtySchema, IncreaseProductQtySchema, ToggleProductSelectedSchema, ToggleStoreSelectedSchema, convertToGetOrderSchema, convertToGetProductQtySchema, convertToGetUserCartSchema, GetStoreOrderListSchema, convertToGetOrderListSchema, ChangeOrderStatusSchema } from "./order.schema";
-import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser, decreaseOrderProductQuantity, getOrderProductQuantity, toggleOrderProductSelected, toggleOrderStoreSelected, deleteOrderStore, deleteOrderProduct, deleteEmptyOrder, order_status, getUserCartSelectedIdList, checkoutSelectedOrderProduct, createNewWaitingOrder, getOrderListByUser, getOrderListByStore, changeStoreOrderStatus, getUserSelectedCartByUser } from "./order.queries";
+import { getOrderInCartId, createNewOrder, getOrderProductId, createOrderProduct, increaseOrderProductQuantity, getOrderById, getUserCartByUser, decreaseOrderProductQuantity, getOrderProductQuantity, toggleOrderProductSelected, toggleOrderStoreSelected, deleteOrderStore, deleteOrderProduct, deleteEmptyOrder, order_status, getUserCartSelectedIdList, checkoutSelectedOrderProduct, createNewWaitingOrder, getOrderListByUser, getOrderListByStore, changeStoreOrderStatus, getUserSelectedCartByUser, getAllOrderListByStore, getAllOrderListByUser } from "./order.queries";
 import { getMinimumProduct } from "../product/product.queries";
 import { checkUserActiveAddress } from "../address/address.queries";
 
@@ -107,6 +107,16 @@ export default class UserController {
 
   static async getUserOrderList(req: Request<ParamsDictionary, any, GetUserOrderListSchema>, res: Response) {
     try {
+      if (req.query.status === "all") {
+        const userOrders = await getAllOrderListByUser.run({ 
+          user_id: req.body.payload.sub
+        }, pool);
+  
+        return res.status(200).json(
+          buildResponse(convertToGetOrderListSchema(userOrders), true, "User orders fetched successfully")
+        );
+      }
+
       const userOrders = await getOrderListByUser.run({ 
         user_id: req.body.payload.sub, 
         status: req.query.status as order_status,
@@ -535,6 +545,16 @@ export default class UserController {
 
   static async getStoreOrderList(req: Request<ParamsDictionary, any, GetStoreOrderListSchema>, res: Response) {
     try {
+      if (req.query.status === "all") {
+        const storeOrders = await getAllOrderListByStore.run({ 
+          store_id: req.body.payload.sub
+        }, pool);
+  
+        return res.status(200).json(
+          buildResponse(convertToGetOrderListSchema(storeOrders), true, "Store orders fetched successfully")
+        );
+      }
+      
       const storeOrders = await getOrderListByStore.run({ 
         store_id: req.body.payload.sub, 
         status: req.query.status as order_status,

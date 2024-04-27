@@ -274,6 +274,39 @@ WHERE
 ORDER BY o.updated_at DESC;
 
 
+/* @name GetAllOrderListByUser */
+SELECT
+    o.id,
+    o.status,
+    s.id AS "store_id",
+    s.display_name AS "store_display_name",
+    u.id AS "user_id",
+    u.email AS "user_email",
+    u.display_name AS "user_display_name",
+    p.id AS "product_id",
+    op.id AS "order_product_id",
+    op.selected AS "order_product_selected",
+    op.quantity AS "order_product_quantity",
+    p.display_name AS "product_display_name",
+    p.price_before AS "product_price_before",
+    p.price_after AS "product_price_after",
+    p.stock AS "product_stock",
+    i.id as "image_id",
+    i.ext as "image_ext",
+    o.created_at,
+    o.updated_at
+FROM orders o
+INNER JOIN order_product op ON o.id = op.order_id
+INNER JOIN store s ON s.id = o.store_id
+INNER JOIN product p ON p.id = op.product_id
+INNER JOIN users u ON u.id = o.customer_id
+LEFT JOIN upload i ON i.id = p.image_id 
+WHERE 
+    o.customer_id = :user_id
+    AND o.status IN ('waiting', 'processed', 'ready', 'done', 'cancelled', 'rejected')
+ORDER BY o.updated_at DESC;
+
+
 /* @name GetUserCartSelectedIDList */
 SELECT id, store_id
 FROM orders
@@ -320,6 +353,39 @@ LEFT JOIN upload i ON i.id = p.image_id
 WHERE 
     o.store_id = :store_id
     AND o.status = :status
+ORDER BY o.updated_at DESC;
+
+
+/* @name GetAllOrderListByStore */
+SELECT
+    o.id,
+    o.status,
+    s.id AS "store_id",
+    s.display_name AS "store_display_name",
+    u.id AS "user_id",
+    u.email AS "user_email",
+    u.display_name AS "user_display_name",
+    p.id AS "product_id",
+    op.id AS "order_product_id",
+    op.selected AS "order_product_selected",
+    op.quantity AS "order_product_quantity",
+    p.display_name AS "product_display_name",
+    p.price_before AS "product_price_before",
+    p.price_after AS "product_price_after",
+    p.stock AS "product_stock",
+    i.id as "image_id",
+    i.ext as "image_ext",
+    o.created_at,
+    o.updated_at
+FROM orders o
+INNER JOIN order_product op ON o.id = op.order_id
+INNER JOIN store s ON s.id = o.store_id
+INNER JOIN product p ON p.id = op.product_id
+INNER JOIN users u ON u.id = o.customer_id
+LEFT JOIN upload i ON i.id = p.image_id 
+WHERE 
+    o.store_id = :store_id
+    AND o.status IN ('waiting', 'processed', 'ready', 'done', 'cancelled', 'rejected')
 ORDER BY o.updated_at DESC;
 
 
