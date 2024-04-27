@@ -5,9 +5,10 @@ import pool from "@/database/pool";
 import { CreateProductSchema, UpdateProductSchema, UpdateStockSchema, convertToGetProductListResponse, convertToGetProductResponse } from "./product.schema";
 import { buildResponse } from "@/utils/response";
 import { getCategoryIdBySlug } from "../category/category.queries";
-import { createProduct, deleteProductById, getProductById, getProductFromNearestStores, getProductFromNearestStoresWithQuery, getProductOwnerById, updateProductDetails, updateProductStock } from "./product.queries";
+import { createProduct, deleteProductById, getProductById, getProductByIdStoreId, getProductFromNearestStores, getProductFromNearestStoresWithQuery, getProductOwnerById, updateProductDetails, updateProductStock } from "./product.queries";
 import { getCoordinates, getUserActiveCoordinates } from "../address/address.queries";
 import { getStoreUploadOwner } from "../upload/upload.queries";
+import { getStoreById, getStoreSecretByEmail } from "../store/store.queries";
 
 const DEFAULT_ADDRESS_ID = "2798eb3a-0a3e-4413-9043-1f4eb00cc1fe";
 
@@ -284,6 +285,22 @@ export default class UserController {
       return res.status(500).json(
         buildResponse(null, false, "Internal server error")
       );
+    }
+  }
+
+  static async getProductByStore (req: Request, res: Response){
+
+    try {
+      const products = await getProductByIdStoreId.run({id: req.body.payload.sub}, pool)
+
+      return res.status(200).json(
+        buildResponse(convertToGetProductListResponse(products), true, "Product fetched successfully")
+      )
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json(
+        buildResponse(null, false, "Internal server error")
+      ) 
     }
   }
 }
